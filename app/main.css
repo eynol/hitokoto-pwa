@@ -1,0 +1,33 @@
+html {
+    box-sizing: border-box;
+    -ms-text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+}
+
+*,
+*:before,
+*:after {
+    box-sizing: inherit;
+}
+
+body {
+    margin: 0;
+    font-family: "PingFang SC", "Noto Sans CJK", "Source Han Sans", "Microsoft Yahei", source-han-sans-simplified-c, sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+ul {
+    margin: 0;
+    padding: 0;
+}
+
+.song {
+    font-family: 'Noto Serif CJK SC', 'Source Han Serif SC', ‘Source Han Serif’, source-han-serif-sc, '宋体', serif;
+    font-weight: 900;
+}
