@@ -1,0 +1,49 @@
+/* Global Layout Element  */
+.info h1{
+  text-align: right;
+  position: relative;
+  padding-bottom: 10px;
+}
+.info h1::after{
+  content:'';
+  display: inline-block;
+  position: absolute;
+  bottom:2px;
+  right: 0;
+  width: 3em;
+  height: 6px;
+  background-color: black;
+}
+.info > p {
+  text-align: right;
+  letter-spacing: 3px;
+}
+
+/* Two  Layout */
+
+.layout_horizon{
+  width: 100%;
+}
+.layout_vertical{
+  
+}
+.song {
+  font-family: 'Noto Serif CJK SC', 'Source Han Serif SC', ‘Source Han Serif’, source-han-serif-sc, '宋体', serif;
+  font-weight: 900;
+}
+.Header {
+  margin: 10px 0;
+}
+
+.Header img {
+  width: 100%;
+}
+
+.Content h1 {
+  font-weight: 200;
+  line-height: 1.9;
+}
+.Content>p{
+  text-align: right;
+  font-kerning: 4px;
+}

@@ -1,10 +1,6 @@
 .root {
-  background-color: #eee;
-  border: 3px solid #ccc;
-  
-}
-
-.ddd{
-  font-size: 55px;
-  color:blue;
+    /* background-color: #c6bba5; */
+    background-color: #e7e7e7;
+    min-height: 100%;
+    padding: 50px 60px;
 }

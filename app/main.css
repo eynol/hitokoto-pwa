@@ -2,6 +2,9 @@ html {
     box-sizing: border-box;
     -ms-text-size-adjust: 100%;
     -webkit-text-size-adjust: 100%;
+    height: 100%;
+    width: 100%;
+    display: block;
 }
 
 *,
@@ -11,8 +14,11 @@ html {
 }
 
 body {
+    display: block;
     margin: 0;
     font-family: "PingFang SC", "Noto Sans CJK", "Source Han Sans", "Microsoft Yahei", source-han-sans-simplified-c, sans-serif;
+    height: 100%;
+    width: 100%;
 }
 
 h1,
@@ -27,7 +33,11 @@ ul {
     padding: 0;
 }
 
-.song {
-    font-family: 'Noto Serif CJK SC', 'Source Han Serif SC', ‘Source Han Serif’, source-han-serif-sc, '宋体', serif;
-    font-weight: 900;
+.Content{
+    color:red;
+}
+
+body>div:first-child{
+    width: 100%;
+    height: 100%;
 }
