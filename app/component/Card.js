@@ -1,9 +1,9 @@
 import React, {Component} from 'react'
-import css from './Card.css'
+import style from './Card.css'
 
 export default function Card(props) {
   return (
-    <div className={css.Card}>
+    <div className={style.Card}>
       {props.children}
     </div>
   )

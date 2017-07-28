@@ -2,5 +2,10 @@
     /* background-color: #c6bba5; */
     background-color: #e7e7e7;
     min-height: 100%;
-    padding: 50px 60px;
+}
+
+.logo{
+    position: absolute;
+    top: 15px;
+    left: 50px;
 }

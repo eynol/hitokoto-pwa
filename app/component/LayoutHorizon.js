@@ -1,5 +1,5 @@
 import React from 'react'
-import css from './HitokotoLayout.css'
+import style from './HitokotoLayout.css'
 
 export default function LayoutHorizon(props) {
   let img,
@@ -7,22 +7,20 @@ export default function LayoutHorizon(props) {
     detail;
   if (!props.img) {
     img = (
-      <div className={css.header}>
+      <div className={style.header}>
         <img src="./ignore/thumb.jpg"/>
       </div>
     )
   }
 
   return (
-    <div className={css.layout_horizon}>
+    <div className={style.layout_horizon}>
       {img}
-      <div className={css.Content}>
+      <div className={style.Content}>
         <h1 className={props.song
-          ? css.song
+          ? style.song
           : ''}>{props.hitokoto}</h1>
-        <p>
-          ——「 {props.from}」
-        </p>
+        <p><i>from</i>&nbsp;&nbsp;&nbsp;{props.from}</p>
       </div>
     </div>
   );
