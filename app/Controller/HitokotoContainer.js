@@ -28,7 +28,7 @@ class HitokotoContainer extends Component {
   handleNext() {
     if (!PROCESSING) {
       PROCESSING = true;
-      getHitokoto().then(json => {
+      getHitokoto(this.handleNext.bind(this)).then(json => {
         PROCESSING = false;
         this.setState({words: json.hitokoto, from: json.from, hitoid: json.id, creator: json.creator})
       }).catch(err => {

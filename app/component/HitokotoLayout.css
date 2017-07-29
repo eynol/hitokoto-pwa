@@ -130,6 +130,8 @@
     text-align: right;
     min-width: 96px;
     margin-left: 30px;
+    display: inline-block;
+    /*edge make this block  */
 }
 
 .layout_vertical .info h1::after {
