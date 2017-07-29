@@ -1,7 +1,10 @@
 .root {
     /* background-color: #c6bba5; */
-    background-color: #e7e7e7;
+    /* background-color: #e7e7e7; */
+    background-color: white;
     min-height: 100%;
+    padding-bottom: 50px;
+    position: relative;
 }
 
 .logo{
@@ -9,3 +12,20 @@
     top: 15px;
     left: 50px;
 }
+
+.logo ul {
+    display: inline-block;
+    list-style: none;
+}
+.logo ul:after{
+    content: '';
+}
+.logo ul li{
+    display: block;
+    float: left;
+}
+.logo ul li a{
+    text-decoration: none;
+    font-size: 16px;
+}
+

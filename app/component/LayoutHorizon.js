@@ -7,7 +7,7 @@ export default function LayoutHorizon(props) {
     detail;
   if (!props.img) {
     img = (
-      <div className={style.header}>
+      <div className={style.Header}>
         <img src="./ignore/thumb.jpg"/>
       </div>
     )

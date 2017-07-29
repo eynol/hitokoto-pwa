@@ -14,22 +14,21 @@ module.exports = {
       {
         test: /\.json$/,
         loader: "json"
-      },
-      {
+      }, {
         test: /\.js$/,
         exclude: /node_modules/,
         loader: 'babel'
-      },
-      {
+      }, {
         test: /\.css$/,
         loader: ExtractTextPlugin.extract('style', 'css?modules!postcss')
+      }, {
+        test: /\.(png|svg|jpg|gif)$/,
+        loader: 'file-loader'
       }
     ]
   },
 
-  postcss: [
-    require('autoprefixer')
-  ],
+  postcss: [require('autoprefixer')],
 
   plugins: [
     new HtmlWebpackPlugin({
@@ -38,8 +37,12 @@ module.exports = {
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
     }),
-    new webpack.optimize.OccurenceOrderPlugin(),
-    new webpack.optimize.UglifyJsPlugin(),
+    new webpack
+      .optimize
+      .OccurenceOrderPlugin(),
+    new webpack
+      .optimize
+      .UglifyJsPlugin(),
     new ExtractTextPlugin("[name]-[hash].css")
   ]
 }

@@ -6,6 +6,8 @@ import Card from '../component/Card'
 import LayoutHorizon from '../component/LayoutHorizon'
 import Action from '../component/Action'
 
+import nextImg from '../img/next.png'
+
 let PROCESSING = false;
 
 class HitokotoContainer extends Component {
@@ -28,7 +30,7 @@ class HitokotoContainer extends Component {
       getHitokoto().then(json => {
         PROCESSING = false;
         this.setState({words: json.hitokoto, from: json.from, id: json.id, creator: json.creator})
-      }).catch(err=>{
+      }).catch(err => {
         PROCESSING = false;
       })
     }
@@ -37,8 +39,12 @@ class HitokotoContainer extends Component {
     return (
       <div>
         <div className={style.info}>
-    <h1 title="序号">{this.state.id}</h1>
-    <p title="创建者">{this.state.creator}</p>
+          <h1>
+            <span title="序号">{this.state.id}</span>
+          </h1>
+          <p >
+            <span title="创建者">{this.state.creator}</span>
+          </p>
         </div>
         <LayoutHorizon
           img={'nothing'}
@@ -46,15 +52,16 @@ class HitokotoContainer extends Component {
           from={this.state.from}/>
         <div className='oprations'>
           <ul className={style.actions}>
-            <li className={style.next}>
-            <Action onClick={this.handleNext.bind(this)}>下一条</Action>
-            </li>
             <li>
-            <Action >喜欢</Action>
+              <a href="javascript:" className={style.love}></a>
+              <a
+                href="javascript:"
+                onClick={this
+                .handleNext
+                .bind(this)}
+                className={style.next}></a>
             </li>
-            <li>
-            <Action >查看留言</Action>
-          </li>
+            <li></li>
           </ul>
         </div>
       </div>

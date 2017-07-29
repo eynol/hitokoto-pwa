@@ -6,6 +6,7 @@
   letter-spacing: 2px;
   color: #111;
   line-height: 1.7;
+  /* font-weight: 700; */
 }
 
  a.action:hover:after{

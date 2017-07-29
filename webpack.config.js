@@ -15,22 +15,21 @@ module.exports = {
       {
         test: /\.json$/,
         loader: "json"
-      },
-      {
+      }, {
         test: /\.js$/,
         exclude: /node_modules/,
         loader: 'babel'
-      },
-      {
+      }, {
         test: /\.css$/,
         loader: 'style!css?modules!postcss'
+      }, {
+        test: /\.(png|svg|jpg|gif)$/,
+        loader: 'file-loader'
       }
     ]
   },
 
-  postcss: [
-    require('autoprefixer')
-  ],
+  postcss: [require('autoprefixer')],
 
   plugins: [
     new HtmlWebpackPlugin({
@@ -43,8 +42,8 @@ module.exports = {
   devServer: {
     colors: true,
     historyApiFallback: true,
-    port: process.env.PORT||8080,
+    port: process.env.PORT || 8080,
     inline: true,
-    hot: true,
+    hot: true
   }
 }

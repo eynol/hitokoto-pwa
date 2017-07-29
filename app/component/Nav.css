@@ -1,0 +1,89 @@
+.nav {
+    position: absolute;
+    top: 15px;
+    right: 100px;
+}
+
+.nav ul {
+    margin-top: 15px;
+    list-style: none;
+    display: block;
+    text-align: right;
+}
+
+.nav ul li {
+    display: inline-block;
+    vertical-align: top;
+    margin: 0 15px;
+}
+
+.nav ul li a {
+    position: relative;
+    text-decoration: none;
+    color: #444;
+}
+
+.nav ul li a:after {
+    content: '';
+    position: absolute;
+    left: 0px;
+    bottom: -4px;
+    background-color: black;
+    display: block;
+    height: 4px;
+    width: 100%;
+    transition: .3s ease-in-out;
+    transform: scale(1, 0);
+    transform-origin: bottom;
+}
+
+.nav ul li a:hover:after {
+    transform: scale(1, 1);
+}
+
+@media screen and (max-width: 768px) {
+    .nav {
+        position: absolute;
+        top: 60px;
+        left: 50px;
+    }
+    .nav ul {
+        list-style: none;
+        display: initial;
+        padding: 0;
+        text-align: left;
+    }
+    .nav ul li {
+        display: list-item;
+        vertical-align: top;
+        margin: 0 ;
+    }
+    .nav ul li a {
+        position: relative;
+        text-decoration: none;
+        color: #444;
+    }
+    .nav ul li a:hover:after {
+        content: '';
+        position: absolute;
+        left: -8px;
+        top: 10px;
+        background-color: black;
+        display: block;
+        height: 4px;
+        width: 4px;
+        animation: blink 1s infinite;
+    }
+}
+
+@keyframes blink {
+    0% {
+        background-color: transparent;
+    }
+    50% {
+        background-color: black;
+    }
+    100% {
+        background-color: transparent;
+    }
+}

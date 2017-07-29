@@ -1,0 +1,22 @@
+.tag {
+    position: absolute;
+    text-align: center;
+    top: 0;
+    right: 50px;
+}
+
+.tag>div {
+    display: inline-block;
+    width: 50px;
+    height: 6em;
+    background-color: black;
+    text-align: center
+}
+.tag>div>p{
+  display: inline-block;
+  width: 1em;
+  font-size: 2em;
+  color: white;
+  font-family: 'Noto Serif CJK SC', 'Source Han Serif SC', ‘Source Han Serif’, source-han-serif-sc, '宋体', serif;
+  font-weight: 900;
+}

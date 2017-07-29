@@ -1,11 +1,18 @@
 /* Global Layout Element  */
 .info{
-  padding:60px 50px 0 0;
+  padding:120px 50px 0 50px;
   margin-bottom: 15px;
 }
 
+@media screen and (max-width: 768px) {
+  .info{
+    padding:180px 50px 0 50px;
+    margin-bottom: 15px;
+  }
+  
+}
 .info h1{
-  text-align: right;
+  /* text-align: right; */
   position: relative;
   padding-bottom: 10px;
 }
@@ -14,13 +21,13 @@
   display: inline-block;
   position: absolute;
   bottom:2px;
-  right: 0;
+  left: 0;
   width: 3em;
   height: 6px;
   background-color: #333;
 }
 .info > p {
-  text-align: right;
+  /* text-align: right; */
   letter-spacing: 3px;
 }
 
@@ -52,13 +59,13 @@
 .Content>p{
 
   position: relative;
-  margin-top: 15px;
+   margin-top: 15px; 
   text-align: left;
   font-kerning: 4px;
-   padding:12px 0; 
+   /* padding:12px 0;  */
 }
-.Content>p:after{
-  content:'';
+/* .Content>p:after{
+   content:''; 
   display: inline-block;
   position: absolute;
   top:0px;
@@ -66,11 +73,37 @@
   width: 4em;
   height: 3px;
   background-color: #333;
-}
+} */
 
 ul.actions{
   list-style: none;
   margin: 25px 0;
   padding-left: 50px;
   
+}
+ul.actions a{
+text-decoration: none;
+}
+
+.actions img{
+  width: 25px;
+  vertical-align: middle
+}
+.next {
+  display: inline-block;
+  width: 36px;
+  height: 36px;
+  background: url(../img/next.png) no-repeat center;
+  background-size: contain;
+}
+
+.love{
+  display: inline-block;
+  width: 36px;
+  height: 36px;
+  background: url(../img/love1.png) no-repeat center;
+  background-size: contain;
+}
+.love:hover{
+  background-image: url(../img/love-active.png);
 }
