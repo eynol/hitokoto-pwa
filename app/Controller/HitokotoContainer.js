@@ -4,6 +4,7 @@ import style from '../component/HitokotoLayout.css'
 import getHitokoto from '../API/hitokoto'
 import Card from '../component/Card'
 import LayoutHorizon from '../component/LayoutHorizon'
+import LayoutVertical from '../component/LayoutVertical'
 import Action from '../component/Action'
 
 import nextImg from '../img/next.png'
@@ -29,43 +30,37 @@ class HitokotoContainer extends Component {
       PROCESSING = true;
       getHitokoto().then(json => {
         PROCESSING = false;
-        this.setState({words: json.hitokoto, from: json.from, id: json.id, creator: json.creator})
+        this.setState({words: json.hitokoto, from: json.from, hitoid: json.id, creator: json.creator})
       }).catch(err => {
         PROCESSING = false;
       })
     }
   }
   render() {
-    return (
-      <div>
-        <div className={style.info}>
-          <h1>
-            <span title="序号">{this.state.id}</span>
-          </h1>
-          <p >
-            <span title="创建者">{this.state.creator}</span>
-          </p>
-        </div>
-        <LayoutHorizon
-          img={'nothing'}
-          hitokoto={this.state.words}
-          from={this.state.from}/>
-        <div className='oprations'>
-          <ul className={style.actions}>
-            <li>
-              <a href="javascript:" className={style.love}></a>
-              <a
-                href="javascript:"
-                onClick={this
-                .handleNext
-                .bind(this)}
-                className={style.next}></a>
-            </li>
-            <li></li>
-          </ul>
-        </div>
-      </div>
-    )
+    let callbacks = {
+      handleNext: this
+        .handleNext
+        .bind(this)
+    };
+
+    if (this.props.vertical) {
+      return (<LayoutHorizon
+        hitoid={this.state.hitoid}
+        creator={this.state.creator}
+        img={'nothing'}
+        hitokoto={this.state.words}
+        from={this.state.from}
+        callbacks={callbacks}/>)
+    } else {
+      return (<LayoutVertical
+        hitoid={this.state.hitoid}
+        creator={this.state.creator}
+        img={'nothing'}
+        hitokoto={this.state.words}
+        from={this.state.from}
+        callbacks={callbacks}/>)
+    }
+
   }
 
 }

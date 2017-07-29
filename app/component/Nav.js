@@ -12,7 +12,7 @@ export default function Nav(props) {
           <a href="javascript:">登录</a>
         </li>
         <li>
-          <a href="javascript:">戳我添加⁄(⁄ ⁄•⁄ω⁄•⁄ ⁄)⁄</a>
+          <a href="javascript:">注册</a>
         </li>
         <li>
           <a href="javascript:">关于Hitokoto</a>
