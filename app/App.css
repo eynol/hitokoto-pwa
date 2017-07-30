@@ -1,10 +1,14 @@
 .root {
-    /* background-color: #c6bba5; */
-    /* background-color: #e7e7e7; */
-    background-color: white;
+     /* background-color: #c6bba5;  */
+     background-color: #e7e7e7; 
+     /* background-color: white;  */
     min-height: 100%;
-    padding-bottom: 50px;
+    width: 100%;
     position: relative;
+    overflow: hidden;
+     /* background: url(./img/bg-creme.jpg) no-repeat;  */
+      /* background: url(./img/bg-paper2.jpg) no-repeat;   */
+    background-size: cover;
 }
 
 .logo{

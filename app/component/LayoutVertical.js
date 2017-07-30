@@ -11,7 +11,7 @@ export default function LayoutVertical(props) {
         <p >
           <span title="创建者">{props.creator}</span>
         </p>
-        <div className='oprations'>
+        <div className={style.oprations}>
           <ul className={style.actions}>
             <li>
               <a href="javascript:" className={style.love}></a>
@@ -20,6 +20,7 @@ export default function LayoutVertical(props) {
                 onClick={props.callbacks.handleNext}
                 className={style.next}></a>
             </li>
+            <li><a href="javascript:"  onClick={props.callbacks.changeLayout}>排版</a></li>
           </ul>
         </div>
       </div>

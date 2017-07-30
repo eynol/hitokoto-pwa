@@ -2,8 +2,58 @@
     position: absolute;
     left: 0;
     right: 0;
-    bottom: 5px;
+    bottom: 16px;
     text-align: right;
     padding: 0 50px 1px 20px;
-    color:#666;
+    color: #666;
+}
+
+.copyright-open,
+.copyright-close {
+    display: none;
+}
+
+@media screen and (max-width:768px) {
+    .copyright-open,
+    .copyright-close {
+        display: initial;
+        text-align: center;
+        width: 100%;
+        position: absolute;
+        bottom: 16px;
+    }
+    .copyright-close{
+        margin-left: -10px;
+        bottom:5px;
+    }
+    .copyright-open:before {
+        content: 'i';
+        display: inline-block;
+        color: white;
+        border-radius: 10px;
+        width: 20px;
+        height: 20px;
+        background-color: #555;
+    }
+    .copyright-close:before {
+        content: 'CLOSE';
+        font-family: sans-serif;
+    }
+    .copyright {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        text-align: right;
+        padding: 20px 10px 30px;
+        color: #666;
+        text-align: left;
+        background-color: white;
+        box-shadow: 0 -5px 10px rgba(0, 0, 0, .15);
+        transition: .3s;
+        transform: translateY(200px);
+    }
+    #copyright-state:checked~.copyright {
+        transform: translateY(0);
+    }
 }

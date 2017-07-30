@@ -16,10 +16,12 @@ class HitokotoContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      words: 'example',
-      from: '??',
-      id: 23,
-      creator: 'nou'
+      words: '你看那个人好像一条狗欸~',
+      from: '中二病的世界花样多',
+      hitoid: 23,
+      creator: '超长待机飞利浦防水手机',
+      vertical: true,
+      song:true
     }
   }
   componentDidMount() {
@@ -36,14 +38,22 @@ class HitokotoContainer extends Component {
       })
     }
   }
+  changeLayout() {
+    this.setState({
+      vertical: !this.state.vertical
+    });
+  }
   render() {
     let callbacks = {
+      changeLayout: this
+        .changeLayout
+        .bind(this),
       handleNext: this
         .handleNext
         .bind(this)
     };
 
-    if (this.props.vertical) {
+    if (!this.state.vertical) {
       return (<LayoutHorizon
         hitoid={this.state.hitoid}
         creator={this.state.creator}
