@@ -35,7 +35,7 @@ module.exports = {
       template: __dirname + "/app/index.tmpl.html"
     }),
     new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)||'production'
     }),
     new webpack
       .optimize
@@ -46,3 +46,4 @@ module.exports = {
     new ExtractTextPlugin("[name]-[hash].css")
   ]
 }
+console.log(JSON.stringify(process.env.NODE_ENV))

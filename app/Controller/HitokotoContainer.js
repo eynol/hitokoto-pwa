@@ -13,7 +13,7 @@ let PROCESSING = false;
 let ClassMap = {
   'default':'inherit',
   'simsun':"'Noto Serif CJK SC', 'Source Han Serif SC', 'Source Han Serif', source-han-serif-sc, '宋体', SimSun, '华文细黑', STXihei, serif",
-  'fangsong':'Georgia, "Times New Roman", "FangSong", "仿宋", STFangSong, "华文仿宋", serif',
+  'fangsong':'Georgia,"Times New Roman", "FangSong", "仿宋", STFangSong, "华文仿宋", serif',
   'kai':'"楷体",serif'
 }
 

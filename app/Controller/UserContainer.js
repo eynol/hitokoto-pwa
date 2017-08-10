@@ -11,6 +11,7 @@ import Nav from '../component/Nav'
 import Login from '../pages/Login'
 import Regist from '../pages/Regist'
 import Setting from '../pages/Setting'
+import Apis from '../pages/Apis'
 
 class UserContainer extends Component {
 
@@ -92,7 +93,7 @@ class UserContainer extends Component {
           style={{
           backgroundColor: this.state.layout.backgroundColor,
           height: '100%',
-          overflow: 'hidden'
+          overflow: 'auto'
         }}>
           <Nav
             inline={true}
@@ -106,6 +107,7 @@ class UserContainer extends Component {
           <Route path='/login' render={loginWrap}/>
           <Route path='/regist' render={registWrap}/>
           <Route path='/setting' render={settingWrap}/>
+          <Route path='/apis' component={Apis}/>
           <Route
             path='/exit'
             render={({match, location, history}) => {
