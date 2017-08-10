@@ -4,9 +4,9 @@ import style from './login.css';
 import FullPage from '../component/FullPage'
 
 let errorStyle = {
-  display: 'block',
+  display: 'inline-block',
   margin: '5px',
-  padding: '5px',
+  padding: '14px 15px',
   backgroundColor: " #ffd9ea",
   border: 'solid 1px pink',
   borderRadius: '4px'
@@ -78,13 +78,13 @@ export default class Login extends Component {
           <h1>登录</h1>
           <p><input
             type="text"
-            placeholder="请输入您的账号"
+            placeholder="输入账号"
             onChange={this
         .handleUsernameChange
         .bind(this)}/></p>
           <p><input
             type="password"
-            placeholder="请输入您的密码"
+            placeholder="密码"
             onChange={this
         .handlePasswordChange
         .bind(this)}

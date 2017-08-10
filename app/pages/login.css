@@ -1,20 +1,22 @@
 
 .login-box{
-  text-align: center;
   padding: 20px 30px;
+  float:right;
 }
 .login-box input {
+  font-size:18px;
   border: none;
   padding: 5px ;
   margin: 5px;
-  text-align: inherit;
-  border-bottom:2px solid  #8b8b8b;
- transition: border .3s;
+  text-align: left;
+  border:1px solid #8b8b8b;
+  border-radius: 4px;
+  transition: border .3s;
   outline: none;
 }
 .login-box input:focus{
-  background-color: #e2ecff;
-  border-bottom-color:  #6d92ff;
+  /*background-color: #e2ecff;*/
+  border-color:  #6d92ff;
   outline: none;
 }
 .login-box button{
