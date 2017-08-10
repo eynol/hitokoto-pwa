@@ -33,9 +33,6 @@ let online = (props) => (
       <Link to='/new'>新增</Link>
     </li>
     <li>
-      <Link to='/setting'>设置</Link>
-    </li>
-    <li>
     <Link to='/exit' onClick={props.navCallbacks.exit}>退出</Link>
   </li>
     <li><hr/></li>

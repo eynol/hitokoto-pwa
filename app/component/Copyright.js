@@ -10,7 +10,7 @@ export default function Copyright(props) {
       <label className={openClass} htmlFor={id}></label>
       <div className={style.copyright}>
         <label className={closeClass} htmlFor={id}></label>
-        <p>Copyright &copy; 2017 hitokoto.cn 沪ICP备16031287号-1 i@loli.online QQ群：70029304</p>
+        <p>Copyright &copy;2017 heitaov.cn 蜀ICP备16001587号-1 QQ群：302713047</p>
       </div>
     </div>
   )

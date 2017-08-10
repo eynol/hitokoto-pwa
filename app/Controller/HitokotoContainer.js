@@ -10,6 +10,12 @@ import Action from '../component/Action'
 import nextImg from '../img/next.png'
 
 let PROCESSING = false;
+let ClassMap = {
+  'default':'inherit',
+  'simsun':"'Noto Serif CJK SC', 'Source Han Serif SC', 'Source Han Serif', source-han-serif-sc, '宋体', SimSun, '华文细黑', STXihei, serif",
+  'fangsong':'Georgia, "Times New Roman", "FangSong", "仿宋", STFangSong, "华文仿宋", serif',
+  'kai':'"楷体",serif'
+}
 
 class HitokotoContainer extends Component {
 
@@ -20,8 +26,7 @@ class HitokotoContainer extends Component {
       from: '中二病的世界花样多',
       hitoid: 23,
       creator: '超长待机飞利浦防水手机',
-      vertical: true,
-      song:true
+      song: true
     }
   }
   componentDidMount() {
@@ -38,29 +43,27 @@ class HitokotoContainer extends Component {
       })
     }
   }
-  changeLayout() {
-    this.setState({
-      vertical: !this.state.vertical
-    });
-  }
+
   render() {
     let callbacks = {
-      changeLayout: this
-        .changeLayout
-        .bind(this),
+     
       handleNext: this
         .handleNext
         .bind(this)
     };
 
-    if (!this.state.vertical) {
+    let {font, fontWeight,layoutHorizon, backgroundColor} = this.props.layout;
+
+    if (layoutHorizon) {
       return (<LayoutHorizon
         hitoid={this.state.hitoid}
         creator={this.state.creator}
         img={'nothing'}
         hitokoto={this.state.words}
         from={this.state.from}
-        callbacks={callbacks}/>)
+        callbacks={callbacks}
+        fontFamily={ClassMap[font]}
+        fontWeight={fontWeight}/>)
     } else {
       return (<LayoutVertical
         hitoid={this.state.hitoid}
@@ -68,7 +71,9 @@ class HitokotoContainer extends Component {
         img={'nothing'}
         hitokoto={this.state.words}
         from={this.state.from}
-        callbacks={callbacks}/>)
+        callbacks={callbacks}
+        fontFamily={ClassMap[font]}
+        fontWeight={fontWeight}/>)
     }
 
   }

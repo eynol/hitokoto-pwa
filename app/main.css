@@ -16,7 +16,8 @@ html {
 body {
     display: block;
     margin: 0;
-    font-family: "PingFang SC", "Noto Sans CJK", "Source Han Sans", "Microsoft Yahei", source-han-sans-simplified-c, sans-serif;
+
+    font-family: "PingFang SC", helvetica,"游ゴシック体","Noto Sans CJK", "Source Han Sans", 'Hiragino Sans GB', 'Microsoft Yahei Light', 'Microsoft YaHei', 'WenQuanYi Micro Hei',"Microsoft Yahei",lucida, sans-serif;
     height: 100%;
     width: 100%;
 }
@@ -39,4 +40,7 @@ a{
 body>div:first-child{
     width: 100%;
     height: 100%;
+}
+hr{
+    border:1px solid #444;
 }

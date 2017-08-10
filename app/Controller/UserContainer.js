@@ -21,14 +21,25 @@ class UserContainer extends Component {
       from: '??',
       id: 23,
       creator: 'nou',
-      background: '#fff',
-      user: null
+      user: null,
+      layout: {
+        font: 'default',
+        fontWeight:'500',
+        layoutHorizon: true,
+        backgroundColor: '#ffffff'
+      }
     }
   }
 
-  handleChangeBGColor(color) {
-    this.setState({background: color})
+  handleLayoutChange(item, nextVal) {
+    let layout = this.state.layout;
+    if (layout[item] != nextVal) {
+      layout[item] = nextVal;
+      this.setState({'layout': layout})
+    }
+    console.log(nextVal);
   }
+
   handleSignUp(info, success, error) {}
   handleSignIn(user, success, error) {
     try {
@@ -67,12 +78,21 @@ class UserContainer extends Component {
       history
       ={history}/>);
 
-    let settingWrap = ({match, location, history}) => (<Setting match={match} location={location} history ={history}/>)
+    let settingWrap = ({match, location, history}) => (<Setting
+      layout={this.state.layout}
+      changeLayout={this.handleLayoutChange.bind(this)}
+      match={match}
+      location={location}
+      history
+      ={history}/>)
 
     return (
       <Router>
-        <div style={{
-          backgroundColor: this.state.background
+        <div
+          style={{
+          backgroundColor: this.state.layout.backgroundColor,
+          height: '100%',
+          overflow: 'hidden'
         }}>
           <Nav
             inline={true}
@@ -82,7 +102,7 @@ class UserContainer extends Component {
               .handleSignOut
               .bind(this)
           }}/>
-          <HitokotoContainer/>
+          <HitokotoContainer layout={this.state.layout}/>
           <Route path='/login' render={loginWrap}/>
           <Route path='/regist' render={registWrap}/>
           <Route path='/setting' render={settingWrap}/>

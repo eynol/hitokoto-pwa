@@ -1,18 +1,19 @@
-.settingWrapper ul{
-    display:block;
-    margin: none;
-    list-style: none;
-    padding: 50px;
+.settingWrapper{
+   position: absolute; 
+  /* right: 0; */
+  background-color: white;
+  border:5px solid black;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, .16);
+  /* display: block; */
 }
-
-.settingWrapper ul li {
-  margin: 20px 0 ;
-}
-.settingWrapper .left{
+.settingWrapper dt{
   float: left;
-  width: 200px;
+  padding: 2px 0;
+  width: 6em;
+  text-align: right;
 }
-
-.settingWrapper .right{
-  margin-left: 200px;
+.settingWrapper dd{
+  padding: 3px ;
+  margin-left: 7em;
+  min-width: 50px;
 }

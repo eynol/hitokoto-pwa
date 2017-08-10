@@ -1,5 +1,6 @@
 import React from 'react';
 export default function FullPage(props) {
+  let {style:userStyle,onClick} = props;
   let style = Object.assign({
     position: 'absolute',
     top: 0,
@@ -9,9 +10,9 @@ export default function FullPage(props) {
     width: '100%',
     zIndex: '500',
     backgroundColor: 'white'
-  }, props.style);
+  },userStyle);
   return (
-    <div style={style}>
+    <div style={style} onClick={onClick}>
       {props.children}
     </div>
   )
