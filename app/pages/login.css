@@ -1,0 +1,29 @@
+
+.login-box{
+  text-align: center;
+  padding: 20px 30px;
+}
+.login-box input {
+  border: none;
+  padding: 5px ;
+  margin: 5px;
+  text-align: inherit;
+  border-bottom:2px solid  #8b8b8b;
+ transition: border .3s;
+  outline: none;
+}
+.login-box input:focus{
+  background-color: #e2ecff;
+  border-bottom-color:  #6d92ff;
+  outline: none;
+}
+.login-box button{
+  outline: none;
+  -webkit-appearance: none;
+  border: none;
+  background-color:#6d92ff;
+  color: white;
+  cursor: pointer;
+  padding: 10px 20px;
+  border-radius: 4px;
+}

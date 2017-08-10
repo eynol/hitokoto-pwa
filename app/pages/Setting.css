@@ -1,0 +1,18 @@
+.settingWrapper ul{
+    display:block;
+    margin: none;
+    list-style: none;
+    padding: 50px;
+}
+
+.settingWrapper ul li {
+  margin: 20px 0 ;
+}
+.settingWrapper .left{
+  float: left;
+  width: 200px;
+}
+
+.settingWrapper .right{
+  margin-left: 200px;
+}

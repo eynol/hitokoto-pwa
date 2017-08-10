@@ -1,29 +1,64 @@
 import React from 'react';
 import style from './Nav.css';
 
+import {HashRouter as Router, Route, Link} from 'react-router-dom'
+
 let {'nav-state': navState, 'menu-open': menuOpen, navWrapper, nav, 'menu-dimmer': menuDimmer} = style;
 
+let beforeLogin = (props) => (
+  <ul>
+    {/**
+     * <li>
+      <Link to='/api'>API</Link>
+    </li>
+     */}
+    <li>
+      <Link to='/login'>登录</Link>
+    </li>
+    <li>
+      <Link to='/regist'>注册</Link>
+    </li>
+    <li>
+      <Link to='/about'>关于Hitokoto</Link>
+    </li>
+  </ul>
+)
+
+let online = (props) => (
+  <ul>
+    <li>
+<Link to='/dashboard' title="前往个人中心">{props.user.username}</Link>
+    </li>
+    <li>
+      <Link to='/new'>新增</Link>
+    </li>
+    <li>
+      <Link to='/setting'>设置</Link>
+    </li>
+    <li>
+    <Link to='/exit' onClick={props.navCallbacks.exit}>退出</Link>
+  </li>
+    <li><hr/></li>
+    <li>
+      <Link to='/about'>关于Hitokoto</Link>
+    </li>
+  </ul>
+)
+
 export default function Nav(props) {
+  let Child = null;
+  if (props.user) {
+    Child = online;
+  } else {
+    Child = beforeLogin;
+  }
   return (
     <div className={navWrapper}>
       <input type="checkbox" id={navState} hidden/>
       <label id={menuOpen} htmlFor={navState}>&#9776;</label>
       <label htmlFor={navState} className={menuDimmer}></label>
       <div className={nav}>
-        <ul>
-          <li>
-            <a href="javascript:">API</a>
-          </li>
-          <li>
-            <a href="javascript:">登录</a>
-          </li>
-          <li>
-            <a href="javascript:">注册</a>
-          </li>
-          <li>
-            <a href="javascript:">关于Hitokoto</a>
-          </li>
-        </ul>
+        {Child(props)}
       </div>
     </div>
   )
