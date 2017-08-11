@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import style from '../component/HitokotoLayout.css'
 
-import getHitokoto from '../API/hitokoto'
+import HitokotoAPI from '../API/hitokoto'
 import Card from '../component/Card'
 import LayoutHorizon from '../component/LayoutHorizon'
 import LayoutVertical from '../component/LayoutVertical'
@@ -9,12 +9,15 @@ import Action from '../component/Action'
 
 import nextImg from '../img/next.png'
 
+let {getHitokoto} = HitokotoAPI;
+console.log(getHitokoto)
 let PROCESSING = false;
 let ClassMap = {
-  'default':'inherit',
-  'simsun':"'Noto Serif CJK SC', 'Source Han Serif SC', 'Source Han Serif', source-han-serif-sc, '宋体', SimSun, '华文细黑', STXihei, serif",
-  'fangsong':'Georgia,"Times New Roman", "FangSong", "仿宋", STFangSong, "华文仿宋", serif',
-  'kai':'"楷体",serif'
+  'default': 'inherit',
+  'simsun': "'Noto Serif CJK SC', 'Source Han Serif SC', 'Source Han Serif', source-han-serif" +
+      "-sc, '宋体', SimSun, '华文细黑', STXihei, serif",
+  'fangsong': 'Georgia,"Times New Roman", "FangSong", "仿宋", STFangSong, "华文仿宋", serif',
+  'kai': '"楷体",serif'
 }
 
 class HitokotoContainer extends Component {
@@ -46,13 +49,13 @@ class HitokotoContainer extends Component {
 
   render() {
     let callbacks = {
-     
+
       handleNext: this
         .handleNext
         .bind(this)
     };
 
-    let {font, fontWeight,layoutHorizon, backgroundColor} = this.props.layout;
+    let {font, fontWeight, layoutHorizon, backgroundColor} = this.props.layout;
 
     if (layoutHorizon) {
       return (<LayoutHorizon
