@@ -64,6 +64,7 @@
 .layout_horizon .Content>h1 {
     font-weight: 200;
     line-height: 1.9;
+    white-space: pre-line;
 }
 
 @media screen and (max-width: 768px) {
@@ -186,6 +187,7 @@ ul.actions li{
 .layout_vertical .Content>h1 {
     line-height: 2;
     font-weight: inherit;
+    white-space: pre-line;
     /* text-align: center; */
 }
 
@@ -207,6 +209,7 @@ ul.actions li{
         text-align: left;
         min-width: auto;
         margin-top: 25px;
+        margin-right: -5px;
         margin-left: 10px;
         display: inline-block;
         position: relative;

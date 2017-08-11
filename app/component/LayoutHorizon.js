@@ -27,19 +27,19 @@ export default function LayoutHorizon(props) {
             <span title="创建者">{props.creator}</span>
           </p>
         </div>
-        <h1 style={{
-          fontFamily:props.fontFamily,
-          fontWeight:props.fontWeight
+        <h1
+          style={{
+          fontFamily: props.fontFamily,
+          fontWeight: props.fontWeight
         }}>{props.hitokoto}</h1>
-        <p>
-          <i>from</i>&nbsp;&nbsp;&nbsp;{props.from}</p>
+        <p>——&nbsp;&nbsp;&nbsp;{props.from}</p>
         <div className='oprations'>
           <ul className={style.actions}>
             <li>
               <a href="javascript:" className={style.love}></a>
             </li>
             <li>
-           <Link to="/setting" >设置</Link>·<a href="javascript:" onClick={props.callbacks.handleNext}>下一条</a>
+              <Link to="/setting">设置</Link>·<a href="javascript:" onClick={props.callbacks.handleNext}>下一条</a>
             </li>
           </ul>
         </div>

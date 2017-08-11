@@ -29,7 +29,6 @@ export default class Setting extends Component {
           onClick={e => {
           console.log('wrapper click');
           e.stopPropagation();
-          e.cacleBubble = true;
           return false;
         }}>
           <dl>
@@ -42,7 +41,7 @@ export default class Setting extends Component {
               }}>
                 <option value="default">默认</option>
                 <option value="simsun">宋体</option>
-                <option value="fongsong">仿宋</option>
+                <option value="fangsong">仿宋</option>
                 <option value="kai">楷体</option>
               </select>
             </dd>

@@ -16,7 +16,7 @@ html {
 body {
     display: block;
     margin: 0;
-
+    scroll-behavior: smooth;
     font-family: "PingFang SC", helvetica,"游ゴシック体","Noto Sans CJK", "Source Han Sans", 'Hiragino Sans GB', 'Microsoft Yahei Light', 'Microsoft YaHei', 'WenQuanYi Micro Hei',"Microsoft Yahei",lucida, sans-serif;
     height: 100%;
     width: 100%;

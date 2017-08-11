@@ -73,8 +73,8 @@ export default class Login extends Component {
     }
 
     return (
-      <FullPage>
-        <div className={style['login-box']}>
+      <FullPage style={{backgroundColor:'transparent'}}   onClick={e => {this.props.history.replace('/');}}>
+        <div className={style['login-box']} onClick={e => {e.stopPropagation();return false; }}>
           <h1>登录</h1>
           <p><input
             type="text"

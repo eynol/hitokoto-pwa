@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import style from '../component/HitokotoLayout.css'
 
-import HitokotoAPI from '../API/hitokoto'
+import hitokotoDriver from '../API/hitokotoDriver'
 import Card from '../component/Card'
 import LayoutHorizon from '../component/LayoutHorizon'
 import LayoutVertical from '../component/LayoutVertical'
@@ -9,8 +9,16 @@ import Action from '../component/Action'
 
 import nextImg from '../img/next.png'
 
-let {getHitokoto} = HitokotoAPI;
-console.log(getHitokoto)
+let {getHitokoto} = hitokotoDriver;
+
+const INSTANT_HITOKOTO_NAME = "instantHitokoto";
+const DEFAULT_HITOKOTO = {
+  creator: "Tao.Da",
+  from: "张嘉佳 从你的全世界路过",
+  hitokoto: "在季节的车上，如果你要提前下车，请别推醒装睡的我，这样我可以沉睡到终点，假装不知道你已经离开。",
+  id: "1995",
+  type: "origin"
+}
 let PROCESSING = false;
 let ClassMap = {
   'default': 'inherit',
@@ -24,27 +32,21 @@ class HitokotoContainer extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      words: '你看那个人好像一条狗欸~',
-      from: '中二病的世界花样多',
-      hitoid: 23,
-      creator: '超长待机飞利浦防水手机',
-      song: true
-    }
+    this.state = getInstantHitokoto();
+    // this.state = {   hitokoto: '你看那个人好像一条狗欸~',   from: '中二病的世界花样多',   id: 23,
+    // creator: '超长待机飞利浦防水手机' }
   }
   componentDidMount() {
-    this.handleNext();
+    hitokotoDriver.registHitokotoHandler(this.hitokotoHandler.bind(this))
+    // this.handleNext();
+  }
+  hitokotoHandler(hitokoto) {
+    console.log(hitokoto)
+    this.setState(hitokoto);
+    setInstantHitokoto(hitokoto);
   }
   handleNext() {
-    if (!PROCESSING) {
-      PROCESSING = true;
-      getHitokoto(this.handleNext.bind(this)).then(json => {
-        PROCESSING = false;
-        this.setState({words: json.hitokoto, from: json.from, hitoid: json.id, creator: json.creator})
-      }).catch(err => {
-        PROCESSING = false;
-      })
-    }
+    hitokotoDriver.getHitokoto()
   }
 
   render() {
@@ -59,20 +61,20 @@ class HitokotoContainer extends Component {
 
     if (layoutHorizon) {
       return (<LayoutHorizon
-        hitoid={this.state.hitoid}
+        hitoid={this.state.id}
         creator={this.state.creator}
         img={'nothing'}
-        hitokoto={this.state.words}
+        hitokoto={this.state.hitokoto}
         from={this.state.from}
         callbacks={callbacks}
         fontFamily={ClassMap[font]}
         fontWeight={fontWeight}/>)
     } else {
       return (<LayoutVertical
-        hitoid={this.state.hitoid}
+        hitoid={this.state.id}
         creator={this.state.creator}
         img={'nothing'}
-        hitokoto={this.state.words}
+        hitokoto={this.state.hitokoto}
         from={this.state.from}
         callbacks={callbacks}
         fontFamily={ClassMap[font]}
@@ -82,4 +84,16 @@ class HitokotoContainer extends Component {
   }
 
 }
-export default HitokotoContainer
+export default HitokotoContainer;
+
+function getInstantHitokoto() {
+  let string = localStorage.getItem(INSTANT_HITOKOTO_NAME);
+  if (!string) {
+    return DEFAULT_HITOKOTO;
+  }
+  return JSON.parse(string);
+}
+
+function setInstantHitokoto(hitokoto) {
+  localStorage.setItem(INSTANT_HITOKOTO_NAME,JSON.stringify(hitokoto));
+}

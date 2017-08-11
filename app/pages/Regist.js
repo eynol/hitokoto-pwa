@@ -24,8 +24,8 @@ export default class Regist extends Component {
   }
   render() {
     return (
-      <FullPage>
-        <div className={style['login-box']}>
+      <FullPage style={{backgroundColor:'transparent'}}  onClick={e => {this.props.history.replace('/');}} >
+        <div className={style['login-box']}  onClick={e => {e.stopPropagation();return false; }} >
           <h1>注册</h1>
           <p><input type="text" placeholder="请输入您的账号"/></p>
           <p><input type="password" placeholder="请输入您的密码"/></p>
