@@ -1,4 +1,4 @@
-import {SOURCES} from './SourceManager';
+import SourceManager, {SOURCES} from './SourceManager';
 
 const PREFIX = 'hikotoko';
 
@@ -22,6 +22,7 @@ export const PATTERNS = [
     default: false
   }
 ];
+const SOURCE_UPDATE_KEYS = ['name','url','adapter'];
 const PATTERNS_NAME = PREFIX + 'patterns';
 //    工具函数开始 ///////////////////////////////////////////////////
 function $getVersion() {
@@ -50,14 +51,15 @@ function $setPatterns(patterns) {
   }
 }
 
-export default class PatternManager {
+export default class PatternManager extends SourceManager {
 
   constructor() {
+    super();
     //  1.获取本地版本号,_Version，如果没有,将VERSION保存到本地，返回文件中的静态变量VERSION
-    this.version = $getVersion()
-    if (!this.version) {
+    this.version_pattern = $getVersion()
+    if (!this.version_pattern) {
       $setVersion(VERSION);
-      this.version = VERSION;
+      this.version_pattern = VERSION;
     }
 
     //2.获取本地存储的所有的hikotoko来源,_Sources，如果本地没有，将SOURCE保存到本地并作为结果返回
@@ -72,7 +74,7 @@ export default class PatternManager {
       *    3.1   从SOURCE中找出_Sources中缺少的来源，追加到_Sources中。依据的标准是URL
       *    3.2   如果有修改，保存_Sources到本地;
       */
-    if (VERSION > this.version) {
+    if (VERSION > this.version_pattern) {
       //  用map缓存已有的本地的url
       let urlMap = {};
       let needUpdatePatterns = false;
@@ -95,12 +97,39 @@ export default class PatternManager {
       }
     }
   }
+  updateSource(id, source) {
+    super.updateSource(id, source);// 让source去更新全部的sources
+    //  更新所有pattern的来源
+    this.patterns.forEach((pattern)=>{
+      pattern.sources.forEach((oldSource,index)=>{
+        if(oldSource.id == id){
+          SOURCE_UPDATE_KEYS.forEach((key)=>{
+            oldSource[key]=source[key];
+          })
+        }
+      });
+    });
+    $setPatterns(this.patterns);//  保存修改到本地
+  }
+  deleteSource(id){
+    super.deleteSource(id);
+     //  更新所有pattern的来源
+     this.patterns.forEach((pattern)=>{
+      pattern.sources.forEach((oldSource,index)=>{
+        if(oldSource.id == id){
+          pattern.sources.splice(index,1);
+        }
+      });
+    });
+    $setPatterns(this.patterns);//  保存修改到本地
+  }
   newPattern(pattern) {
     this
       .patterns
       .push(pattern);
     $setPatterns(this.patterns);
   }
+ 
   updatePattern(index, pattern) {
     this.patterns[index] = pattern;
     $setPatterns(this.patterns);
@@ -117,10 +146,21 @@ export default class PatternManager {
     }
     $setPatterns(this.patterns);
   }
+  setDefaultPattern(id){
+    this.patterns.forEach((pattern)=>{
+      if(pattern.id==id){
+        pattern.default = true;
+      }else{
+        pattern.default = false;
+      }
+    });
+    
+    $setPatterns(this.patterns);
+  }
   getDefaultPattern() {
     for (let i = 0, len = this.patterns.length; i < len; i++) {
       let pattern = this.patterns[i];
-      if(pattern.default){
+      if (pattern.default) {
         return pattern;
       }
     }

@@ -19,7 +19,10 @@ let beforeLogin = (props) => (
       <Link to='/regist'>注册</Link>
     </li>
     <li>
-      <Link to='/apis'>API管理</Link>
+    <Link to='/sources'>来源管理</Link>
+  </li>
+    <li>
+      <Link to='/patterns'>模式管理</Link>
     </li>
     <li>
       <Link to='/about'>关于Hitokoto</Link>
@@ -40,7 +43,10 @@ let online = (props) => (
     </li>
     <li><hr/></li>
     <li>
-      <Link to='/apis'>API管理</Link>
+    <Link to='/sources'>来源管理</Link>
+    </li>
+    <li>
+      <Link to='/patterns'>模式管理</Link>
     </li>
     <li>
       <Link to='/about'>关于Hitokoto</Link>

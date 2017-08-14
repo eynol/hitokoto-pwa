@@ -1,0 +1,85 @@
+
+.close-button {
+  float: right;
+  position: relative;
+  color: hsla(0,0%,100%,.3);
+  cursor: pointer;
+  text-decoration: none;
+  vertical-align: middle;
+}
+.close-button:before{
+  display: inline-block;
+  position: absolute;
+  right: 0;
+  width: 16px;
+  height: 3px;
+  border-radius: 5px;
+  background-color: rgba(0,0,0,.56);
+}
+.close-button:hover {
+  color: #303030;
+  -webkit-transition: color .3s;
+  transition: color .3s;
+  text-decoration: none;
+}
+i.icon{
+  display: inline-block;
+  width: 36px;
+  height: 36px;
+  line-height: 36px;
+  vertical-align: top;
+}
+i.close{
+  background: url(../img/icon-close.png) no-repeat center;
+  background-size: contain;
+}
+.clearfix{
+  position: relative;
+}
+.clearfix:after{
+  content: '';
+  clear: both;
+  display: table;
+}
+.sourcesList{
+  list-style: none;
+}
+.sourcesList li{
+  margin: .3em 0;
+}
+.delete-button{
+  color:red;
+}
+i.back{
+  background: url(../img/icon-back.png) no-repeat center;
+  background-size: contain;
+}
+.backButton{
+  display: none;
+  float: left;
+  position: relative;
+
+  margin-right: 10px;
+  color: hsla(0,0%,100%,.3);
+  cursor: pointer;
+  text-decoration: none;
+  vertical-align: middle;
+}
+.backButton .back{
+  width: 24px;
+  height: 24px;
+}
+.ellipsis{
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+@media screen and (max-width:768px){
+  .manageBox {margin-top: -20px;}
+  .manageBox > hr{border-color: transparent;}
+  .manageBox .close-button {display: none;}
+  .manageBox .backButton{ display: block;float: left;}
+  .manageBox h1{ font-weight: normal;font-size: 24px;}
+  
+}

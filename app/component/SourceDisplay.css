@@ -1,0 +1,36 @@
+.displaybox{
+  background-color: white;
+}
+@media screen and (max-width: 768px){
+  .displaybox{
+    margin-top: -20px;
+  }
+}
+.form input{
+  border: none;
+  width: 100%;
+  outline: none;
+  border-bottom: 1px dashed gray;
+  margin-bottom: 2em;
+  text-overflow: ellipsis;
+}
+.form input:focus{
+  border-bottom: 1px solid #6d92ff;
+}
+
+.form textarea{
+  border: dashed 1px gray;
+  white-space: pre;
+  width: 100%;
+}
+.form textarea:focus{
+  border: 1px solid #6d92ff;
+}
+.basicButton{
+  background-color: #a6a6a6;
+
+}
+
+.deleteButton{
+  background-color:#f00056;
+}

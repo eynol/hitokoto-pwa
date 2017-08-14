@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import style from '../component/HitokotoLayout.css'
 import {HashRouter as Router, Route, Redirect} from 'react-router-dom'
 
-import getHitokoto from '../API/hitokotoDriver'
+import hitokotoDriver from '../API/hitokotoDriver'
 import Card from '../component/Card'
 
 import HitokotoContainer from './HitokotoContainer'
@@ -11,7 +11,8 @@ import Nav from '../component/Nav'
 import Login from '../pages/Login'
 import Regist from '../pages/Regist'
 import Setting from '../pages/Setting'
-import Apis from '../pages/Apis'
+import Patterns from '../pages/Patterns'
+import Sources from '../pages/Sources'
 
 const INSTANT_LAYOUT_NAME = 'instant_layout';
 const DEFAULT_LAYOUT ={
@@ -112,11 +113,12 @@ class UserContainer extends Component {
           <Route path='/login' render={loginWrap}/>
           <Route path='/regist' render={registWrap}/>
           <Route path='/setting' render={settingWrap}/>
-          <Route path='/apis' component={Apis}/>
+          <Route path='/patterns' component={Patterns}/>
+          <Route path='/sources' component={Sources}/>
           <Route
             path='/exit'
             render={({match, location, history}) => {
-            return (<Redirect to="/somewhere/else"/>)
+            return (<Redirect to="/"/>)
           }}/>
         </div>
       </Router>

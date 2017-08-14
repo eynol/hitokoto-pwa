@@ -5,9 +5,10 @@ const VERSION_NAME = PREFIX + 'sources_version';
 
 export const SOURCES = [
   {
+    id: 1001,
     name: 'hitokoto.cn',
     url: 'http://api.hitokoto.cn/',
-    resolve: 0,
+    adapter: 0,
     online: true,
     local: true
   }
@@ -44,10 +45,10 @@ export default class SourceManager {
 
   constructor() {
     //  1.获取本地版本号,_Version，如果没有,将VERSION保存到本地，返回文件中的静态变量VERSION
-    this.version = $getVersion()
-    if (!this.version) {
+    this.version_source = $getVersion()
+    if (!this.version_source) {
       $setVersion(VERSION);
-      this.version = VERSION;
+      this.version_source = VERSION;
     }
 
     //2.获取本地存储的所有的hikotoko来源,_Sources，如果本地没有，将SOURCE保存到本地并作为结果返回
@@ -62,7 +63,7 @@ export default class SourceManager {
      *    3.1   从SOURCE中找出_Sources中缺少的来源，追加到_Sources中。依据的标准是URL
      *    3.2   如果有修改，保存_Sources到本地;
      */
-    if (VERSION > this.version) {
+    if (VERSION > this.version_source) {
       //  用map缓存已有的本地的url
       let urlMap = {};
       let needUpdateSource = false;
@@ -86,7 +87,6 @@ export default class SourceManager {
     }
 
   }
- 
 
   newSource(source) {
     this
@@ -94,13 +94,17 @@ export default class SourceManager {
       .push(source);
     $setSources(this.sources);
   }
-  updateSource(index, source) {
-    this.sources[index] = source;
+  updateSource(id, source) {
+    for (var i = 0, len = this.sources.length; i < len; i++) {
+      if (this.sources[i].id == id) {
+        this.sources[i] = source;
+      }
+    }
     $setSources(this.sources);
   }
-  deleteSource(url) {
+  deleteSource(id) {
     for (var i = 0, len = this.sources.length; i < len; i++) {
-      if (this.sources[i].url == url) {
+      if (this.sources[i].id == id) {
         this
           .sources
           .splice(i, 1);

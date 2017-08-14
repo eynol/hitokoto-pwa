@@ -44,3 +44,14 @@ body>div:first-child{
 hr{
     border:1px solid #444;
 }
+
+button{
+  outline: none;
+  -webkit-appearance: none;
+  border: none;
+  background-color:#0095d9 ;
+  color: white;
+  cursor: pointer;
+  padding: .6em 1.9em;  
+  border-radius: 4px;
+}

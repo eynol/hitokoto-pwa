@@ -9,8 +9,7 @@ import Action from '../component/Action'
 
 import nextImg from '../img/next.png'
 
-let {getHitokoto} = hitokotoDriver;
-
+console.log(hitokotoDriver);
 const INSTANT_HITOKOTO_NAME = "instantHitokoto";
 const DEFAULT_HITOKOTO = {
   creator: "Tao.Da",
@@ -33,20 +32,19 @@ class HitokotoContainer extends Component {
   constructor(props) {
     super(props);
     this.state = getInstantHitokoto();
+    hitokotoDriver.registHitokotoHandler(this.hitokotoHandler.bind(this)).start()
+
     // this.state = {   hitokoto: '你看那个人好像一条狗欸~',   from: '中二病的世界花样多',   id: 23,
     // creator: '超长待机飞利浦防水手机' }
   }
-  componentDidMount() {
-    hitokotoDriver.registHitokotoHandler(this.hitokotoHandler.bind(this))
-    // this.handleNext();
-  }
+  
   hitokotoHandler(hitokoto) {
     console.log(hitokoto)
     this.setState(hitokoto);
     setInstantHitokoto(hitokoto);
   }
   handleNext() {
-    hitokotoDriver.getHitokoto()
+    hitokotoDriver.next()
   }
 
   render() {

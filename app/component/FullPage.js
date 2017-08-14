@@ -18,6 +18,7 @@ export default function FullPage(props) {
     bottom: 0,
     width: '100%',
     zIndex: '500',
+    overflow: 'auto',
     backgroundColor: 'white'
   }, userStyle);
   return (
