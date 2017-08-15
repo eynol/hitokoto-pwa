@@ -71,14 +71,16 @@ export default class SourceDisplay extends Component {
   render() {
     let props = this.props;
     let source = props.source;
-    let areaheight = 5;
+    let areaheight ;
     if (source && typeof source.adapter == 'string') {
       areaheight = source
         .adapter
         .split('\n')
         .length
     }
-
+    if(areaheight<10){
+      areaheight  = 10;
+    }
     let oprations;
     if (source) {
       oprations = (
@@ -109,7 +111,7 @@ export default class SourceDisplay extends Component {
     source = source || {};
     return (
       <FullPage style={{
-        padding: '50px 30px'
+        padding: '30px 30px'
       }}>
         <div className={style.displaybox}>
           <h1>{props.title}</h1>
@@ -138,6 +140,7 @@ export default class SourceDisplay extends Component {
               : source.adapter}
               placeholder='PS:不要在此粘贴来历不明的代码！'/>
           </div>
+          <br/>
           {oprations}
         </div>
       </FullPage>

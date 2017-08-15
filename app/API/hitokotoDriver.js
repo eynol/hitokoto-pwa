@@ -86,14 +86,14 @@ class HitokotoDriver {
   }
   start() {
     let {interval, type} = this.pattern;
+    clearInterval(this.timer);
     if (interval && interval >= 5) {
-      clearInterval(this.timer);
 
       this.timer = setInterval(() => {
         if (!this.timerDisabled) {
           this.next();
         }
-      }, interval);
+      }, interval*1000);
     }
     //挂载 next
     this.next = (id) => {
@@ -159,6 +159,14 @@ class HitokotoDriver {
     });
     this.drive(this.pattern);
     this.start();
+  }
+  updatePattern(id,pattern){
+    this.patterManager.updatePattern(id,pattern);
+    if(this.pattern.id == id){
+      let pattern = this.patterManager.getPatternById(id);
+      this.drive(pattern);
+      this.start();
+    }
   }
 }
 

@@ -1,6 +1,6 @@
 const PREFIX = 'hikotoko';
 
-export const VERSION = '20170811';
+export const VERSION = '2017081401';
 const VERSION_NAME = PREFIX + 'sources_version';
 
 export const SOURCES = [
@@ -9,6 +9,23 @@ export const SOURCES = [
     name: 'hitokoto.cn',
     url: 'http://api.hitokoto.cn/',
     adapter: 0,
+    online: true,
+    local: true
+  },
+  {
+    id: 1002,
+    name: 'hitoapi.cc',
+    url: 'https://hitoapi.cc/s/',
+    adapter: 'function(resp){return { type:resp.catname,creator:resp.author,created_at:resp.date,id:resp.id,hitokoto:resp.text,from:resp.source}}',
+    online: true,
+    local: true
+  }
+  ,
+  {
+    id: 1005,
+    name: 'hitoapi.cc',
+    url: 'https://hitoapi.cc/sp/',
+    adapter: 'function(resp){return { type:resp.catname,creator:resp.author,created_at:resp.date,id:resp.id,hitokoto:resp.text,from:resp.source}}',
     online: true,
     local: true
   }
@@ -72,7 +89,7 @@ export default class SourceManager {
         .forEach(function (item) {
           urlMap[item.url] = true;
         });
-      SOURCES.forEach(function (src) {
+      SOURCES.forEach( (src) =>{
         if (!urlMap[src.url]) {
           //url不存在,添加至_sources
           this

@@ -89,11 +89,14 @@ class Sources extends Component {
     }
   }
   handleDeleteSource(id) {
-    hitokotoDriver
-      .patterManager
-      .deleteSource(id);
+    if (confirm('确认删除该来源？')) {
 
-    this.setState({update: undefined})
+      hitokotoDriver
+        .patterManager
+        .deleteSource(id);
+
+      this.setState({update: undefined})
+    }
   }
   hideUpdate() {
     this.setState({update: undefined});
@@ -109,8 +112,7 @@ class Sources extends Component {
               <button
                 onClick={this
                 .showUpdate
-                .bind(this, source.id)}>修改</button>
-              {source.name}
+                .bind(this, source.id)}>修改</button>&nbsp; {source.name}
               - {source.url}</p>
           </li>
         )
@@ -158,7 +160,7 @@ class Sources extends Component {
 
     return (
       <FullPage style={{
-        padding: '50px 30px'
+        padding: '30px'
       }}>
         <div className={manageBox}>
           <h1 className={clearfix}>来源管理

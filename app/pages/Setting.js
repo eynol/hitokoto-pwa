@@ -8,9 +8,40 @@ import {settingWrapper, left, right} from './Setting.css'
 export default class Setting extends Component {
 
   render() {
-    let {font, fontWeight, layoutHorizon, backgroundColor} = this.props.layout;
+    let {
+      changeLayout,
+      patterns,
+      layout: {
+        font,
+        fontWeight,
+        layoutHorizon,
+        backgroundColor
+      },
+      patternChange
+    } = this.props;
 
-    let changeLayout = this.props.changeLayout;
+    let patternOptions,
+      defaultPatternID;
+    if (patterns) {
+      patternOptions = patterns.map((pattern) => {
+        if (pattern.default) {
+          defaultPatternID = pattern.id;
+        }
+        return (
+          <option key={pattern.id} value={pattern.id}>{pattern.name}</option>
+        )
+      })
+      patternOptions = (
+        <span>
+          <dt>模式</dt>
+          <dd>
+            <select name="mode" onChange={event=>{
+              patternChange(event.target.value);
+            }} defaultValue={defaultPatternID}>{patternOptions}</select>
+          </dd>
+        </span>
+      )
+    }
 
     return (
       <FullPage
@@ -84,6 +115,7 @@ export default class Setting extends Component {
               }}
                 value={backgroundColor}/>
             </dd>
+            {patternOptions}
           </dl>
         </div>
       </FullPage>

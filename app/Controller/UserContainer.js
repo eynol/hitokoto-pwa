@@ -13,15 +13,15 @@ import Regist from '../pages/Regist'
 import Setting from '../pages/Setting'
 import Patterns from '../pages/Patterns'
 import Sources from '../pages/Sources'
+import About from '../pages/About'
 
 const INSTANT_LAYOUT_NAME = 'instant_layout';
-const DEFAULT_LAYOUT ={
+const DEFAULT_LAYOUT = {
   font: 'simsun',
-  fontWeight:'600',
+  fontWeight: '600',
   layoutHorizon: false,
   backgroundColor: '#ffffff'
 }
-
 
 class UserContainer extends Component {
 
@@ -46,7 +46,11 @@ class UserContainer extends Component {
     }
     console.log(nextVal);
   }
-
+  handlePatternChange(id){
+    let pattern = hitokotoDriver.patterManager.getPatternById(id);
+    hitokotoDriver.drive(pattern);
+    hitokotoDriver.start();
+  }
   handleSignUp(info, success, error) {}
   handleSignIn(user, success, error) {
     try {
@@ -87,7 +91,11 @@ class UserContainer extends Component {
 
     let settingWrap = ({match, location, history}) => (<Setting
       layout={this.state.layout}
-      changeLayout={this.handleLayoutChange.bind(this)}
+      changeLayout={this
+      .handleLayoutChange
+      .bind(this)}
+      patterns={hitokotoDriver.patterManager.patterns}
+      patternChange={this.handlePatternChange.bind(this)}
       match={match}
       location={location}
       history
@@ -111,6 +119,7 @@ class UserContainer extends Component {
           }}/>
           <HitokotoContainer layout={this.state.layout}/>
           <Route path='/login' render={loginWrap}/>
+          <Route path='/about' component={About}/>
           <Route path='/regist' render={registWrap}/>
           <Route path='/setting' render={settingWrap}/>
           <Route path='/patterns' component={Patterns}/>
@@ -128,13 +137,13 @@ class UserContainer extends Component {
 }
 export default UserContainer;
 
-function getInstantLayout(){
+function getInstantLayout() {
   let string = localStorage.getItem(INSTANT_LAYOUT_NAME);
   if (!string) {
     return DEFAULT_LAYOUT;
   }
   return JSON.parse(string);
 }
-function setInstantLayout(layout){
-   localStorage.setItem(INSTANT_LAYOUT_NAME,JSON.stringify(layout));
+function setInstantLayout(layout) {
+  localStorage.setItem(INSTANT_LAYOUT_NAME, JSON.stringify(layout));
 }
