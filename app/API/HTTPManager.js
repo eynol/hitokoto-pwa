@@ -1,8 +1,17 @@
+const TOKEN_NAME = 'hitokotoToken'
+
+function $getLSToken() {
+  return localStorage.getItem(TOKEN_NAME + 'localStored');
+}
+function $setLSToken(token) {
+  localStorage.setItem(TOKEN_NAME + 'localStored', token);
+}
+
 export default class HTTPManager {
   constructor() {
 
     this.initQ = []; //  暂存Promise未polyfill完成前的请求；
-   
+    this.token = $getLSToken() || '';
     //promise polyfill
     let _that = this;
 
@@ -30,6 +39,10 @@ export default class HTTPManager {
 
     }
   }
+  updateToken(token) {
+    this.token = token;
+    $setLSToken(token);
+  }
   afterInited() {
     while (this.initQ.length) {
       let walker = this
@@ -45,14 +58,13 @@ export default class HTTPManager {
     let _that = this;
 
     if (this.inited) {
-      return fetch(url)
-        .then(resp => resp.json())
+      return fetch(url).then(resp => resp.json())
     } else {
 
-      let chain = [];// store then and catch functions;
+      let chain = []; // store then and catch functions;
       let ret = {
         then: function (func) {
-          chain.push({t: true, f: func});// store as then function
+          chain.push({t: true, f: func}); // store as then function
           return this;
         }, catch: function (func) {
           chain.push({t: false, f: func}); //store as catch function
@@ -73,9 +85,27 @@ export default class HTTPManager {
       }
       this
         .initQ
-        .push(walker);//
-     
+        .push(walker); //
+
       return ret
     }
+  }
+  AUTH_requst() {}
+
+  API_login(formData) {
+    return fetch('/api/login', {
+        method: 'POST',
+        body: formData
+      })
+      .then(resp => resp.json())
+      .catch(e => Promise.reject('请求出错：' + e))
+  }
+  API_regist(formData) {
+    return fetch('/api/regist', {
+        method: 'POST',
+        body: formData
+      })
+      .then(resp => resp.json())
+      .catch(e => Promise.reject('请求出错：' + e))
   }
 }

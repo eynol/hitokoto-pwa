@@ -1,9 +1,8 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
-
+import QueueAnim from 'rc-queue-anim';
 import hitokotoDriver from '../API/hitokotoDriver'
-
-import FullPage from '../component/FullPage'
+import FullPageCard from '../component/FullPageCard'
 import SourceDisplay from '../component/SourceDisplay'
 import style from './UI.css';
 
@@ -42,7 +41,7 @@ class Sources extends Component {
           hitokotoDriver
             .patterManager
             .newSource(source);
-          this.setState({newSource: undefined})
+          this.setState({sources: hitokotoDriver.patterManager.sources, newSource: undefined})
         })
         .catch((e) => {
           if (typeof e == 'string') {
@@ -59,6 +58,9 @@ class Sources extends Component {
       this.setState({newSource: undefined})
     }
 
+  }
+  hideNewSource() {
+    this.setState({newSource: undefined})
   }
   showUpdate(id) {
     this.setState({update: id});
@@ -153,15 +155,14 @@ class Sources extends Component {
           .handleNewSource
           .bind(this),
         hide: this
-          .hideUpdate
+          .hideNewSource
           .bind(this)
       }}/>)
     }
 
     return (
-      <FullPage style={{
-        padding: '30px'
-      }}>
+
+      <FullPageCard>
         <div className={manageBox}>
           <h1 className={clearfix}>来源管理
             <Link to='/' className={closeButton}>
@@ -176,19 +177,23 @@ class Sources extends Component {
             <i>Tips:</i>
             在这里添加其他域名下的hitokoto一言接口，然后在<Link to='/patterns'>模式管理</Link>中使用哦~</p>
           <div>
-            <ul className={sourcesList}>
+            <QueueAnim component="ul" className={sourcesList}>
               {lists}
-              <li>
+              <li key="new">
                 <button
                   onClick={this
                   .showNewSource
-                  .bind(this)}>添加</button>
+                  .bind(this)}
+                  style={{
+                  float: 'right'
+                }}>添加</button>
               </li>
-            </ul>
+            </QueueAnim>
           </div>
           {sourceDisplayC}
         </div>
-      </FullPage>
+      </FullPageCard>
+
     );
   }
 }

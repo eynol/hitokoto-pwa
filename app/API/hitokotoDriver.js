@@ -1,9 +1,16 @@
 import 'whatwg-fetch';
-import PatternManager,{SOURCE_UPDATE_KEYS} from './PatternManager'
+import PatternManager, {SOURCE_UPDATE_KEYS} from './PatternManager'
 import HTTPManager from './HTTPManager'
 import {PERSE_ADAPTER_SAFE, AdapterValidate, PERSE_ADAPTER} from './AdapterValidate'
 
-const HITOKOTO_KEYS = ['id','hitokoto','creator','type','from','created_at']
+const HITOKOTO_KEYS = [
+  'id',
+  'hitokoto',
+  'creator',
+  'type',
+  'from',
+  'created_at'
+]
 
 class HitokotoDriver {
   constructor() {
@@ -26,6 +33,8 @@ class HitokotoDriver {
     return this.sources[Math.floor(Math.random() * this.sources.length)]
   }
   drive(pattern) {
+    console.log(this.timer, '清空计时器');
+    clearInterval(this.timer);
     this.pattern = pattern;
     this.sources = pattern.sources;
 
@@ -66,19 +75,19 @@ class HitokotoDriver {
       .request(url)
       .then(adapter)
       .then((hitokoto) => {
-        console.log('[test.adapter.result]',hitokoto);
-        if(!hitokoto){
+        console.log('[test.adapter.result]', hitokoto);
+        if (!hitokoto) {
           return Promise.reject(hitokoto);
-        }else{
+        } else {
           let missed = [];
-          HITOKOTO_KEYS.forEach((key)=>{
-            if(!hitokoto[key]){
+          HITOKOTO_KEYS.forEach((key) => {
+            if (!hitokoto[key]) {
               missed.push(key);
             }
           });
-          if(missed.length>0){
-            return Promise.reject('返回的对象中缺少成员：'+JSON.stringify(missed));
-          }else{
+          if (missed.length > 0) {
+            return Promise.reject('返回的对象中缺少成员：' + JSON.stringify(missed));
+          } else {
             return Promise.resolve(hitokoto);
           }
         }
@@ -86,14 +95,13 @@ class HitokotoDriver {
   }
   start() {
     let {interval, type} = this.pattern;
-    clearInterval(this.timer);
     if (interval && interval >= 5) {
 
       this.timer = setInterval(() => {
         if (!this.timerDisabled) {
           this.next();
         }
-      }, interval*1000);
+      }, interval * 1000);
     }
     //挂载 next
     this.next = (id) => {
@@ -149,21 +157,30 @@ class HitokotoDriver {
       .then(this.responseHandler);
   }
   updateSource(id, source) {
-    this.patterManager.updateSource(id,source);
-    this.pattern.sources.forEach((oldSource)=>{
-      if(oldSource.id==id){
-        SOURCE_UPDATE_KEYS.forEach((k)=>{
-          oldSource[k]=source[k];
-        })
-      }
-    });
+    this
+      .patterManager
+      .updateSource(id, source);
+    this
+      .pattern
+      .sources
+      .forEach((oldSource) => {
+        if (oldSource.id == id) {
+          SOURCE_UPDATE_KEYS.forEach((k) => {
+            oldSource[k] = source[k];
+          })
+        }
+      });
     this.drive(this.pattern);
     this.start();
   }
-  updatePattern(id,pattern){
-    this.patterManager.updatePattern(id,pattern);
-    if(this.pattern.id == id){
-      let pattern = this.patterManager.getPatternById(id);
+  updatePattern(id, pattern) {
+    this
+      .patterManager
+      .updatePattern(id, pattern);
+    if (this.pattern.id == id) {
+      let pattern = this
+        .patterManager
+        .getPatternById(id);
       this.drive(pattern);
       this.start();
     }

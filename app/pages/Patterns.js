@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
-import FullPage from '../component/FullPage'
+import FullPageCard from '../component/FullPageCard'
 import PatternDisplay from '../component/PatternDisplay'
+import QueueAnim from 'rc-queue-anim';
 
 import hitokotoDriver from '../API/hitokotoDriver'
 
@@ -31,29 +32,35 @@ class Patterns extends Component {
     this.setState({update: id});
   }
   handleUpdate(id, pattern) {
-    hitokotoDriver.updatePattern(id,pattern);
+    hitokotoDriver.updatePattern(id, pattern);
     this.hideUpdate();
-    this.setState({pattern:this.state.patterns})
+    this.setState({pattern: this.state.patterns})
   }
   hideUpdate() {
     this.setState({update: undefined})
   }
-  handleDelete(id){
-    if(confirm('你确认要删除该模式？')){
-      hitokotoDriver.patterManager.deletePattern(id);
+  handleDelete(id) {
+    if (confirm('你确认要删除该模式？')) {
+      hitokotoDriver
+        .patterManager
+        .deletePattern(id);
       this.hideUpdate()
     }
   }
-  showNewPattern(){
-    this.setState({newPattern:Date.now()});
+  showNewPattern() {
+    this.setState({
+      newPattern: Date.now()
+    });
   }
-  hideNewPattern(){
-    this.setState({newPattern:undefined});
+  hideNewPattern() {
+    this.setState({newPattern: undefined});
   }
-  handleNewPattern(pattern){
-    hitokotoDriver.patterManager.newPattern(pattern);
+  handleNewPattern(pattern) {
+    hitokotoDriver
+      .patterManager
+      .newPattern(pattern);
     this.hideNewPattern();
-    this.setState({pattern:hitokotoDriver.patterManager.patterns})
+    this.setState({pattern: hitokotoDriver.patterManager.patterns})
   }
   render() {
 
@@ -67,9 +74,10 @@ class Patterns extends Component {
               <button
                 onClick={this
                 .showUpdate
-                .bind(this, pattern.id)}>修改</button>&nbsp; 
-                {pattern.name}{pattern.default?'（当前默认模式）':''}
-              </p>
+                .bind(this, pattern.id)}>修改</button>&nbsp; {pattern.name}{pattern.default
+                ? '（当前默认模式）'
+                : ''}
+            </p>
           </li>
         )
       })
@@ -87,28 +95,37 @@ class Patterns extends Component {
           }
         })
 
-      patternDisplay = (<PatternDisplay 
+      patternDisplay = (<PatternDisplay
         pattern={patternToUpdate}
         title="修改"
         sources={hitokotoDriver.patterManager.sources}
         hook={{
-        hide:this.hideUpdate.bind(this),
-        update:this.handleUpdate.bind(this),
-        delete:this.handleDelete.bind(this)
+        hide: this
+          .hideUpdate
+          .bind(this),
+        update: this
+          .handleUpdate
+          .bind(this),
+        delete: this
+          .handleDelete
+          .bind(this)
       }}/>)
     } else if (this.state.newPattern) {
-      patternDisplay = (<PatternDisplay 
+      patternDisplay = (<PatternDisplay
         title="新增"
         sources={hitokotoDriver.patterManager.sources}
         hook={{
-        hide:this.hideNewPattern.bind(this),
-        newPattern:this.handleNewPattern.bind(this)
+        hide: this
+          .hideNewPattern
+          .bind(this),
+        newPattern: this
+          .handleNewPattern
+          .bind(this)
       }}/>)
     }
     return (
-      <FullPage style={{
-        padding: '30px 30px'
-      }}>
+
+      <FullPageCard>
         <div className={manageBox}>
           <input type="radio" name="pattern-tab" value="pattern" hidden/>
           <input type="radio" name="pattern-tab" value="api" hidden/>
@@ -122,16 +139,22 @@ class Patterns extends Component {
           </h1>
           <hr/>
           <div>
-            <ul className={sourcesList}>
+            <QueueAnim component="ul" className={sourcesList}>
               {lists}
-              <li>
-                <button onClick={this.showNewPattern.bind(this)} >添加</button>
+              <li key="new">
+                <button
+                  onClick={this
+                  .showNewPattern
+                  .bind(this)}
+                  style={{
+                  float: 'right'
+                }}>添加</button>
               </li>
-            </ul>
+            </QueueAnim>
           </div>
         </div>
         {patternDisplay}
-      </FullPage>
+      </FullPageCard>
     );
   }
 }

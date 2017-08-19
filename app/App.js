@@ -33,7 +33,12 @@ function exitFullscreen() {
 
 let Logo = (props) => {
   return (
-    <div className={style.logo} onClick={props.clickCallback} style={{cursor: 'pointer'}}>
+    <div
+      className={style.logo}
+      onClick={props.clickCallback}
+      style={{
+      cursor: 'pointer'
+    }}>
       <h1 title="点击此处开启全屏或退出全屏">Hitokoto</h1>
     </div>
   )
@@ -48,17 +53,17 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      exitFS:false,
+      exitFS: false,
       fullscreenEnabled: document.fullscreenEnabled || document.mozFullScreenEnabled || document.webkitFullscreenEnabled || document.msFullscreenEnabled
     }
   }
   requestFullScreen(event) {
-    if(this.state.fullscreenEnabled){
-      let  fullscreenElement = document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement || document.msFullscreenElement;
-      if(fullscreenElement){
+    if (this.state.fullscreenEnabled) {
+      let fullscreenElement = document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement || document.msFullscreenElement;
+      if (fullscreenElement) {
         exitFullscreen();
-      }else{
-        launchIntoFullscreen(document.documentElement||this.refs.root);
+      } else {
+        launchIntoFullscreen(document.documentElement || this.refs.root);
       }
     }
     console.log('[App.js -> requestFullScreen]Click Event');

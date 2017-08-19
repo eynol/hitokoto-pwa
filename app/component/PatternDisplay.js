@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import FullPage from './FullPage'
+import FullPageCard from './FullPageCard'
 
 import style from './PatternDisplay.css';
 import {ellipsis} from '../pages/UI.css'
@@ -50,7 +50,7 @@ export default class PatternDisplay extends Component {
   }
 
   handleUpdate() {
-    let {hook,pattern} = this.props;
+    let {hook, pattern} = this.props;
     let name = this.refs.name.value;
     let defaultPattern = this.refs.default.checked;
     let interval = this.refs.interval.value;
@@ -64,7 +64,7 @@ export default class PatternDisplay extends Component {
       .filter((source) => (source.local || source.online));
 
     let valid = this.validatePattern(name, interval, sources)
-    if (valid.length!=0) {
+    if (valid.length != 0) {
       alert(valid.join('\n'));
     } else {
       let newPattern = {
@@ -76,7 +76,7 @@ export default class PatternDisplay extends Component {
         type: type
       }
 
-      hook.update(newPattern.id,newPattern);
+      hook.update(newPattern.id, newPattern);
     }
   }
 
@@ -95,7 +95,7 @@ export default class PatternDisplay extends Component {
       .filter((source) => (source.local || source.online));
 
     let valid = this.validatePattern(name, interval, sources)
-    if (valid.length!=0) {
+    if (valid.length != 0) {
       alert(valid.join('\n'));
     } else {
       let pattern = {
@@ -207,12 +207,10 @@ export default class PatternDisplay extends Component {
       });
 
     return (
-      <FullPage style={{
-        padding: '30px 30px'
-      }}>
+      <FullPageCard>
         <div className={style.displaybox}>
           <h1>{props.title}</h1>
-          <hr/>
+          <br/>
           <div className={style.form}>
             <label htmlFor="">名称：</label><input
               type="text"
@@ -243,8 +241,6 @@ export default class PatternDisplay extends Component {
             <label htmlFor="">请求类型:</label>
             <select
               ref='type'
-              name=""
-              id=""
               defaultValue={pattern.type
               ? pattern.type
               : 'random'}>
@@ -258,11 +254,10 @@ export default class PatternDisplay extends Component {
             <ul>
               {sourcesList}
             </ul>
-
           </div>
           {oprations}
         </div>
-      </FullPage>
+      </FullPageCard>
     );
   }
 }

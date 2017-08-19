@@ -11,21 +11,29 @@ export const SOURCES = [
     adapter: 0,
     online: true,
     local: true
-  },
-  {
+  }, {
     id: 1002,
     name: 'hitoapi.cc',
     url: 'https://hitoapi.cc/s/',
-    adapter: 'function(resp){return { type:resp.catname,creator:resp.author,created_at:resp.date,id:resp.id,hitokoto:resp.text,from:resp.source}}',
+    adapter: 'function(resp){return { type:resp.catname,creator:resp.author,created_at:resp.da' +
+        'te,id:resp.id,hitokoto:resp.text,from:resp.source}}',
     online: true,
     local: true
-  }
-  ,
-  {
+  }, {
     id: 1005,
     name: 'hitoapi.cc',
     url: 'https://hitoapi.cc/sp/',
-    adapter: 'function(resp){return { type:resp.catname,creator:resp.author,created_at:resp.date,id:resp.id,hitokoto:resp.text,from:resp.source}}',
+    adapter: 'function(resp){return { type:resp.catname,creator:resp.author,created_at:resp.da' +
+        'te,id:resp.id,hitokoto:resp.text,from:resp.source}}',
+    online: true,
+    local: true
+  }, {
+    id: 1006,
+    name: 'https://api.satori.moe/hitokoto.php',
+    url: 'https://api.satori.moe/hitokoto.php',
+    adapter: 'function (resp){\nreturn {\n  hitokoto:resp.hitokoto,\n  type: resp.cat,\n  id: ' +
+        'resp.id,\n  from:resp.source?resp.source:"无来源",\n  creator:"佚名",\n  created_at:r' +
+        'esp.addtime\n  }\n}',
     online: true,
     local: true
   }
@@ -89,7 +97,7 @@ export default class SourceManager {
         .forEach(function (item) {
           urlMap[item.url] = true;
         });
-      SOURCES.forEach( (src) =>{
+      SOURCES.forEach((src) => {
         if (!urlMap[src.url]) {
           //url不存在,添加至_sources
           this

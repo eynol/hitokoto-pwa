@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import style from '../component/HitokotoLayout.css'
-
+import TweenOne from 'rc-tween-one';
+import QueueAnim from 'rc-queue-anim';
 import hitokotoDriver from '../API/hitokotoDriver'
 import Card from '../component/Card'
 import LayoutHorizon from '../component/LayoutHorizon'
@@ -27,17 +28,33 @@ let ClassMap = {
   'kai': '"楷体",serif'
 }
 
+let ANIMATE_CONFIG = [
+  {
+    opacity: [
+      1, 0
+    ],
+    translateX: [0, 50]
+  }, {
+    opacity: [
+      1, 0
+    ],
+    position: 'absolute',
+    translateX: [0, -50]
+  }
+]
 class HitokotoContainer extends Component {
 
   constructor(props) {
     super(props);
     this.state = getInstantHitokoto();
-    hitokotoDriver.registHitokotoHandler(this.hitokotoHandler.bind(this)).start()
+    hitokotoDriver
+      .registHitokotoHandler(this.hitokotoHandler.bind(this))
+      .start()
 
     // this.state = {   hitokoto: '你看那个人好像一条狗欸~',   from: '中二病的世界花样多',   id: 23,
     // creator: '超长待机飞利浦防水手机' }
   }
-  
+
   hitokotoHandler(hitokoto) {
     console.log(hitokoto)
     this.setState(hitokoto);
@@ -58,17 +75,23 @@ class HitokotoContainer extends Component {
     let {font, fontWeight, layoutHorizon, backgroundColor} = this.props.layout;
 
     if (layoutHorizon) {
-      return (<LayoutHorizon
-        hitoid={this.state.id}
-        creator={this.state.creator}
-        img={'nothing'}
-        hitokoto={this.state.hitokoto}
-        from={this.state.from}
-        callbacks={callbacks}
-        fontFamily={ClassMap[font]}
-        fontWeight={fontWeight}/>)
+      return (
+        <QueueAnim animConfig={ANIMATE_CONFIG} className="animate-none-sense">
+          <LayoutHorizon
+            key={this.state.id}
+            hitoid={this.state.id}
+            creator={this.state.creator}
+            img={'nothing'}
+            hitokoto={this.state.hitokoto}
+            from={this.state.from}
+            callbacks={callbacks}
+            fontFamily={ClassMap[font]}
+            fontWeight={fontWeight}/>
+        </QueueAnim>
+      )
     } else {
       return (<LayoutVertical
+        key={this.state.id}
         hitoid={this.state.id}
         creator={this.state.creator}
         img={'nothing'}
@@ -78,7 +101,6 @@ class HitokotoContainer extends Component {
         fontFamily={ClassMap[font]}
         fontWeight={fontWeight}/>)
     }
-
   }
 
 }
@@ -93,5 +115,5 @@ function getInstantHitokoto() {
 }
 
 function setInstantHitokoto(hitokoto) {
-  localStorage.setItem(INSTANT_HITOKOTO_NAME,JSON.stringify(hitokoto));
+  localStorage.setItem(INSTANT_HITOKOTO_NAME, JSON.stringify(hitokoto));
 }

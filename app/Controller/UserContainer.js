@@ -1,6 +1,7 @@
-import React, {Component} from 'react'
-import style from '../component/HitokotoLayout.css'
-import {HashRouter as Router, Route, Redirect} from 'react-router-dom'
+import React, {Component} from 'react';
+import QueueAnim from 'rc-queue-anim';
+import style from '../component/HitokotoLayout.css';
+import {HashRouter as Router, Route, Redirect} from 'react-router-dom';
 
 import hitokotoDriver from '../API/hitokotoDriver'
 import Card from '../component/Card'
@@ -14,6 +15,7 @@ import Setting from '../pages/Setting'
 import Patterns from '../pages/Patterns'
 import Sources from '../pages/Sources'
 import About from '../pages/About'
+import NewHitokoto from '../pages/NewHitokoto'
 
 const INSTANT_LAYOUT_NAME = 'instant_layout';
 const DEFAULT_LAYOUT = {
@@ -22,7 +24,7 @@ const DEFAULT_LAYOUT = {
   layoutHorizon: false,
   backgroundColor: '#ffffff'
 }
-
+const USER_NICKNAME = 'hitoUserNickname';
 class UserContainer extends Component {
 
   constructor(props) {
@@ -32,8 +34,9 @@ class UserContainer extends Component {
       from: '??',
       id: 23,
       creator: 'nou',
-      user: null,
-      layout: getInstantLayout()
+      layout: $getInstantLayout(),
+      nickname: $getNickname()
+
     }
   }
 
@@ -42,38 +45,50 @@ class UserContainer extends Component {
     if (layout[item] != nextVal) {
       layout[item] = nextVal;
       this.setState({'layout': layout});
-      setInstantLayout(layout);
+      $setInstantLayout(layout);
     }
     console.log(nextVal);
   }
-  handlePatternChange(id){
-    let pattern = hitokotoDriver.patterManager.getPatternById(id);
+  handlePatternChange(id) {
+    let pattern = hitokotoDriver
+      .patterManager
+      .getPatternById(id);
     hitokotoDriver.drive(pattern);
     hitokotoDriver.start();
   }
-  handleSignUp(info, success, error) {}
-  handleSignIn(user, success, error) {
+  updateNameAndToken({nickname, token}) {
+    this.setState({nickname: nickname});
+    $setNickname(nickname)
+    hitokotoDriver
+      .httpManager
+      .updateToken(token);
+  }
+  handleSignUp(formData) {
+    return hitokotoDriver
+      .httpManager
+      .API_regist(formData)
+  }
+  handleSignIn(formData) {
     try {
-      if (user.username == 'heitao' && user.password == '123456') {
-        success()
-        this.setState({user: user})
-
-      } else {
-        error('用户名或密码错误')
-      }
+      return hitokotoDriver
+        .httpManager
+        .API_login(formData)
     } catch (e) {
       console.log('[UserContainer.handleSignIn]', e)
-      error || error();
+      return Promise.reject(e);
     }
   }
   handleSignOut() {
     console.log('sign out');
-    this.setState({user: undefined});
+    this.updateNameAndToken({nickname: '', token: ''});
   }
   render() {
     let loginWrap = ({match, location, history}) => (<Login
       loginCallback={this
       .handleSignIn
+      .bind(this)}
+      loginDone={this
+      .updateNameAndToken
       .bind(this)}
       match={match}
       location={location}
@@ -83,6 +98,9 @@ class UserContainer extends Component {
     let registWrap = ({match, location, history}) => (<Regist
       registCallback={this
       .handleSignUp
+      .bind(this)}
+      registDone={this
+      .updateNameAndToken
       .bind(this)}
       match={match}
       location={location}
@@ -95,7 +113,9 @@ class UserContainer extends Component {
       .handleLayoutChange
       .bind(this)}
       patterns={hitokotoDriver.patterManager.patterns}
-      patternChange={this.handlePatternChange.bind(this)}
+      patternChange={this
+      .handlePatternChange
+      .bind(this)}
       match={match}
       location={location}
       history
@@ -109,24 +129,28 @@ class UserContainer extends Component {
           height: '100%',
           overflow: 'auto'
         }}>
+          <HitokotoContainer layout={this.state.layout}/>
           <Nav
             inline={true}
-            user={this.state.user}
+            nickname={this.state.nickname}
             navCallbacks={{
             exit: this
               .handleSignOut
               .bind(this)
           }}/>
-          <HitokotoContainer layout={this.state.layout}/>
           <Route path='/login' render={loginWrap}/>
           <Route path='/about' component={About}/>
           <Route path='/regist' render={registWrap}/>
           <Route path='/setting' render={settingWrap}/>
           <Route path='/patterns' component={Patterns}/>
-          <Route path='/sources' component={Sources}/>
+          <Route path='/sources' params={this.state.layout} component={Sources}/>
+          <Route path='/new' component={NewHitokoto}/>
           <Route
             path='/exit'
             render={({match, location, history}) => {
+            setTimeout(() => {
+              this.handleSignOut();
+            }, 200);
             return (<Redirect to="/"/>)
           }}/>
         </div>
@@ -137,13 +161,21 @@ class UserContainer extends Component {
 }
 export default UserContainer;
 
-function getInstantLayout() {
+function $getInstantLayout() {
   let string = localStorage.getItem(INSTANT_LAYOUT_NAME);
   if (!string) {
     return DEFAULT_LAYOUT;
   }
   return JSON.parse(string);
 }
-function setInstantLayout(layout) {
+function $setInstantLayout(layout) {
   localStorage.setItem(INSTANT_LAYOUT_NAME, JSON.stringify(layout));
+}
+
+function $getNickname() {
+  return localStorage.getItem(USER_NICKNAME) || '';
+
+}
+function $setNickname(name) {
+  localStorage.setItem(USER_NICKNAME, name);
 }

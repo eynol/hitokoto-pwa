@@ -5,9 +5,9 @@ export const PERSE_ADAPTER_SAFE = funcBody => {
   if (typeof funcBody != 'string') {
     return ADAPTER_ORGIN;
   } else {
-      if(funcBody.trim().length==0){
-        return ADAPTER_ORGIN; 
-      }
+    if (funcBody.trim().length == 0) {
+      return ADAPTER_ORGIN;
+    }
     try {
       let expectedArgs = AdapterValidate(funcBody);
       if (expectedArgs.err) {
@@ -36,7 +36,6 @@ export function AdapterValidate(adapterStr) {
 
   //  手动结束
   FUNC_REGEXP.exec(adapterStr);
-
 
   let args = matchs[1];
   if (!args) {

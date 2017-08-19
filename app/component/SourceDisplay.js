@@ -1,15 +1,13 @@
 import React, {Component} from 'react';
-import FullPage from './FullPage'
+import FullPageCard from './FullPageCard'
 
 import style from './SourceDisplay.css';
 
 let showDemo = () => {
   setTimeout(function () {
-    alert('使用new Function("resp",函数体代码)，构造adapter函数，所以只写函数体的代码。\nAPI请求的结果将作为参数resp传入函数，你可以直' +
-        '接在函数体里使用resp变量。\n函数体需要返回一个JSON对象，包含的键名有id、hitokoto、from、creator、type、created_at。' +
-        '\n示例：\nreturn {\n  id: resp.uuid,\n  hitokoto: resp.hitokoto,\n  from: resp.sour' +
-        'ce,\n  creator: resp.owner,\n  type: resp.info.type,\n  created_at: resp.info.wh' +
-        'en,\n}');
+    alert('adapter函数接收一个参数(json格式,参数名随意)，函数需要返回一个json对象.例如：\nfunction szdfdawefad(resp){\nr' +
+        'eturn {\n  hitokoto: resp.words,\n  from: resp.source\n  id: resp.id\n  ...\n  }' +
+        '\n}');
   }, 0)
 }
 export default class SourceDisplay extends Component {
@@ -71,15 +69,15 @@ export default class SourceDisplay extends Component {
   render() {
     let props = this.props;
     let source = props.source;
-    let areaheight ;
+    let areaheight;
     if (source && typeof source.adapter == 'string') {
       areaheight = source
         .adapter
         .split('\n')
         .length
     }
-    if(areaheight<10){
-      areaheight  = 10;
+    if (areaheight < 10) {
+      areaheight = 10;
     }
     let oprations;
     if (source) {
@@ -110,12 +108,10 @@ export default class SourceDisplay extends Component {
 
     source = source || {};
     return (
-      <FullPage style={{
-        padding: '30px 30px'
-      }}>
+      <FullPageCard>
         <div className={style.displaybox}>
           <h1>{props.title}</h1>
-          <hr/>
+          <br/>
           <div className={style.form}>
             <label htmlFor="">名称：</label><input
               type="text"
@@ -140,10 +136,9 @@ export default class SourceDisplay extends Component {
               : source.adapter}
               placeholder='PS:不要在此粘贴来历不明的代码！'/>
           </div>
-          <br/>
-          {oprations}
+          <br/> {oprations}
         </div>
-      </FullPage>
+      </FullPageCard>
     );
   }
 }

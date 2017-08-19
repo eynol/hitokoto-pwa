@@ -1,7 +1,7 @@
 import React from 'react';
 import style from './Copyright.css'
 
-let {"copyright-state": id, "copyright-open": openClass, "copyright-close": closeClass ,copyrightWrapper} = style;
+let {"copyright-state": id, "copyright-open": openClass, "copyright-close": closeClass, copyrightWrapper} = style;
 
 export default function Copyright(props) {
   return (
