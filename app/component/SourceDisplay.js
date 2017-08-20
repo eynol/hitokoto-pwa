@@ -1,7 +1,11 @@
 import React, {Component} from 'react';
 import FullPageCard from './FullPageCard'
-
+import QueueAnim from 'rc-queue-anim';
 import style from './SourceDisplay.css';
+import Textarea from 'react-textarea-autosize';
+import TextFiledCss from '../component/TextFiled.css'
+
+let {'text-filed': textFiled, blocked} = TextFiledCss;
 
 let showDemo = () => {
   setTimeout(function () {
@@ -113,24 +117,21 @@ export default class SourceDisplay extends Component {
           <h1>{props.title}</h1>
           <br/>
           <div className={style.form}>
-            <label htmlFor="">名称：</label><input
-              type="text"
-              ref="sourceName"
-              defaultValue={source.name}
-              placeholder='给接口取一个好名字'/><br/>
-            <label htmlFor="">URL：</label><input
-              type="text"
-              ref="sourceUrl"
-              defaultValue={source.url}
-              placeholder='请求的url,如有需要，请携带参数'/><br/>
+            <div className={textFiled + ' ' + blocked}>
+              <input type="text" required ref="sourceName" defaultValue={source.name}/>
+              <label data-content="来源名字">来源名字</label>
+            </div>
+            <div className={textFiled + ' ' + blocked}><input type="text" required ref="sourceUrl" defaultValue={source.url}/>
+              <label data-content="URL(参数也写上)">URL</label>
+            </div>
             <label htmlFor="">Adapter:</label><br/>
             <p>
               <i>tip:</i>Adapter是一个JavaScript
               函数，接收一个json格式的参数，返回一个hitokoto，用于将其他网站返回的json数据转换成本地需要的hitokoto格式。<a href='javascript:' onClick={showDemo}>查看示例</a>
               （非开发人员请跳过该设置，也不要粘贴来历不明的代码，不填写内容表示不使用Adapter。）</p>
-            <textarea
+            <Textarea
               ref="sourceAdapter"
-              rows={areaheight}
+              minRows={3}
               defaultValue={source.adapter == 0
               ? ''
               : source.adapter}

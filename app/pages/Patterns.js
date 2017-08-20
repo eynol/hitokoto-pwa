@@ -6,7 +6,7 @@ import QueueAnim from 'rc-queue-anim';
 import hitokotoDriver from '../API/hitokotoDriver'
 
 import style from './UI.css';
-import {Link} from 'react-router-dom';
+import {Link, withRouter} from 'react-router-dom';
 
 let {
   manageBox,
@@ -27,6 +27,9 @@ class Patterns extends Component {
       update: undefined,
       newPattern: undefined
     }
+  }
+  shouldComponentUpdate(nextProps, nextState) {
+    return nextProps.location.pathname == nextProps.path || this.props.location.pathname == nextProps.path;
   }
   showUpdate(id) {
     this.setState({update: id});
@@ -82,7 +85,7 @@ class Patterns extends Component {
         )
       })
 
-    let patternDisplay;
+    let patternDisplay = null;
     if (this.state.update) {
       let patternToUpdate = this
         .state
@@ -98,6 +101,7 @@ class Patterns extends Component {
       patternDisplay = (<PatternDisplay
         pattern={patternToUpdate}
         title="修改"
+        key={this.state.update}
         sources={hitokotoDriver.patterManager.sources}
         hook={{
         hide: this
@@ -114,6 +118,7 @@ class Patterns extends Component {
       patternDisplay = (<PatternDisplay
         title="新增"
         sources={hitokotoDriver.patterManager.sources}
+        key={this.state.newPattern}
         hook={{
         hide: this
           .hideNewPattern
@@ -123,9 +128,9 @@ class Patterns extends Component {
           .bind(this)
       }}/>)
     }
-    return (
-
-      <FullPageCard>
+    let {location, path} = this.props;
+    let Child = (
+      <FullPageCard key={path}>
         <div className={manageBox}>
           <input type="radio" name="pattern-tab" value="pattern" hidden/>
           <input type="radio" name="pattern-tab" value="api" hidden/>
@@ -137,9 +142,12 @@ class Patterns extends Component {
               <i className={icon + ' ' + back}></i>
             </Link>
           </h1>
-          <hr/>
+          <br/>
           <div>
-            <QueueAnim component="ul" className={sourcesList}>
+            <QueueAnim
+              component="ul"
+              ease={['easeOutQuart', 'easeInOutQuart']}
+              className={sourcesList}>
               {lists}
               <li key="new">
                 <button
@@ -153,10 +161,17 @@ class Patterns extends Component {
             </QueueAnim>
           </div>
         </div>
-        {patternDisplay}
+        <QueueAnim type={['right', 'left']} ease={['easeOutQuart', 'easeInOutQuart']}>{patternDisplay}</QueueAnim>
       </FullPageCard>
+    )
+    return (
+      <QueueAnim type={['right', 'left']} ease={['easeOutQuart', 'easeInOutQuart']}>
+        {location.pathname == path
+          ? Child
+          : null}
+      </QueueAnim>
     );
   }
 }
 
-export default Patterns;
+export default withRouter(Patterns);

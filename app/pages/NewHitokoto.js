@@ -1,44 +1,55 @@
 import React, {Component} from 'react';
-import {Link} from 'react-router-dom';
+import {Link, withRouter} from 'react-router-dom';
 import QueueAnim from 'rc-queue-anim';
 import FullPageCard from '../component/FullPageCard'
-import style from './UI.css';
-
+import style from './NewHitokoto.css';
+import Textarea from 'react-textarea-autosize';
 let {
   manageBox,
   clearfix,
   'close-button': closeButton,
   icon,
   close,
-  sourcesList,
   back,
   backButton,
-  ellipsis
+  ellipsis,
+  hitokotoTextarea,
+  hitokotoSouceInput
 } = style;
 
-export default class About extends Component {
+class NewHitokoto extends Component {
+  shouldComponentUpdate(nextProps, nextState) {
+    return nextProps.location.pathname == nextProps.path || this.props.location.pathname == nextProps.path;
+  }
   render() {
+    let {location, path} = this.props;
+    let child = '';
     return (
-      <FullPageCard>
-        <header className={manageBox}>
-          <h1 className={clearfix}>关于hitokoto
-            <Link to='/' className={closeButton}>
-              <i className={icon + ' ' + close}></i>
-            </Link>
-            <Link to='/' className={backButton}>
-              <i className={icon + ' ' + back}></i>
-            </Link>
-          </h1>
-          <br/>
-          <div>
-            <header>请输入来源</header>
-            <input type="text"/>
-            <div>
-              <textarea name="" id="" cols="30" rows="10" placeholder="请在此输入hitokoto"></textarea>
-            </div>
-          </div>
-        </header>
-      </FullPageCard>
+      <QueueAnim type={['right', 'left']} ease={['easeOutQuart', 'easeInOutQuart']}>{location.pathname == path
+          ? <FullPageCard key="23">
+              <header className={manageBox}>
+                <h1 className={clearfix}>关于hitokoto
+                  <Link to='/' className={closeButton}>
+                    <i className={icon + ' ' + close}></i>
+                  </Link>
+                  <Link to='/' className={backButton}>
+                    <i className={icon + ' ' + back}></i>
+                  </Link>
+                </h1>
+                <br/>
+                <div>
+                  <div>
+                    <Textarea minRows={3} className={hitokotoTextarea} placeholder="请在此输入hitokoto"></Textarea>
+                  </div>
+                  <div>
+                    <input type="text" placeholder="...在这里写来源出处" className={hitokotoSouceInput}/>
+                  </div>
+                </div>
+              </header>
+            </FullPageCard>
+          : null}</QueueAnim>
     )
   }
 }
+
+export default withRouter(NewHitokoto);

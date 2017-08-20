@@ -1,9 +1,12 @@
 import React, {Component} from 'react';
 import QueueAnim from 'rc-queue-anim';
-import {Link} from 'react-router-dom';
+import {Link, withRouter} from 'react-router-dom';
 import here$you$are from '../API/PublicEncrypt';
 import style from './login.css';
 import FullPage from '../component/FullPage'
+import TextFiledCss from '../component/TextFiled.css'
+
+let {'text-filed': textFiled} = TextFiledCss;
 
 let errorStyle = {
   display: 'inline-block',
@@ -18,7 +21,7 @@ let errorStyle = {
 let ErrorInfo = reason => (
   <span style={errorStyle}>{reason}</span>
 );
-export default class Login extends Component {
+class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -26,6 +29,9 @@ export default class Login extends Component {
       password: undefined,
       errinfo: undefined
     }
+  }
+  shouldComponentUpdate(nextProps, nextState) {
+    return nextProps.location.pathname == nextProps.path || this.props.location.pathname == nextProps.path;
   }
   handleUsernameChange(event) {
     this.setState({username: event.target.value})
@@ -95,56 +101,63 @@ export default class Login extends Component {
         <p>{ErrorInfo(this.state.errinfo)}</p>
       )
     }
-
+    let {location, path} = this.props;
     return (
-      <QueueAnim>
-        <FullPage
-          key="res"
-          style={{
-          backgroundColor: 'transparent'
-        }}
-          onClick={e => {
-          this
-            .props
-            .history
-            .replace('/');
-        }}>
-          <div
-            className={style['login-box']}
-            onClick={e => {
-            e.stopPropagation();
-            return false;
-          }}>
-            <h1>登录</h1>
-            <p><input
-              type="text"
-              placeholder="输入账号"
-              onChange={this
-        .handleUsernameChange
-        .bind(this)}/></p>
-            <p><input
-              type="password"
-              placeholder="密码"
-              onChange={this
-        .handlePasswordChange
-        .bind(this)}
-              onKeyPress={this
-        .handleKeyPress
-        .bind(this)}/></p>
-            {errinfo}
-            <p>
-              <button
-                onClick={this
-                .handleSigninClick
-                .bind(this)}>登录</button>
-            </p>
-            <p><br/>
-              <Link to='/'>返回首页</Link>&nbsp;
-              <Link to='/regist' replace>前往注册</Link>
-            </p>
-          </div>
-        </FullPage>
+      <QueueAnim type={['right', 'left']} ease={['easeOutQuart', 'easeInOutQuart']}>{location.pathname == path
+          ? <FullPage
+              key={path}
+              style={{
+              backgroundColor: 'transparent'
+            }}
+              onClick={e => {
+              this
+                .props
+                .history
+                .replace('/');
+            }}>
+              <div
+                className={style['login-box']}
+                onClick={e => {
+                e.stopPropagation();
+                return false;
+              }}>
+                <h1>登录</h1>
+                <div className={textFiled}><input
+                  type="text"
+                  onChange={this
+              .handleUsernameChange
+              .bind(this)}
+                  required/>
+                  <label data-content="账号">账号</label>
+                </div>
+                <div className={textFiled}><input
+                  type="password"
+                  onChange={this
+              .handlePasswordChange
+              .bind(this)}
+                  required
+                  onKeyPress={this
+              .handleKeyPress
+              .bind(this)}/>
+                  <label data-content="密码">密码</label>
+                </div>
+                {errinfo}
+                <br/>
+                <p>
+                  <button
+                    onClick={this
+                    .handleSigninClick
+                    .bind(this)}>登录</button>
+                </p>
+                <p><br/>
+                  <Link to='/'>返回首页</Link>&nbsp;
+                  <Link to='/regist' replace>前往注册</Link>
+                </p>
+              </div>
+            </FullPage>
+          : null}
       </QueueAnim>
     )
   }
 }
+export default withRouter(Login)

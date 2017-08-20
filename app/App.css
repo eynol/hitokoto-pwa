@@ -12,26 +12,3 @@
     background-size: cover;
 }
 
-.logo{
-    position: absolute;
-    top: 15px;
-    left: 50px;
-    z-index: 200;
-}
-
-.logo ul {
-    display: inline-block;
-    list-style: none;
-}
-.logo ul:after{
-    content: '';
-}
-.logo ul li{
-    display: block;
-    float: left;
-}
-.logo ul li a{
-    text-decoration: none;
-    font-size: 16px;
-}
-

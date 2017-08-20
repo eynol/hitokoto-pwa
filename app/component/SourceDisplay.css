@@ -1,13 +1,9 @@
 
-.form input{
-  border: none;
-  width: 100%;
-  outline: none;
-  border-bottom: 1px dashed gray;
-  margin-bottom: 2em;
+.forms input{
+  
   text-overflow: ellipsis;
 }
-.form input:focus{
+.forms input:focus{
   border-bottom: 1px solid #6d92ff;
 }
 

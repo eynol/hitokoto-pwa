@@ -1,9 +1,7 @@
 import React from 'react'
-import TweenOne from 'rc-tween-one';
 import QueueAnim from 'rc-queue-anim';
-import style from './HitokotoLayout.css'
-import {Link} from 'react-router-dom'
 
+import {layout_horizon, Content, info, actions, love} from './HitokotoLayout.css'
 let ANIMATE_CONFIG = [
   {
     opacity: [
@@ -18,48 +16,69 @@ let ANIMATE_CONFIG = [
     translateX: [0, -50]
   }
 ]
+
+let FONT_MAP = {
+  'default': 'inherit',
+  'simsun': "'Noto Serif CJK SC', 'Source Han Serif SC', 'Source Han Serif', source-han-serif" +
+      "-sc, '宋体', SimSun, '华文细黑', STXihei, serif",
+  'fangsong': 'Georgia,"Times New Roman", "FangSong", "仿宋", STFangSong, "华文仿宋", serif',
+  'kai': '"楷体",serif'
+}
 export default function LayoutHorizon(props) {
-  let img,
-    body,
+  let body,
     detail;
-  if (!props.img) {
-    img = (
-      <div className={style.Header}>
-        <img src="./ignore/thumb.jpg"/>
-      </div>
-    )
+
+  let {
+    hitokoto: {
+      id,
+      'from': fromwhere,
+      hitokoto,
+      creator,
+      created_at,
+      type
+    },
+    layout: {
+      font,
+      fontWeight
+    }
+  } = props;
+  let OptionsChildren = null;
+  if (props.children.length) {
+    for (let i = 0, len = props.children.length; i < len; i++) {
+      let one = props.children[i];
+      if (one.props['data-role'] == 'actions') {
+        OptionsChildren = one.props.children;
+      }
+    }
+  } else {
+    if (props.children.props['data-role'] == 'actions') {
+      OptionsChildren = props.children.props.children;
+    }
   }
 
   return (
-    <div className={style.layout_horizon}>
-      {img}
-
-      <QueueAnim animConfig={ANIMATE_CONFIG} className={style.Content}>
-        <div className={style.info} key={props.hitoid + 'info'}>
+    <div className={layout_horizon}>
+      <QueueAnim animConfig={ANIMATE_CONFIG} className={Content}>
+        <div className={info} key={id + 'info'}>
           <h1>
-            <span title="序号">{props.hitoid}</span>
+            <span title="序号">{id}</span>
           </h1>
           <p >
-            <span title="创建者">{props.creator}</span>
+            <span title="创建者">{creator}</span>
           </p>
         </div>
 
         <h1
           style={{
-          fontFamily: props.fontFamily,
-          fontWeight: props.fontWeight
+          fontFamily: FONT_MAP[font],
+          fontWeight: fontWeight
         }}
-          key={props.hitoid + 'hito'}>{props.hitokoto}</h1>
+          key={id + 'hito'}>{hitokoto}</h1>
 
-        <p key={props.hitoid + 'from'}>——&nbsp;&nbsp;&nbsp;{props.from}</p>
-        <div className='oprations' key={props.hitoid + 'oprations'}>
-          <ul className={style.actions}>
-            <li>
-              <a href="javascript:" className={style.love}></a>
-            </li>
-            <li>
-              <Link to="/setting">设置</Link>·<a href="javascript:" onClick={props.callbacks.handleNext}>下一条</a>
-            </li>
+        <p key={id + 'from'}>——&nbsp;&nbsp;&nbsp;{fromwhere}</p>
+        <div className='oprations' key={id + 'oprations'}>
+          <ul className={actions}>
+            {OptionsChildren}
           </ul>
         </div>
       </QueueAnim>

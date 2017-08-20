@@ -1,10 +1,13 @@
 import React, {Component} from 'react';
-import {Link} from 'react-router-dom';
+import {Link, withRouter} from 'react-router-dom';
 import QueueAnim from 'rc-queue-anim';
 import here$you$are from '../API/PublicEncrypt';
 
 import style from './login.css';
 import FullPage from '../component/FullPage'
+import TextFiledCss from '../component/TextFiled.css'
+
+let {'text-filed': textFiled} = TextFiledCss;
 
 let errorStyle = {
   display: 'inline-block',
@@ -20,7 +23,7 @@ let ErrorInfo = reason => (
   <span style={errorStyle}>{reason}</span>
 );
 
-export default class Regist extends Component {
+class Regist extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -36,6 +39,9 @@ export default class Regist extends Component {
       user: {}
     }
   }
+  shouldComponentUpdate(nextProps, nextState) {
+    return nextProps.location.pathname == nextProps.path || this.props.location.pathname == nextProps.path;
+  }
   handleUsernameChange(event) {
     this.setState({username: event.target.value})
   }
@@ -44,7 +50,7 @@ export default class Regist extends Component {
     let pass = event.target.value
     if (this.state.showPasswordDiff) {
       if (pass !== this.state.password2) {
-        this.setState({password: pass, errinfo: '两次密码不一致!\n密码至少7位!\n密码可以使用任意字符，包括中文。\n若不能输入中文，可以复制粘贴。'})
+        this.setState({password: pass, errinfo: '两次密码不一致!\n若不能输入中文，可以复制粘贴。'})
       } else {
         this.setState({password: pass, errinfo: ''})
       }
@@ -58,7 +64,7 @@ export default class Regist extends Component {
       this.setState({showPasswordDiff: true})
     }
     if (pd2 != this.state.password) {
-      this.setState({password2: pd2, errinfo: '两次密码不一致!\n密码至少7位!\n密码可以使用任意字符，包括中文。\n若不能输入中文，可以复制粘贴。'})
+      this.setState({password2: pd2, errinfo: '两次密码不一致!\n若不能输入中文，可以复制粘贴。'})
     } else {
       this.setState({password2: pd2, errinfo: ''})
     }
@@ -96,31 +102,31 @@ export default class Regist extends Component {
     let {username, password, password2, email, nickname} = this.state;
 
     if (typeof username == 'undefined') {
-      this.setState({errinfo: '用户名不能为空！\n用户名至少7位!\n用户名可以使用任意字符，包括中文。'});
+      this.setState({errinfo: '用户名不能为空！\n用户名至少7位任意字符，包括中文!'});
       return;
     }
     if (username.trim().length == 0) {
-      this.setState({errinfo: '用户名不能为空！\n用户名至少7位!\n用户名可以使用任意字符，包括中文。'});
+      this.setState({errinfo: '用户名不能为空！\n用户名至少7位任意字符，包括中文!'});
       return;
     }
     if (username.length < 7) {
-      this.setState({errinfo: '用户名过短！至少要7位。\n用户名可以使用任意字符，包括中文。'})
+      this.setState({errinfo: '用户名过短！\n至少要7位任意字符，包括中文。'})
     }
     if (typeof password == 'undefined') {
-      this.setState({errinfo: '密码不能为空！\n密码至少7位!\n密码可以使用任意字符，包括中文。\n若不能输入中文，可以复制粘贴。'});
+      this.setState({errinfo: '密码不能为空！\n若不能输入中文，可以复制粘贴。'});
       return;
     }
     if (password.trim().length == 0) {
-      this.setState({errinfo: '密码不能为空！\n密码至少7位!\n密码可以使用任意字符，包括中文。\n若不能输入中文，可以复制粘贴。'});
+      this.setState({errinfo: '密码不能为空！\n若不能输入中文，可以复制粘贴。'});
       return;
     }
     if (password2 != password) {
-      this.setState({errinfo: '两次密码不一致！\n密码至少7位!\n密码可以使用任意字符，包括中文。\n若不能输入中文，可以复制粘贴。'});
+      this.setState({errinfo: '两次密码不一致！\n若不能输入中文，可以复制粘贴。'});
       return;
     }
 
     if (!/^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$/.test(email)) {
-      this.setState({errinfo: '请输入正确的邮箱'});
+      this.setState({errinfo: '请输入正确的邮箱!'});
       return;
     }
 
@@ -228,7 +234,8 @@ export default class Regist extends Component {
           .props
           .history
           .replace('/');
-      }}>
+      }}
+        key='step1'>
         <div
           className={style['login-box']}
           onClick={e => {
@@ -236,43 +243,54 @@ export default class Regist extends Component {
           return false;
         }}>
           <h1>注册</h1>
-          <p><input
+          <div className={textFiled}><input
             type="text"
-            placeholder="用户名"
+            required
             onChange={this
         .handleUsernameChange
         .bind(this)}
-            defaultValue={this.state.username}/></p>
-          <p><input
+            defaultValue={this.state.username}/>
+            <label data-content="用户名">用户名</label>
+          </div>
+          <div className={textFiled}><input
             type="password"
-            placeholder="密码"
+            required
             onChange={this
         .handlePasswordChange
         .bind(this)}
-            defaultValue={this.state.password}/></p>
-          <p><input
+            defaultValue={this.state.password}/>
+            <label data-content="密码(任意字符至少七位)">密码</label>
+          </div>
+          <div className={textFiled}><input
             type="password"
-            placeholder="请再次确认您的密码"
+            required
             onChange={this
         .handlePassword2Change
         .bind(this)}
-            defaultValue={this.state.password2}/></p>
-          <p><input
+            defaultValue={this.state.password2}/>
+            <label data-content="请再次确认您的密码">请再次确认您的密码</label>
+          </div>
+          <div className={textFiled}><input
             type="text"
-            placeholder="验证邮箱(非常重要)"
+            required
             onChange={this
         .handleEmailChange
         .bind(this)}
-            defaultValue={this.state.email}/></p>
-          <p><input
+            defaultValue={this.state.email}/>
+            <label data-content="验证邮箱(非常重要)">验证邮箱(非常重要)</label>
+          </div>
+          <div className={textFiled}><input
             type="text"
-            placeholder="显示的昵称"
+            required
             onChange={this
         .handleNicknameChange
         .bind(this)}
-            defaultValue={this.state.nickname}/></p>
+            defaultValue={this.state.nickname}/>
+            <label data-content="显示的昵称">显示的昵称</label>
+          </div>
           {errinfo}
           <p>
+            <br/>
             <button onClick={this
               .handleRegist
               .bind(this)}>下一步</button>
@@ -290,7 +308,8 @@ export default class Regist extends Component {
         key="regist-step2"
         style={{
         backgroundColor: 'transparent'
-      }}>
+      }}
+        key='step2'>
         <div className={style['login-box']}>
           <h1>请输入您收到的验证码</h1>
           <p><input
@@ -301,6 +320,7 @@ export default class Regist extends Component {
         .bind(this)}/></p>
           {errinfo}
           <p>
+            <br/>
             <button
               style={{
               backgroundColor: '#c6c7c8'
@@ -322,10 +342,16 @@ export default class Regist extends Component {
         </div>
       </FullPage>
     );
+
+    let {path, location} = this.props;
     return (
-      <QueueAnim>{this.state.step == 1
-          ? step1
-          : step2}</QueueAnim>
+      <QueueAnim type={['right', 'left']} ease={['easeOutQuart', 'easeInOutQuart']}>{location.pathname == path
+          ? (this.state.step == 1
+            ? step1
+            : step2)
+          : null}</QueueAnim>
     );
   }
 }
+
+export default withRouter(Regist)

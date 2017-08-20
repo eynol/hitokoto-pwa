@@ -24,7 +24,7 @@ class HitokotoDriver {
     this.drive(this.patterManager.getDefaultPattern()); //  默认模式
     this.processing = false; // 是否请求中的flag标志
 
-    this.responseHandler = Function.prototype; // 获取到hitokoto后注入返回的hitokoto
+    this.hitokotoHandler = Function.prototype; // 获取到hitokoto后注入返回的hitokoto
     this.next = Function.prototype; // 执行后获取下一条hitokoto;
     this.UIResolver = Function.prototype; // 外部注入的展示不同状态下的处理函数；
   }
@@ -33,11 +33,9 @@ class HitokotoDriver {
     return this.sources[Math.floor(Math.random() * this.sources.length)]
   }
   drive(pattern) {
-    console.log(this.timer, '清空计时器');
     clearInterval(this.timer);
     this.pattern = pattern;
     this.sources = pattern.sources;
-
     this.registAdapter(this.sources);
 
   }
@@ -54,8 +52,12 @@ class HitokotoDriver {
     return this;
   }
   registHitokotoHandler(handler) {
-    this.responseHandler = handler;
+    this.hitokotoHandler = handler;
     return this;
+  }
+  updateProcessing(state) {
+    this.processing = state;
+    this.UIResolver(this.processing);
   }
   getAdapter(url) {
     return this.adaptersMap[url] || ADAPTER_ORGIN;
@@ -107,16 +109,36 @@ class HitokotoDriver {
     this.next = (id) => {
       let source = this.getRandomSource();
       let url = source.url;
+      if (this.processing) {
+        return;
+      }
+      this.updateProcessing(true);
       if (source.online) {
         //  如果启用在线
         this
           .getHitokotoFromWEB(url, type, id)
-          .then(this.responseHandler);
+          .then(json => {
+            this.updateProcessing(false);
+            return json;
+          })
+          .then(this.hitokotoHandler)
+          .catch(e => {
+            this.updateProcessing(false);
+            return Promise.reject(e);
+          });
       } else {
         //  启用离线资源
         this
           .getHitokotoFromIDB(url, type, id)
-          .then(this.responseHandler);
+          .then(json => {
+            this.updateProcessing(false);
+            return json;
+          })
+          .then(this.hitokotoHandler)
+          .catch(e => {
+            this.updateProcessing(false);
+            return Promise.reject(e);
+          });
       }
 
     }
@@ -135,6 +157,10 @@ class HitokotoDriver {
       .httpManager
       .request(url)
       .then(this.getAdapter(url))
+      .catch(e => {
+        console.log(e)
+        return Promise.reject(e);
+      })
   }
   getHitokotoFromWEB(url, patternType, id) {
     return this
@@ -143,19 +169,12 @@ class HitokotoDriver {
       .then(this.getAdapter(url))
       .catch((e) => {
         console.error(e);
+
         //  出错了，可能是短线了，回退使用indexedDB的内容
         return Promise.resolve(this.getHitokotoFromIDB(url, patternType, id))
       })
   }
-  getHitokoto() {
-    let url = this.getRandomURL();
-    let adpter = this.getAdapter(url);
-    this
-      .httpManager
-      .request(url)
-      .then(adpter)
-      .then(this.responseHandler);
-  }
+
   updateSource(id, source) {
     this
       .patterManager

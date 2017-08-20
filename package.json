@@ -36,6 +36,7 @@
     "rc-queue-anim": "^1.2.2",
     "rc-tween-one": "^1.4.4",
     "react": "^15.1.0",
-    "react-dom": "^15.1.0"
+    "react-dom": "^15.1.0",
+    "react-textarea-autosize": "^5.1.0"
   }
 }

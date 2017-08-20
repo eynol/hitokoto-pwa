@@ -7,6 +7,26 @@ function $setLSToken(token) {
   localStorage.setItem(TOKEN_NAME + 'localStored', token);
 }
 
+function timeoutPromise(ms, promise) {
+  return new Promise((resolve, reject) => {
+    let timeoutId = setTimeout(() => {
+      timeoutId = undefined;
+      reject(new Error("promise timeout"))
+    }, ms);
+    promise.then((res) => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+        resolve(res);
+      }
+    }, (err) => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+        reject(err);
+      }
+    });
+  })
+}
+
 export default class HTTPManager {
   constructor() {
 
@@ -58,7 +78,7 @@ export default class HTTPManager {
     let _that = this;
 
     if (this.inited) {
-      return fetch(url).then(resp => resp.json())
+      return timeoutPromise(5000, fetch(url)).then(resp => resp.json())
     } else {
 
       let chain = []; // store then and catch functions;

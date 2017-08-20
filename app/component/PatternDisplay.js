@@ -3,6 +3,10 @@ import FullPageCard from './FullPageCard'
 
 import style from './PatternDisplay.css';
 import {ellipsis} from '../pages/UI.css'
+import TextFiledCss from '../component/TextFiled.css'
+
+let {'text-filed': textFiled, blocked} = TextFiledCss;
+
 let showDemo = () => {
   setTimeout(function () {
     alert('使用new Function("resp",函数体代码)，构造adapter函数，所以只写函数体的代码。\nAPI请求的结果将作为参数resp传入函数，你可以直' +
@@ -212,11 +216,11 @@ export default class PatternDisplay extends Component {
           <h1>{props.title}</h1>
           <br/>
           <div className={style.form}>
-            <label htmlFor="">名称：</label><input
-              type="text"
-              ref="name"
-              defaultValue={pattern.name}
-              placeholder='给模式取一个好名字吧~'/><br/>
+            <div className={textFiled + ' ' + blocked}>
+              <input type="text" ref="name" required defaultValue={pattern.name}/>
+              <label data-content="模式名称（取一个好名字吧）">模式名称</label>
+            </div>
+            <br/>
             <label htmlFor="">默认模式：</label>
             <input
               type="checkbox"

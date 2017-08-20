@@ -18,8 +18,9 @@
     .copyright-close {
         display: initial;
         text-align: center;
-        width: 100%;
+        width: 20px;
         position: absolute;
+        left: calc(50% - 10px);
         bottom: 16px;
     }
     .copyright-close{

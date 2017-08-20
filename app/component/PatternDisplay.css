@@ -1,15 +1,5 @@
 
-.form input[type=text]{
-  border: none;
-  width: 100%;
-  outline: none;
-  border-bottom: 1px dashed gray;
-  margin-bottom: 2em;
-  text-overflow: ellipsis;
-}
-.form input[type=text]:focus{
-  border-bottom: 1px solid #6d92ff;
-}
+
 .form input[type=number]{
   border: none;
   width: 6em;

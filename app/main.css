@@ -42,7 +42,17 @@ body>div:first-child{
     height: 100%;
 }
 hr{
-    border:1px solid #444;
+    /* border:1px solid #444; */
+    border: none  ;
+    outline: none;
+}
+hr::after{
+    content: '';
+    margin: 5px 0;
+    display: block;
+    height: 1px;
+    width: inherit;
+    background-color: #e0e0e0;
 }
 
 button{

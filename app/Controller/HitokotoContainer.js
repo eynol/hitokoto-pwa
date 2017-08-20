@@ -1,11 +1,10 @@
 import React, {Component} from 'react'
 import style from '../component/HitokotoLayout.css'
-import TweenOne from 'rc-tween-one';
+
 import QueueAnim from 'rc-queue-anim';
 import hitokotoDriver from '../API/hitokotoDriver'
-import Card from '../component/Card'
-import LayoutHorizon from '../component/LayoutHorizon'
-import LayoutVertical from '../component/LayoutVertical'
+
+import HitokotoDisplay from '../component/HitokotoDisplay'
 import Action from '../component/Action'
 
 import nextImg from '../img/next.png'
@@ -20,44 +19,33 @@ const DEFAULT_HITOKOTO = {
   type: "origin"
 }
 let PROCESSING = false;
-let ClassMap = {
-  'default': 'inherit',
-  'simsun': "'Noto Serif CJK SC', 'Source Han Serif SC', 'Source Han Serif', source-han-serif" +
-      "-sc, '宋体', SimSun, '华文细黑', STXihei, serif",
-  'fangsong': 'Georgia,"Times New Roman", "FangSong", "仿宋", STFangSong, "华文仿宋", serif',
-  'kai': '"楷体",serif'
-}
 
-let ANIMATE_CONFIG = [
-  {
-    opacity: [
-      1, 0
-    ],
-    translateX: [0, 50]
-  }, {
-    opacity: [
-      1, 0
-    ],
-    position: 'absolute',
-    translateX: [0, -50]
-  }
-]
 class HitokotoContainer extends Component {
 
   constructor(props) {
     super(props);
-    this.state = getInstantHitokoto();
+    this.state = {
+      instant: getInstantHitokoto(),
+      hitokoto: null,
+      processing: false
+    };
     hitokotoDriver
       .registHitokotoHandler(this.hitokotoHandler.bind(this))
+      .registUIProcessingHandler(this.processingHandler.bind(this))
       .start()
 
     // this.state = {   hitokoto: '你看那个人好像一条狗欸~',   from: '中二病的世界花样多',   id: 23,
     // creator: '超长待机飞利浦防水手机' }
   }
 
+  processingHandler(processing) {
+
+    this.setState({processing: processing})
+
+  }
   hitokotoHandler(hitokoto) {
     console.log(hitokoto)
-    this.setState(hitokoto);
+    this.setState({hitokoto: hitokoto});
     setInstantHitokoto(hitokoto);
   }
   handleNext() {
@@ -66,41 +54,18 @@ class HitokotoContainer extends Component {
 
   render() {
     let callbacks = {
-
       handleNext: this
         .handleNext
         .bind(this)
     };
-
-    let {font, fontWeight, layoutHorizon, backgroundColor} = this.props.layout;
-
-    if (layoutHorizon) {
-      return (
-        <QueueAnim animConfig={ANIMATE_CONFIG} className="animate-none-sense">
-          <LayoutHorizon
-            key={this.state.id}
-            hitoid={this.state.id}
-            creator={this.state.creator}
-            img={'nothing'}
-            hitokoto={this.state.hitokoto}
-            from={this.state.from}
-            callbacks={callbacks}
-            fontFamily={ClassMap[font]}
-            fontWeight={fontWeight}/>
-        </QueueAnim>
-      )
-    } else {
-      return (<LayoutVertical
-        key={this.state.id}
-        hitoid={this.state.id}
-        creator={this.state.creator}
-        img={'nothing'}
-        hitokoto={this.state.hitokoto}
-        from={this.state.from}
+    let hitokoto = this.state.hitokoto || this.state.instant;
+    return (
+      <HitokotoDisplay
+        hitokoto={hitokoto}
         callbacks={callbacks}
-        fontFamily={ClassMap[font]}
-        fontWeight={fontWeight}/>)
-    }
+        layout={this.props.layout}
+        processing={this.state.processing}></HitokotoDisplay>
+    )
   }
 
 }

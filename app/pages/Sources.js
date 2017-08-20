@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
-import {Link} from 'react-router-dom';
+import {Link, withRouter} from 'react-router-dom';
 import QueueAnim from 'rc-queue-anim';
+
 import hitokotoDriver from '../API/hitokotoDriver'
 import FullPageCard from '../component/FullPageCard'
 import SourceDisplay from '../component/SourceDisplay'
@@ -27,7 +28,9 @@ class Sources extends Component {
       newSource: undefined
     }
   }
-
+  shouldComponentUpdate(nextProps, nextState) {
+    return nextProps.location.pathname == nextProps.path || this.props.location.pathname == nextProps.path;
+  }
   showNewSource() {
     this.setState({
       newSource: Date.now()
@@ -120,7 +123,7 @@ class Sources extends Component {
         )
       })
 
-    let sourceDisplayC;
+    let sourceDisplayC = null;
     if (this.state.update) {
       let sourceToUpdate = this
         .state
@@ -133,6 +136,7 @@ class Sources extends Component {
           }
         })
       sourceDisplayC = (<SourceDisplay
+        key={this.state.update}
         title='修改'
         sid={this.state.update}
         hook={{
@@ -149,6 +153,7 @@ class Sources extends Component {
         source={sourceToUpdate}/>)
     } else if (this.state.newSource) {
       sourceDisplayC = (<SourceDisplay
+        key={this.state.newSource}
         title='新增'
         hook={{
         newSource: this
@@ -159,43 +164,50 @@ class Sources extends Component {
           .bind(this)
       }}/>)
     }
+    let {location, path} = this.props;
 
     return (
-
-      <FullPageCard>
-        <div className={manageBox}>
-          <h1 className={clearfix}>来源管理
-            <Link to='/' className={closeButton}>
-              <i className={icon + ' ' + close}></i>
-            </Link>
-            <Link to='/' className={backButton}>
-              <i className={icon + ' ' + back}></i>
-            </Link>
-          </h1>
-          <hr/>
-          <p>
-            <i>Tips:</i>
-            在这里添加其他域名下的hitokoto一言接口，然后在<Link to='/patterns'>模式管理</Link>中使用哦~</p>
-          <div>
-            <QueueAnim component="ul" className={sourcesList}>
-              {lists}
-              <li key="new">
-                <button
-                  onClick={this
-                  .showNewSource
-                  .bind(this)}
-                  style={{
-                  float: 'right'
-                }}>添加</button>
-              </li>
-            </QueueAnim>
-          </div>
-          {sourceDisplayC}
-        </div>
-      </FullPageCard>
+      <QueueAnim type={['right', 'left']} ease={['easeOutQuart', 'easeInOutQuart']}>{location.pathname == path
+          ? <FullPageCard key={path}>
+              <div className={manageBox}>
+                <h1 className={clearfix}>来源管理
+                  <Link to='/' className={closeButton}>
+                    <i className={icon + ' ' + close}></i>
+                  </Link>
+                  <Link to='/' className={backButton}>
+                    <i className={icon + ' ' + back}></i>
+                  </Link>
+                </h1>
+                <br/>
+                <p>
+                  <i>Tips:</i>
+                  在这里添加其他域名下的hitokoto一言接口，然后在<Link to='/patterns'>模式管理</Link>中使用哦~</p>
+                <div>
+                  <QueueAnim
+                    component="ul"
+                    ease={['easeOutQuart', 'easeInOutQuart']}
+                    className={sourcesList}>
+                    {lists}
+                    <li key="new">
+                      <button
+                        onClick={this
+                        .showNewSource
+                        .bind(this)}
+                        style={{
+                        float: 'right'
+                      }}>添加</button>
+                    </li>
+                  </QueueAnim>
+                </div>
+                <QueueAnim type={['right', 'left']} ease={['easeOutQuart', 'easeInOutQuart']}>
+                  {sourceDisplayC}</QueueAnim>
+              </div>
+            </FullPageCard>
+          : null}
+      </QueueAnim>
 
     );
   }
 }
 
-export default Sources;
+export default withRouter(Sources);

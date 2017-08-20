@@ -43,6 +43,7 @@
 .layout_horizon {
     width: 100%;
     padding: 140px 50px 50px;
+    will-change: opacity,translate;
 }
 
 .layout_horizon .Header {
@@ -59,6 +60,7 @@
     background-color: #fff; 
     /* box-shadow: 0 3px 10px rgba(0,0,0,.15); */
     border-radius: 4px;
+    will-change: transiform;
 }
 
 .layout_horizon .Content>h1 {
@@ -154,6 +156,7 @@ ul.actions li{
     overflow: auto;
     /* height: 20em; */
     padding: 80px 400px 50px 20px;
+    will-change: transiform;
     /* font-family: 'Noto Serif CJK SC', 'Source Han Serif SC', ‘Source Han Serif’, source-han-serif-sc, '宋体', serif;
     font-weight: 900; */
 }
@@ -181,6 +184,7 @@ ul.actions li{
     /* background-color: rgba(255, 255, 255, .78); */
     padding: 25px;
     border-radius: 4px;
+    will-change: opacity,translate;
     /* box-shadow: 0 3px 10px rgba(0, 0, 0, .15); */
 }
 
