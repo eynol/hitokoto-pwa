@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import style from './App.css';
-
+import {HashRouter as Router} from 'react-router-dom';
 import AppContainer from './Controller/AppContainer'
 
 /**
@@ -12,9 +12,9 @@ class App extends Component {
 
   render() {
     return (
-      <div className={style.root}>
+      <Router>
         <AppContainer></AppContainer>
-      </div>
+      </Router>
     );
   }
 }

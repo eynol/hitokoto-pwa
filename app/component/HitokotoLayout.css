@@ -41,7 +41,9 @@
 /* Two  Layout */
 
 .layout_horizon {
+    height: 100%;
     width: 100%;
+    overflow: auto;
     padding: 140px 50px 50px;
     will-change: opacity,translate;
 }

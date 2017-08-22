@@ -9,7 +9,7 @@ import Action from '../component/Action'
 
 import nextImg from '../img/next.png'
 
-console.log(hitokotoDriver);
+console.log('in hitokotoContainer');
 const INSTANT_HITOKOTO_NAME = "instantHitokoto";
 const DEFAULT_HITOKOTO = {
   creator: "Tao.Da",
@@ -24,38 +24,68 @@ class HitokotoContainer extends Component {
 
   constructor(props) {
     super(props);
+    let _instantHitokoto = getInstantHitokoto()
     this.state = {
-      instant: getInstantHitokoto(),
+      instant: _instantHitokoto,
       hitokoto: null,
-      processing: false
+      processing: false,
+      direction: 'next',
+      lastCount: 1,
+      nextCount: 5
     };
     hitokotoDriver
-      .registHitokotoHandler(this.hitokotoHandler.bind(this))
+      .initRollback(_instantHitokoto)
+      .registNextHitokotoHandler(this.nextHitokotoHandler.bind(this))
+      .registLastHitokotoHandler(this.lastHitokotoHandler.bind(this))
       .registUIProcessingHandler(this.processingHandler.bind(this))
       .start()
-
-    // this.state = {   hitokoto: '你看那个人好像一条狗欸~',   from: '中二病的世界花样多',   id: 23,
-    // creator: '超长待机飞利浦防水手机' }
   }
 
+  componentDidMount(e) {
+    hitokotoDriver.start()
+  }
+  componentWillUnmount(e) {
+    hitokotoDriver.stop()
+  }
+  componentWillReceiveProps(nextProps) {
+    console.log('nextProps ', nextProps)
+
+    if (/^\/$|^\/layoutsetting/.test(nextProps.location.pathname)) {
+      console.log('start hitokoto')
+      hitokotoDriver.start()
+    } else {
+      console.log('stop hito')
+      hitokotoDriver.stop();
+    }
+  }
   processingHandler(processing) {
-
     this.setState({processing: processing})
-
   }
-  hitokotoHandler(hitokoto) {
-    console.log(hitokoto)
-    this.setState({hitokoto: hitokoto});
+  nextHitokotoHandler(hitokoto, {lastCount, nextCount}) {
+    console.log(hitokoto, lastCount, nextCount)
+    this.setState({hitokoto: hitokoto, direction: 'next', lastCount, nextCount});
     setInstantHitokoto(hitokoto);
   }
+  lastHitokotoHandler(hitokoto, {lastCount, nextCount}) {
+    console.log(hitokoto, lastCount, nextCount)
+    this.setState({hitokoto: hitokoto, direction: 'back', lastCount, nextCount});
+  }
   handleNext() {
-    hitokotoDriver.next()
+    if (this.state.processing) {} else {
+      hitokotoDriver.next()
+    }
+  }
+  handleLast() {
+    hitokotoDriver.last()
   }
 
   render() {
     let callbacks = {
       handleNext: this
         .handleNext
+        .bind(this),
+      handleLast: this
+        .handleLast
         .bind(this)
     };
     let hitokoto = this.state.hitokoto || this.state.instant;
@@ -63,6 +93,9 @@ class HitokotoContainer extends Component {
       <HitokotoDisplay
         hitokoto={hitokoto}
         callbacks={callbacks}
+        direction={this.state.direction}
+        lastCount={this.state.lastCount}
+        nextCount={this.state.nextCount}
         layout={this.props.layout}
         processing={this.state.processing}></HitokotoDisplay>
     )

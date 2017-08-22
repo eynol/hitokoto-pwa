@@ -18,6 +18,7 @@ import Patterns from '../pages/Patterns'
 import Sources from '../pages/Sources'
 import About from '../pages/About'
 import NewHitokoto from '../pages/NewHitokoto'
+import Home from '../pages/Home'
 
 const INSTANT_LAYOUT_NAME = 'instant_layout';
 const DEFAULT_LAYOUT = {
@@ -58,8 +59,9 @@ class AppContainer extends Component {
       let pattern = hitokotoDriver
         .patterManager
         .getPatternById(id);
-      hitokotoDriver.drive(pattern);
-      hitokotoDriver.start();
+      hitokotoDriver
+        .drive(pattern)
+        .start();
       this.setState({currentPatternID: id})
     }
   }
@@ -100,7 +102,7 @@ class AppContainer extends Component {
         overflow: 'hidden'
       }}>
         <Logo/>
-        <HitokotoContainer layout={this.state.layout}/>
+        <HitokotoContainer location={this.props.location} layout={this.state.layout}/>
         <Nav
           inline={true}
           nickname={this.state.nickname}
@@ -154,36 +156,81 @@ class AppContainer extends Component {
       </div>
     );
 
-    return (
-      <Router>
+    let secondFrame = (<Home key='secondframe' path='/home'/>)
+      let path = this.props.location.pathname,
+        frameToShow,
+        animateConfig;
+      if (/^\/home/gim.test(path)) {
+        frameToShow = secondFrame;
+        animateConfig = [
+          {
+            translateY: ['0%', '-100%']
+          }, {
+            position: 'absolute',
+            translateY: ['0%', '100%']
+          }, {
+            position: 'absolute',
+            translateY: ['0%', '-100%']
+          }
+        ]
+      } else {
+        frameToShow = firstFrame;
+        animateConfig = [
+          {
+            translateY: ['0%', '100%']
+          }, {
+            position: 'absolute',
+            translateY: ['0%', '-100%']
+          }
+        ]
+      }
+
+      return (
+
         <QueueAnim
           style={{
           width: '100%',
           position: 'relative',
           height: '100%'
-        }}>
-          {firstFrame}
+        }}
+          duration='1000'
+          animConfig={[
+          {
+            opacity: [
+              1, 0
+            ],
+            translateX: [0, 100]
+          }, {
+            opacity: [
+              1, 0
+            ],
+            position: 'absolute',
+            zIndex: '-1',
+            translateX: [0, -100]
+          }
+        ]}>
+          {frameToShow}
         </QueueAnim>
-      </Router>
-    )
-  }
-}
-function $getInstantLayout() {
-  let string = localStorage.getItem(INSTANT_LAYOUT_NAME);
-  if (!string) {
-    return DEFAULT_LAYOUT;
-  }
-  return JSON.parse(string);
-}
-function $setInstantLayout(layout) {
-  localStorage.setItem(INSTANT_LAYOUT_NAME, JSON.stringify(layout));
-}
 
-function $getNickname() {
-  return localStorage.getItem(USER_NICKNAME) || '';
-}
-function $setNickname(name) {
-  localStorage.setItem(USER_NICKNAME, name);
-}
+      )
+    }
+  }
+  function $getInstantLayout() {
+    let string = localStorage.getItem(INSTANT_LAYOUT_NAME);
+    if (!string) {
+      return DEFAULT_LAYOUT;
+    }
+    return JSON.parse(string);
+  }
+  function $setInstantLayout(layout) {
+    localStorage.setItem(INSTANT_LAYOUT_NAME, JSON.stringify(layout));
+  }
 
-export default AppContainer;
+  function $getNickname() {
+    return localStorage.getItem(USER_NICKNAME) || '';
+  }
+  function $setNickname(name) {
+    localStorage.setItem(USER_NICKNAME, name);
+  }
+
+  export default withRouter(AppContainer);

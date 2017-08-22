@@ -33,6 +33,7 @@
   },
   "dependencies": {
     "crypto-js": "^3.1.9-1",
+    "dexie": "^1.5.1",
     "rc-queue-anim": "^1.2.2",
     "rc-tween-one": "^1.4.4",
     "react": "^15.1.0",

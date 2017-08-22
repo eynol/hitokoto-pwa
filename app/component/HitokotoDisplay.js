@@ -6,55 +6,77 @@ import LayoutVertical from './LayoutVertical'
 import {Link} from 'react-router-dom'
 
 import {love} from './HitokotoLayout.css'
-let ANIMATE_CONFIG = [
+let ANIMATE_CONFIG_NEXT = [
   {
     opacity: [
       1, 0
     ],
-    translateX: [0, 50]
+    translateZ: [
+      0, 20
+    ],
+    translateX: [0, 100]
   }, {
     opacity: [
       1, 0
     ],
     position: 'absolute',
-    translateX: [0, -50]
+    zIndex: '100',
+    translateX: [0, -100]
+  }
+]
+let ANIMATE_CONFIG_LAST = [
+  {
+    opacity: [
+      1, 0
+    ],
+    rotate: [
+      0, '-90deg'
+    ],
+    translateY: [0, 50]
+  }, {
+    opacity: [
+      1, 0
+    ],
+    position: 'absolute',
+    zIndex: '100'
   }
 ]
 class HitokotoDisplay extends Component {
   render() {
 
-    let {hitokoto, layout, callbacks: {
-          handleNext
-        }, processing} = this.props,
+    let {
+        hitokoto,
+        layout,
+        callbacks: {
+          handleNext,
+          handleLast
+        },
+        direction,
+        lastCount,
+        nextCount,
+        processing
+      } = this.props,
       id = hitokoto.id,
-      layoutHorizon = layout.layoutHorizon,
-      nextHorizon = processing
-        ? (
-          <a href="javascript:;">...</a>
-        )
-        : (
-          <a href="javascript:" onClick={handleNext}>下一条</a>
-        ),
-      nextVertical = processing
-        ? (
-          <li key={id + 'processing'}>
-            <a href="javascript:">...</a>
-          </li>
-        )
-        : (
-          <li key={id + 'next'}>
-            <a href="javascript:" onClick={handleNext}>下一条</a>
-          </li>
-        );
+      layoutHorizon = layout.layoutHorizon;
 
-    if (processing) {}
+    console.log(lastCount)
     let ActionsHorizon = (
       <ul data-role="actions">
         <li>
-          <a href="javascript:" className={love}></a>·<Link to="/layoutsetting">显示设置</Link>
+          <a href="javascript:" className={love}></a>
         </li>
         <li>
-          {nextHorizon}
+          <Link to="/layoutsetting">显示设置</Link>
+          {lastCount > 1
+            ? '·'
+            : null}
+          {lastCount > 1
+            ? <a href='javascript:' onClick={handleLast}>上一条</a>
+            : null}
+          ·
+          <a href="javascript:" onClick={handleNext}>{processing
+              ? 'emm..'
+              : '下一条'}</a>
         </li>
       </ul>
     );
@@ -66,14 +88,25 @@ class HitokotoDisplay extends Component {
         <li key={id + 'pagesetting'}>
           <Link to="/layoutsetting">显示设置</Link>
         </li>
-        {nextVertical}
+        {lastCount > 1
+          ? <li key={id + 'last'}>
+              <a href='javascript:' onClick={handleLast}>上一条</a>
+            </li>
+          : null}
+        <li key={id + 'next'}>
+          <a href="javascript:" onClick={handleNext}>{processing
+              ? 'emm..'
+              : '下一条'}</a>
+        </li>
       </ul>
     )
 
     if (layoutHorizon) {
       return (
         <QueueAnim
-          animConfig={ANIMATE_CONFIG}
+          animConfig={direction == 'next'
+          ? ANIMATE_CONFIG_NEXT
+          : ANIMATE_CONFIG_LAST}
           ease={['easeOutQuart', 'easeInOutQuart']}
           className="animate-none-sense"
           style={{

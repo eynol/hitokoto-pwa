@@ -78,7 +78,7 @@ export default class HTTPManager {
     let _that = this;
 
     if (this.inited) {
-      return timeoutPromise(5000, fetch(url)).then(resp => resp.json())
+      return timeoutPromise(10000, fetch(url)).then(resp => resp.json())
     } else {
 
       let chain = []; // store then and catch functions;
