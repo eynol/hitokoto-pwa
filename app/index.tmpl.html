@@ -79,7 +79,27 @@
       height: 100%;
     }
   </style>
-  <style>
+  <style type='text/css'>
+    @-webkit-keyframes predelay {
+      0% {
+        opacity: 0;
+      }
+
+      100% {
+        opacity: 1;
+      }
+    }
+
+    @keyframes predelay {
+      0% {
+        opacity: 0;
+      }
+
+      100% {
+        opacity: 1;
+      }
+    }
+
     #preshow {
       position: absolute;
       z-index: -1;
@@ -91,10 +111,14 @@
       width: 300px;
       height: 100px;
       text-align: center;
+      opacity: 0;
+      animation: predelay .3s ease-out 1s forwards;
     }
-    #preshow-loading{
+
+    #preshow-loading {
       margin-top: 100px;
     }
+
     .content {
       text-align: center;
       vertical-align: middle;
