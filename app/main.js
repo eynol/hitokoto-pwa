@@ -2,7 +2,6 @@ import React from 'react';
 import {render} from 'react-dom';
 import App from './App';
 import './normalize.css';
-import './main.css';
 if (!('find' in Array.prototype)) {
   Array.prototype.find = function (func, that) {
     if (typeof func !== 'function') {
