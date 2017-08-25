@@ -4,10 +4,23 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
   devtool: 'eval-source-map',
 
-  entry: __dirname + "/app/main.js",
+  entry: {
+    vendor: [
+      "react",
+      "react-dom",
+      'react-router',
+      'react-router-dom',
+      'rc-queue-anim',
+      'dexie',
+      'crypto-js/sha1',
+      'react-textarea-autosize',
+      'whatwg-fetch'
+    ],
+    bundle: __dirname + "/app/main.js"
+  },
   output: {
     path: __dirname + "/build",
-    filename: "bundle.js"
+    filename: "[name].js"
   },
 
   module: {
@@ -35,6 +48,11 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: __dirname + "/app/index.tmpl.html"
     }),
+    new webpack
+      .optimize
+      .CommonsChunkPlugin({
+        name: ['vendor', 'runtime']
+      }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin()
   ],

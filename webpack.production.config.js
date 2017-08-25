@@ -3,7 +3,20 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
-  entry: __dirname + "/app/main.js",
+  entry: {
+    vendor: [
+      "react",
+      "react-dom",
+      'react-router',
+      'react-router-dom',
+      'rc-queue-anim',
+      'dexie',
+      'crypto-js/sha1',
+      'react-textarea-autosize',
+      'whatwg-fetch'
+    ],
+    bundle: __dirname + "/app/main.js"
+  },
   output: {
     path: __dirname + "/build",
     filename: "[name]-[hash].js"
@@ -35,8 +48,13 @@ module.exports = {
       template: __dirname + "/app/index.tmpl.html"
     }),
     new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)||'production'
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV) || 'production'
     }),
+    new webpack
+      .optimize
+      .CommonsChunkPlugin({
+        name: ['vendor', 'runtime']
+      }),
     new webpack
       .optimize
       .OccurenceOrderPlugin(),
