@@ -4,11 +4,10 @@ import style from '../component/HitokotoLayout.css';
 import {HashRouter as Router, withRouter, Route, Redirect} from 'react-router-dom';
 
 import hitokotoDriver from '../API/hitokotoDriver'
-import Card from '../component/Card'
 
 import HitokotoContainer from './HitokotoContainer'
 import Nav from '../component/Nav'
-import Logo from '../component/Logo'
+
 import Copyright from '../component/Copyright'
 
 import Login from '../pages/Login'
@@ -17,26 +16,38 @@ import LayoutSetting from '../pages/LayoutSetting'
 import Patterns from '../pages/Patterns'
 import Sources from '../pages/Sources'
 import About from '../pages/About'
-import NewHitokoto from '../pages/NewHitokoto'
 import Home from '../pages/Home'
 
-const INSTANT_LAYOUT_NAME = 'instant_layout';
-const DEFAULT_LAYOUT = {
-  font: 'simsun',
-  fontWeight: '600',
-  layoutHorizon: false,
-  backgroundColor: '#ffffff'
-}
+const ROUTES = [
+  {
+    to: /^\/$/,
+    component: About,
+    name: '首页'
+  }, {
+    to: /^\/sources$/,
+    component: Sources,
+    name: '首页'
+  }, {
+    to: /^\/patterns$/,
+    component: Patterns,
+    name: '首页'
+  }, {
+    to: /^\/home$/,
+    component: Home,
+    name: '个人中心页面'
+  }, {
+    to: /^\/about/,
+    component: About,
+    name: '关于页面'
+  }
+];
+
 const USER_NICKNAME = 'hitoUserNickname';
 class AppContainer extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      words: 'example',
-      from: '??',
-      id: 23,
-      creator: 'nou',
       layout: $getInstantLayout(),
       nickname: $getNickname(),
       path: '/',
@@ -91,8 +102,48 @@ class AppContainer extends Component {
     console.log('sign out');
     this.updateNameAndToken({nickname: '', token: ''});
   }
+  getChildren(props) {
+    const {location} = props;
+    const mathPath = ROUTES
+      .map(item => {
+      if (item.to.test(location.pathname)) {
+        return item;
+      }
+    })
+      .filter(item => item)[0];
+    const Child = mathPath.component;
+    return (
+      <QueueAnim
+        style={{
+        width: '100%',
+        position: 'relative',
+        height: '100%',
+        backgroundColor: 'white'
+      }}
+        duration='1000'
+        animConfig={[
+        {
+          opacity: [
+            1, 0
+          ],
+          translateX: [0, -50]
+        }, {
+          opacity: [
+            1, 0
+          ],
+          position: 'absolute',
+          translateX: [0, 50]
+        }
+      ]}>
+        <Child key={location.pathname}/>
+      </QueueAnim>
+    );
+  }
   render() {
-
+    return (<Route render={this.getChildren}/>);
+  }
+  renders() {
+    console.log('app container render')
     let firstFrame = (
       <div
         key="firstFrame"
@@ -101,7 +152,7 @@ class AppContainer extends Component {
         height: '100%',
         overflow: 'hidden'
       }}>
-        <Logo/>
+
         <HitokotoContainer location={this.props.location} layout={this.state.layout}/>
         <Nav
           inline={true}
@@ -143,7 +194,6 @@ class AppContainer extends Component {
           .bind(this)}/>
         <Patterns path='/patterns'/>
         <Sources path='/sources'/>
-        <NewHitokoto path='/new'/>
         <Route
           path='/exit'
           render={({match, location, history}) => {
@@ -156,42 +206,26 @@ class AppContainer extends Component {
       </div>
     );
 
-    let secondFrame = (<Home key='secondframe' path='/home'/>)
+    let secondFrame = (<Home
+      key='secondframe'
+      nickname={this.state.nickname}
+      layout={this.state.layout}
+      path='/home'/>)
       let path = this.props.location.pathname,
-        frameToShow,
-        animateConfig;
-      if (/^\/home/gim.test(path)) {
+        frameToShow;
+      if (/(^\/home|^\/collections)/gim.test(path)) {
         frameToShow = secondFrame;
-        animateConfig = [
-          {
-            translateY: ['0%', '-100%']
-          }, {
-            position: 'absolute',
-            translateY: ['0%', '100%']
-          }, {
-            position: 'absolute',
-            translateY: ['0%', '-100%']
-          }
-        ]
       } else {
         frameToShow = firstFrame;
-        animateConfig = [
-          {
-            translateY: ['0%', '100%']
-          }, {
-            position: 'absolute',
-            translateY: ['0%', '-100%']
-          }
-        ]
       }
 
       return (
-
         <QueueAnim
           style={{
           width: '100%',
           position: 'relative',
-          height: '100%'
+          height: '100%',
+          backgroundColor: 'white'
         }}
           duration='1000'
           animConfig={[
@@ -199,32 +233,23 @@ class AppContainer extends Component {
             opacity: [
               1, 0
             ],
-            translateX: [0, 100]
+            translateX: [0, -50]
           }, {
             opacity: [
               1, 0
             ],
             position: 'absolute',
-            zIndex: '-1',
-            translateX: [0, -100]
+            translateX: [0, 50]
           }
         ]}>
-          {frameToShow}
+          <Route path='/' key='/' render={Page1}/>
+          <Route path='/home' key='/home' render={Page2}/>
         </QueueAnim>
-
       )
     }
   }
-  function $getInstantLayout() {
-    let string = localStorage.getItem(INSTANT_LAYOUT_NAME);
-    if (!string) {
-      return DEFAULT_LAYOUT;
-    }
-    return JSON.parse(string);
-  }
-  function $setInstantLayout(layout) {
-    localStorage.setItem(INSTANT_LAYOUT_NAME, JSON.stringify(layout));
-  }
+
+  export default AppContainer;
 
   function $getNickname() {
     return localStorage.getItem(USER_NICKNAME) || '';
@@ -232,5 +257,3 @@ class AppContainer extends Component {
   function $setNickname(name) {
     localStorage.setItem(USER_NICKNAME, name);
   }
-
-  export default withRouter(AppContainer);

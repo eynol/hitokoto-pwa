@@ -28,9 +28,6 @@ class Patterns extends Component {
       newPattern: undefined
     }
   }
-  shouldComponentUpdate(nextProps, nextState) {
-    return nextProps.location.pathname == nextProps.path || this.props.location.pathname == nextProps.path;
-  }
   showUpdate(id) {
     this.setState({update: id});
   }
@@ -64,6 +61,12 @@ class Patterns extends Component {
       .newPattern(pattern);
     this.hideNewPattern();
     this.setState({pattern: hitokotoDriver.patterManager.patterns})
+  }
+  goBack() {
+    this
+      .props
+      .history
+      .goBack();
   }
   render() {
 
@@ -129,23 +132,34 @@ class Patterns extends Component {
       }}/>)
     }
     let {location, path} = this.props;
-    let Child = (
+    return (
       <FullPageCard key={path}>
         <div className={manageBox}>
           <input type="radio" name="pattern-tab" value="pattern" hidden/>
           <input type="radio" name="pattern-tab" value="api" hidden/>
           <h1>模式管理
-            <Link to='/' className={closeButton}>
+            <a
+              href="javascript:"
+              onClick={this
+              .goBack
+              .bind(this)}
+              className={closeButton}>
               <i className={icon + ' ' + close}></i>
-            </Link>
-            <Link to='/' className={backButton}>
+            </a>
+            <a
+              href="javascript:"
+              onClick={this
+              .goBack
+              .bind(this)}
+              className={backButton}>
               <i className={icon + ' ' + back}></i>
-            </Link>
+            </a>
           </h1>
           <br/>
           <div>
             <QueueAnim
               component="ul"
+              type={['left', 'right']}
               ease={['easeOutQuart', 'easeInOutQuart']}
               className={sourcesList}>
               {lists}
@@ -161,16 +175,10 @@ class Patterns extends Component {
             </QueueAnim>
           </div>
         </div>
-        <QueueAnim type={['right', 'left']} ease={['easeOutQuart', 'easeInOutQuart']}>{patternDisplay}</QueueAnim>
+        <QueueAnim type={['left', 'right']} ease={['easeOutQuart', 'easeInOutQuart']}>{patternDisplay}</QueueAnim>
       </FullPageCard>
     )
-    return (
-      <QueueAnim type={['right', 'left']} ease={['easeOutQuart', 'easeInOutQuart']}>
-        {location.pathname == path
-          ? Child
-          : null}
-      </QueueAnim>
-    );
+
   }
 }
 

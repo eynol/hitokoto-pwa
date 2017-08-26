@@ -282,6 +282,7 @@ class Regist extends Component {
           <div className={textFiled}><input
             type="text"
             required
+            maxlength="20"
             onChange={this
         .handleNicknameChange
         .bind(this)}
@@ -345,7 +346,7 @@ class Regist extends Component {
 
     let {path, location} = this.props;
     return (
-      <QueueAnim type={['right', 'left']} ease={['easeOutQuart', 'easeInOutQuart']}>{location.pathname == path
+      <QueueAnim type={['left', 'right']} ease={['easeOutQuart', 'easeInOutQuart']}>{location.pathname == path
           ? (this.state.step == 1
             ? step1
             : step2)

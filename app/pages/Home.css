@@ -1,4 +1,51 @@
-.home{
-  background-color: hsl(230, 100%, 41%);
-  height: 100%;
+.home {
+    background-color: #fff;
+    width: 100%;
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+}
+
+.username {
+    /* position: absolute; */
+    /* top: 60px; */
+    font-size: 24px;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+    /* left: 200px; */
+    /* text-align: right; */
+}
+
+.menu {
+    list-style: none;
+    letter-spacing: 2px;
+    font-size: 16px;
+    line-height: 2;
+}
+
+.menu a {
+    text-decoration: none;
+    padding-bottom: 3px;
+}
+
+.menu a:focus,
+.menu a:hover {
+    outline: none;
+    border-bottom: 1px solid currentColor;
+}
+
+.left {
+    padding-top: 100px;
+    width: 300px;
+    float: left;
+    height: 100%;
+    text-align: right;
+}
+
+.right {
+    margin-left: 350px;
+    padding-top: 50px;
+    position: relative;
+    overflow: auto;
+    height: 100%;
 }

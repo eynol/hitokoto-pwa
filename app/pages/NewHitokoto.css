@@ -47,7 +47,6 @@ i.close {
     display: table;
 }
 
-
 .delete-button {
     color: red;
 }
@@ -105,21 +104,22 @@ blockquote {
     border-left: 5px solid #9a9a9a
 }
 
-.hitokotoTextarea{
-    border: 1px solid transparent;    
+.hitokotoTextarea {
+    border: 1px solid transparent;
     font-size: 16px;
     line-height: 1.8;
     font-family: inherit;
     padding: 30px;
     width: 100%;
     white-space: pre-line;
-    border-left: 5px solid rgba(0,0,0,.56);
+    border-left: 5px solid rgba(0, 0, 0, .56);
 }
-.hitokotoTextarea:focus{
-    outline: none;
-}       
 
-.hitokotoSouceInput{
+.hitokotoTextarea:focus {
+    outline: none;
+}
+
+.hitokotoSouceInput {
     display: block;
     text-align: right;
     width: 100%;
@@ -128,9 +128,31 @@ blockquote {
     border: none;
     -webkit-appearance: none;
 }
-.hitokotoSouceInput:invalid{
-    color:red;
+
+.hitokotoSouceInput:invalid {
+    color: red;
 }
-.hitokotoSouceInput:valid{
-    color:black;
+
+.hitokotoSouceInput:valid {
+    color: black;
+}
+
+.hitokotoSouceTypeBlock {
+    /* text-align: right; */
+    padding-right: 50px;
+}
+
+.hitokotoSouceTypeBlock select {
+    padding: 5px 10px;
+    border-radius: 4px;
+    line-height: 1.7;
+    letter-spacing: 1.2px;
+}
+
+.hitokotoSouceTypeBlock select:focus{
+    outline: none;
+    border: 1px solid #0095d9;
+}
+.operations{
+padding: 20px 0 ;
 }

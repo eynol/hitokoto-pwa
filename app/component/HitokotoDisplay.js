@@ -14,14 +14,13 @@ let ANIMATE_CONFIG_NEXT = [
     translateZ: [
       0, 20
     ],
-    translateX: [0, 100]
+    translateX: [0, -100]
   }, {
     opacity: [
       1, 0
     ],
     position: 'absolute',
-    zIndex: '100',
-    translateX: [0, -100]
+    translateX: [0, 100]
   }
 ]
 let ANIMATE_CONFIG_LAST = [
@@ -29,16 +28,16 @@ let ANIMATE_CONFIG_LAST = [
     opacity: [
       1, 0
     ],
-    rotate: [
-      0, '-90deg'
+    translateZ: [
+      0, 20
     ],
-    translateY: [0, 50]
+    translateX: [0, 100]
   }, {
     opacity: [
       1, 0
     ],
     position: 'absolute',
-    zIndex: '100'
+    translateX: [0, -100]
   }
 ]
 class HitokotoDisplay extends Component {
@@ -54,12 +53,12 @@ class HitokotoDisplay extends Component {
         direction,
         lastCount,
         nextCount,
-        processing
+        processing,
+        preview
       } = this.props,
       id = hitokoto.id,
       layoutHorizon = layout.layoutHorizon;
 
-    console.log(lastCount)
     let ActionsHorizon = (
       <ul data-role="actions">
         <li>
@@ -116,7 +115,6 @@ class HitokotoDisplay extends Component {
         }}>
           <LayoutHorizon key={id} hitokoto={hitokoto} layout={layout}>
             {ActionsHorizon}
-            <p>fawe</p>
           </LayoutHorizon>
         </QueueAnim>
       )

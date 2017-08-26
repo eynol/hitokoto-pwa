@@ -106,6 +106,12 @@ class Sources extends Component {
   hideUpdate() {
     this.setState({update: undefined});
   }
+  goBack() {
+    this
+      .props
+      .history
+      .goBack();
+  }
   render() {
     let lists = this
       .state
@@ -167,16 +173,26 @@ class Sources extends Component {
     let {location, path} = this.props;
 
     return (
-      <QueueAnim type={['right', 'left']} ease={['easeOutQuart', 'easeInOutQuart']}>{location.pathname == path
+      <QueueAnim type={['left', 'right']} ease={['easeOutQuart', 'easeInOutQuart']}>{location.pathname == path
           ? <FullPageCard key={path}>
               <div className={manageBox}>
                 <h1 className={clearfix}>来源管理
-                  <Link to='/' className={closeButton}>
+                  <a
+                    href="javascript:"
+                    onClick={this
+                    .goBack
+                    .bind(this)}
+                    className={closeButton}>
                     <i className={icon + ' ' + close}></i>
-                  </Link>
-                  <Link to='/' className={backButton}>
+                  </a>
+                  <a
+                    href="javascript:"
+                    onClick={this
+                    .goBack
+                    .bind(this)}
+                    className={backButton}>
                     <i className={icon + ' ' + back}></i>
-                  </Link>
+                  </a>
                 </h1>
                 <br/>
                 <p>
@@ -185,6 +201,7 @@ class Sources extends Component {
                 <div>
                   <QueueAnim
                     component="ul"
+                    type={['left', 'right']}
                     ease={['easeOutQuart', 'easeInOutQuart']}
                     className={sourcesList}>
                     {lists}
@@ -199,7 +216,7 @@ class Sources extends Component {
                     </li>
                   </QueueAnim>
                 </div>
-                <QueueAnim type={['right', 'left']} ease={['easeOutQuart', 'easeInOutQuart']}>
+                <QueueAnim type={['left', 'right']} ease={['easeOutQuart', 'easeInOutQuart']}>
                   {sourceDisplayC}</QueueAnim>
               </div>
             </FullPageCard>

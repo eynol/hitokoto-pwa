@@ -1,8 +1,16 @@
 
 .logo{
   position: absolute;
+  writing-mode: horizontal-tb;
   top: 15px;
   left: 50px;
   z-index: 200;
   cursor: pointer;
+}
+@media screen and (max-width:768px){
+
+  .logo h1{
+    margin: 5px ;
+  }
+  
 }

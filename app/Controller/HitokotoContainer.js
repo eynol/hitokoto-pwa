@@ -5,11 +5,9 @@ import QueueAnim from 'rc-queue-anim';
 import hitokotoDriver from '../API/hitokotoDriver'
 
 import HitokotoDisplay from '../component/HitokotoDisplay'
-import Action from '../component/Action'
 
 import nextImg from '../img/next.png'
 
-console.log('in hitokotoContainer');
 const INSTANT_HITOKOTO_NAME = "instantHitokoto";
 const DEFAULT_HITOKOTO = {
   creator: "Tao.Da",
@@ -41,10 +39,16 @@ class HitokotoContainer extends Component {
       .start()
   }
 
-  componentDidMount(e) {
-    hitokotoDriver.start()
+  componentDidMount() {
+    if (/^\/$|^\/layoutsetting/.test(this.props.location.pathname)) {
+      console.log('componentDidMount start hitokoto')
+      hitokotoDriver.start()
+    } else {
+      console.log('componentDidMount stop hito')
+      hitokotoDriver.stop();
+    }
   }
-  componentWillUnmount(e) {
+  componentWillUnmount() {
     hitokotoDriver.stop()
   }
   componentWillReceiveProps(nextProps) {
@@ -106,7 +110,7 @@ export default HitokotoContainer;
 
 function getInstantHitokoto() {
   let string = localStorage.getItem(INSTANT_HITOKOTO_NAME);
-  if (!string) {
+  if (!string || string == 'undefined') {
     return DEFAULT_HITOKOTO;
   }
   return JSON.parse(string);

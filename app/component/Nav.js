@@ -39,10 +39,7 @@ let beforeLogin = (props) => (
 let online = (props) => (
   <ul>
     <li>
-      <Link to='/dashboard' title="前往个人中心">{props.nickname}</Link>
-    </li>
-    <li>
-      <Link to='/new'>新增</Link>
+      <Link to='/home' title="前往个人中心">{props.nickname}</Link>
     </li>
     <li>
       <Link to='/sources'>来源管理</Link>
@@ -53,9 +50,8 @@ let online = (props) => (
     <li>
       <Link to='/about'>关于Hitokoto</Link>
     </li>
-    <li><hr/></li>
     <li>
-      <Link to='/exit' onClick={props.navCallbacks.exit}>退出</Link>
+      <Link to='/exit' onClick={props.navCallbacks.exit}>注销</Link>
     </li>
   </ul>
 )

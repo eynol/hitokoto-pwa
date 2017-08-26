@@ -1,19 +1,19 @@
 import React from 'react'
 import QueueAnim from 'rc-queue-anim';
-
+import Logo from './Logo'
 import {layout_horizon, Content, info, actions, love} from './HitokotoLayout.css'
 let ANIMATE_CONFIG = [
   {
     opacity: [
       1, 0
     ],
-    translateX: [0, 50]
+    translateX: [0, -50]
   }, {
     opacity: [
       1, 0
     ],
     position: 'absolute',
-    translateX: [0, -50]
+    translateX: [0, 50]
   }
 ]
 
@@ -58,6 +58,7 @@ export default function LayoutHorizon(props) {
 
   return (
     <div className={layout_horizon}>
+      <Logo/>
       <QueueAnim animConfig={ANIMATE_CONFIG} className={Content}>
         <div className={info} key={id + 'info'}>
           <h1>

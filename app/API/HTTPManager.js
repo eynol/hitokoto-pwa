@@ -1,3 +1,4 @@
+import indexedDBManager from './IndexedDBManager'
 const TOKEN_NAME = 'hitokotoToken'
 
 function $getLSToken() {
@@ -7,11 +8,18 @@ function $setLSToken(token) {
   localStorage.setItem(TOKEN_NAME + 'localStored', token);
 }
 
+/**
+ * 传入超时时间和一个promise.
+ * 如果超过指定时间后，会返回一个Rejected的Promise。
+ * @param {Number} ms
+ * @param {Promise} promise
+ * @returns {Promise}
+ */
 function timeoutPromise(ms, promise) {
   return new Promise((resolve, reject) => {
     let timeoutId = setTimeout(() => {
       timeoutId = undefined;
-      reject(new Error("promise timeout"))
+      reject(new Error("请求超时！"))
     }, ms);
     promise.then((res) => {
       if (timeoutId) {
@@ -37,7 +45,7 @@ export default class HTTPManager {
 
     try {
       var p = Promise.resolve(2);
-      console.log(p.then);
+
       _that.inited = true;
       _that.afterInited();
     } catch (e) {
@@ -59,6 +67,14 @@ export default class HTTPManager {
 
     }
   }
+  parseToJSON(resp) {
+    if (resp.status === 200) {
+      return resp.json();
+    } else {
+      console.log(resp);
+      return Promise.reject('请求出错！')
+    }
+  }
   updateToken(token) {
     this.token = token;
     $setLSToken(token);
@@ -74,11 +90,16 @@ export default class HTTPManager {
     }
   }
 
-  request(url) {
+  getHitokoto(url) {
     let _that = this;
 
     if (this.inited) {
-      return timeoutPromise(10000, fetch(url)).then(resp => resp.json())
+      return timeoutPromise(13000, fetch(url))
+        .then(this.parseToJSON)
+        .catch(e => {
+          console.log(e)
+          return Promise.reject('请求出错！' + e)
+        })
     } else {
 
       let chain = []; // store then and catch functions;
@@ -117,7 +138,7 @@ export default class HTTPManager {
         method: 'POST',
         body: formData
       })
-      .then(resp => resp.json())
+      .then(this.parseToJSON)
       .catch(e => Promise.reject('请求出错：' + e))
   }
   API_regist(formData) {
@@ -125,7 +146,73 @@ export default class HTTPManager {
         method: 'POST',
         body: formData
       })
-      .then(resp => resp.json())
+      .then(this.parseToJSON)
+      .catch(e => Promise.reject('请求出错：' + e))
+  }
+
+  API_myCollections() {
+    return fetch('/api/collections', {
+        method: 'get',
+        headers: {
+          'X-API-TOKEN': this.token
+        }
+      })
+      .then(this.parseToJSON)
+      .catch(e => Promise.reject('请求出错：' + e))
+  }
+  API_newCollection(formData) {
+    return fetch('/api/collections', {
+      method: 'put',
+      headers: {
+        'X-API-TOKEN': this.token
+      },
+        body: formData
+      })
+      .then(this.parseToJSON)
+      .catch(e => Promise.reject('请求出错：' + e))
+  }
+  API_updateCollectionName(formData) {
+    return fetch('/api/collections', {
+      method: 'post',
+      headers: {
+        'X-API-TOKEN': this.token
+      },
+        body: formData
+      })
+      .then(this.parseToJSON)
+      .catch(e => Promise.reject('请求出错：' + e))
+  }
+  API_deleteCollection(formData) {
+    return fetch('/api/collections', {
+      method: 'delete',
+      headers: {
+        'X-API-TOKEN': this.token
+      },
+        body: formData
+      })
+      .then(this.parseToJSON)
+      .catch(e => Promise.reject('请求出错：' + e))
+  }
+  API_viewCollection(name) {
+    return fetch('/api/collections/' + name, {
+        method: 'get',
+        headers: {
+          'X-API-TOKEN': this.token
+        }
+      })
+      .then(this.parseToJSON)
+      .catch(e => Promise.reject('请求出错：' + e))
+  }
+
+  API_newHitokoto(name, formData) {
+    return fetch('/api/collections/' + name, {
+      method: 'put',
+      headers: {
+        'X-API-TOKEN': this.token
+      },
+        body: formData
+      })
+      .then(this.parseToJSON)
       .catch(e => Promise.reject('请求出错：' + e))
   }
 }

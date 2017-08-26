@@ -1,5 +1,5 @@
 import React from 'react';
-
+import Logo from './Logo'
 import QueueAnim from 'rc-queue-anim';
 import {
   layout_vertical,
@@ -49,6 +49,7 @@ export default function LayoutVertical(props) {
 
   return (
     <div className={layout_vertical}>
+      <Logo/>
       <div className={info}>
         <h1>
           <span title="序号">{id}</span>
@@ -68,16 +69,15 @@ export default function LayoutVertical(props) {
           opacity: [
             1, 0
           ],
-          translateY: [0, -30]
+          translateX: [0, -50]
         }, {
           opacity: [
             1, 0
           ],
           position: 'absolute',
-          translateY: [0, 50]
+          translateX: [0, 50]
         }
       ]}
-        ease={['easeOutQuart', 'easeInOutQuart']}
         className="animate-none-sense">
         <div
           className={Content}

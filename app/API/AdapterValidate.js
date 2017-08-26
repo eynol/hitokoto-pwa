@@ -1,6 +1,12 @@
 export const FUNC_REGEXP = /function\s*(?:\w*)(?:\s*)\(([^\)]*)\)(?:\s*)\{([\s\S]*)\}/gim;
 export const ADAPTER_ORGIN = json => json;
 
+/**
+ * 转换一个adapter适配器,传入函数字符串，返回函数
+ * 如果转换失败或者出错，返回默认的adapter
+ * @param {String} funcBody
+ * @returns {Function}
+ */
 export const PERSE_ADAPTER_SAFE = funcBody => {
   if (typeof funcBody != 'string') {
     return ADAPTER_ORGIN;
@@ -22,10 +28,22 @@ export const PERSE_ADAPTER_SAFE = funcBody => {
     }
   }
 }
+/**
+ * 转换一个adapter适配器,传入函数字符串，返回函数
+ * 出错会抛出异常。
+ * @param {String} funcBody
+ * @returns {Function}
+ */
 export const PERSE_ADAPTER = funcBody => {
   let args = AdapterValidate(funcBody);
   return Function.apply(null, args)
 }
+/**
+ * 验证一个adapter适配器,传入函数字符串，返回解析后的函数参数，函数体部分等
+ *
+ * @param {String} adapterStr
+ * @returns {Array<String>}
+ */
 export function AdapterValidate(adapterStr) {
   'use strict';
 

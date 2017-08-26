@@ -79,15 +79,19 @@ class Login extends Component {
       .props
       .loginCallback(form)
       .then((resp) => {
+        if (resp.err) {
+          this.setState({errinfo: resp.err})
+        } else {
+          this
+            .props
+            .loginDone(resp)
+          console.log(resp);
+          this
+            .props
+            .history
+            .replace('/')
+        }
 
-        this
-          .props
-          .loginDone(resp)
-        console.log(resp);
-        this
-          .props
-          .history
-          .replace('/')
       })
       .catch(err => {
         this.setState({errinfo: err})
@@ -103,7 +107,7 @@ class Login extends Component {
     }
     let {location, path} = this.props;
     return (
-      <QueueAnim type={['right', 'left']} ease={['easeOutQuart', 'easeInOutQuart']}>{location.pathname == path
+      <QueueAnim type={['left', 'right']} ease={['easeOutQuart', 'easeInOutQuart']}>{location.pathname == path
           ? <FullPage
               key={path}
               style={{

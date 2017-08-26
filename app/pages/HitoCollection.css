@@ -1,0 +1,102 @@
+.Card {
+    display: inline-block;
+    vertical-align: top;
+    width: 12em;
+    margin: 15px 10px;
+    border-radius: 4px;
+    padding: 25px 20px 10px;
+    cursor: pointer;
+    position: relative;
+}
+.Card:focus{
+    outline:none;
+}
+.Card--change {
+    padding: 0px 20px 10px;
+}
+
+.Card:before,
+.Card_content:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background-color: black;
+    transition: .5s cubic-bezier(0.23, 1, 0.32, 1);
+    transform-origin: left top;
+    transform: scale(.005, 1)
+}
+
+.Card_content:before {
+    top: auto;
+    bottom: 0;
+    transform-origin: bottom right;
+}
+
+.Card:after,
+.Card_content:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1px;
+    background-color: black;
+    height: 100%;
+    transition: .5s cubic-bezier(0.23, 1, 0.32, 1);
+    ;
+    transform-origin: top left;
+    transform: scale(1, .005)
+}
+
+.Card_content:after {
+    left: auto;
+    right: 0;
+    bottom: 0;
+    transform-origin: bottom right;
+}
+
+.Card:focus:before,
+.Card:focus .Card_content:before,
+.Card:focus:after,
+.Card:focus .Card_content:after,
+.Card:hover:before,
+.Card:hover .Card_content:before,
+.Card:hover:after,
+.Card:hover .Card_content:after {
+    transform: scale(1);
+}
+
+.Card_options>a{
+    transition: opacity .5s cubic-bezier(0.23, 1, 0.32, 1);
+    opacity: 0;
+}
+.Card--change .Card_options {
+    margin-top: -10px;
+    opacity: 1!important;
+}
+
+.Card_options.hide{
+    visibility: hidden;
+}
+.Card:focus .Card_options > a,
+.Card:hover .Card_options > a{
+    will-change: opacity;
+    opacity: 1;
+}
+.Card .Card_options>a:focus{
+    will-change: opacity;
+    opacity: 1;
+}
+
+.HitoCollection {
+    color: red;
+}
+.newone{
+    font-size: 30px;
+    display: block;
+    text-align: center;
+    padding: 13px 0;
+    margin-bottom: 15px;
+}

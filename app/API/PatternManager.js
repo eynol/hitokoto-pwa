@@ -86,7 +86,7 @@ export default class PatternManager extends SourceManager {
         });
       PATTERNS.forEach(function (src) {
         if (!urlMap[src.id]) {
-          //url不存在,添加至_sources
+          //  url不存在,添加至_sources
           this
             .patterns
             .push(src);
@@ -162,7 +162,7 @@ export default class PatternManager extends SourceManager {
               .push(source)
           })
 
-        //还要更新default
+        //  还要更新default
         if (newPattern.default) {
           this.setDefaultPattern(id);
         }
@@ -203,7 +203,7 @@ export default class PatternManager extends SourceManager {
         return pattern;
       }
     }
-    //如果没有找到
+    //  如果没有找到
     return this.patterns[0];
   }
   getPatternById(id) {
