@@ -3,34 +3,26 @@ import QueueAnim from 'rc-queue-anim';
 import style from '../component/HitokotoLayout.css';
 import {HashRouter as Router, withRouter, Route, Redirect} from 'react-router-dom';
 
-import hitokotoDriver from '../API/hitokotoDriver'
-
-import HitokotoContainer from './HitokotoContainer'
-import Nav from '../component/Nav'
-
-import Copyright from '../component/Copyright'
-
-import Login from '../pages/Login'
-import Regist from '../pages/Regist'
-import LayoutSetting from '../pages/LayoutSetting'
 import Patterns from '../pages/Patterns'
 import Sources from '../pages/Sources'
 import About from '../pages/About'
-import Home from '../pages/Home'
+import Home from '../containers/Home'
 
+import Index from '../containers/Index'
+import {ANIMATE_CONFIG_NEXT, GLOBAL_ANIMATE_TYPE} from '../configs'
 const ROUTES = [
   {
     to: /^\/$/,
-    component: About,
+    component: Index,
     name: '首页'
   }, {
     to: /^\/sources$/,
     component: Sources,
-    name: '首页'
+    name: '来源管理'
   }, {
     to: /^\/patterns$/,
     component: Patterns,
-    name: '首页'
+    name: '模式管理'
   }, {
     to: /^\/home$/,
     component: Home,
@@ -45,98 +37,35 @@ const ROUTES = [
 const USER_NICKNAME = 'hitoUserNickname';
 class AppContainer extends Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      layout: $getInstantLayout(),
-      nickname: $getNickname(),
-      path: '/',
-      currentPatternID: hitokotoDriver.pattern.id
-    }
-  }
-
-  handleLayoutChange(item, nextVal) {
-    let layout = this.state.layout;
-    if (layout[item] != nextVal) {
-      layout[item] = nextVal;
-      this.setState({'layout': layout});
-      $setInstantLayout(layout);
-    }
-    console.log(nextVal);
-  }
-  handlePatternChange(id) {
-    console.log('pattern change', id);
-    if (id !== hitokotoDriver.pattern.id) {
-      let pattern = hitokotoDriver
-        .patterManager
-        .getPatternById(id);
-      hitokotoDriver
-        .drive(pattern)
-        .start();
-      this.setState({currentPatternID: id})
-    }
-  }
-  updateNameAndToken({nickname, token}) {
-    this.setState({nickname: nickname});
-    $setNickname(nickname)
-    hitokotoDriver
-      .httpManager
-      .updateToken(token);
-  }
-  handleSignUp(formData) {
-    return hitokotoDriver
-      .httpManager
-      .API_regist(formData)
-  }
-  handleSignIn(formData) {
-    try {
-      return hitokotoDriver
-        .httpManager
-        .API_login(formData)
-    } catch (e) {
-      console.log('[UserContainer.handleSignIn]', e)
-      return Promise.reject(e);
-    }
-  }
-  handleSignOut() {
-    console.log('sign out');
-    this.updateNameAndToken({nickname: '', token: ''});
-  }
   getChildren(props) {
     const {location} = props;
-    const mathPath = ROUTES
-      .map(item => {
+    const mathPath = ROUTES.map(item => {
       if (item.to.test(location.pathname)) {
         return item;
       }
-    })
-      .filter(item => item)[0];
+    }).filter(item => item)[0];
     const Child = mathPath.component;
     return (
-      <QueueAnim
+      <div
         style={{
         width: '100%',
         position: 'relative',
         height: '100%',
         backgroundColor: 'white'
-      }}
-        duration='1000'
-        animConfig={[
-        {
-          opacity: [
-            1, 0
-          ],
-          translateX: [0, -50]
-        }, {
-          opacity: [
-            1, 0
-          ],
-          position: 'absolute',
-          translateX: [0, 50]
-        }
-      ]}>
-        <Child key={location.pathname}/>
-      </QueueAnim>
+      }}>
+        <QueueAnim
+          style={{
+          width: '100%',
+          position: 'relative',
+          height: '100%',
+          backgroundColor: 'white'
+        }}
+          leaveReverse
+          animConfig={ANIMATE_CONFIG_NEXT}
+          duration='1000'>
+          <Child key={Date.now()}/>
+        </QueueAnim>
+      </div>
     );
   }
   render() {
@@ -158,50 +87,29 @@ class AppContainer extends Component {
           inline={true}
           nickname={this.state.nickname}
           navCallbacks={{
-          exit: this
-            .handleSignOut
-            .bind(this)
+          exit: this.handleSignOut.bind(this)
         }}/>
 
         <About path='/about'/>
         <Login
           path='/login'
-          loginCallback={this
-          .handleSignIn
-          .bind(this)}
-          loginDone={this
-          .updateNameAndToken
-          .bind(this)}/>
+          loginCallback={this.handleSignIn.bind(this)}
+          loginDone={this.updateNameAndToken.bind(this)}/>
         <Regist
           path='/regist'
-          registCallback={this
-          .handleSignUp
-          .bind(this)}
-          registDone={this
-          .updateNameAndToken
-          .bind(this)}/>
+          registCallback={this.handleSignUp.bind(this)}
+          registDone={this.updateNameAndToken.bind(this)}/>
 
         <LayoutSetting
           path='/layoutsetting'
           layout={this.state.layout}
-          changeLayout={this
-          .handleLayoutChange
-          .bind(this)}
+          changeLayout={this.handleLayoutChange.bind(this)}
           patterns={hitokotoDriver.patterManager.patterns}
           currentPatternID={this.state.currentPatternID}
-          patternChange={this
-          .handlePatternChange
-          .bind(this)}/>
+          patternChange={this.handlePatternChange.bind(this)}/>
         <Patterns path='/patterns'/>
         <Sources path='/sources'/>
-        <Route
-          path='/exit'
-          render={({match, location, history}) => {
-          setTimeout(() => {
-            this.handleSignOut();
-          }, 200);
-          return (<Redirect to="/"/>)
-        }}/>
+
         <Copyright/>
       </div>
     );
@@ -250,10 +158,3 @@ class AppContainer extends Component {
   }
 
   export default AppContainer;
-
-  function $getNickname() {
-    return localStorage.getItem(USER_NICKNAME) || '';
-  }
-  function $setNickname(name) {
-    localStorage.setItem(USER_NICKNAME, name);
-  }

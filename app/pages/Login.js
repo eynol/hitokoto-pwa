@@ -1,10 +1,14 @@
 import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import QueueAnim from 'rc-queue-anim';
 import {Link, withRouter} from 'react-router-dom';
 import here$you$are from '../API/PublicEncrypt';
 import style from './login.css';
 import FullPage from '../component/FullPage'
 import TextFiledCss from '../component/TextFiled.css'
+
+import hitokotoDriver from '../API/hitokotoDriver'
+import httpManager from '../API/httpManager'
 
 let {'text-filed': textFiled} = TextFiledCss;
 
@@ -30,8 +34,11 @@ class Login extends Component {
       errinfo: undefined
     }
   }
-  shouldComponentUpdate(nextProps, nextState) {
-    return nextProps.location.pathname == nextProps.path || this.props.location.pathname == nextProps.path;
+  componentWillMount() {
+    hitokotoDriver.stop();
+  }
+  componentWillUnmount() {
+    hitokotoDriver.start();
   }
   handleUsernameChange(event) {
     this.setState({username: event.target.value})
@@ -75,27 +82,20 @@ class Login extends Component {
     let form = new FormData();
     form.append('username', $username);
     form.append('password', $password)
-    this
-      .props
-      .loginCallback(form)
-      .then((resp) => {
-        if (resp.err) {
-          this.setState({errinfo: resp.err})
-        } else {
-          this
-            .props
-            .loginDone(resp)
-          console.log(resp);
-          this
-            .props
-            .history
-            .replace('/')
-        }
+    httpManager.API_login(form).then((resp) => {
+      if (resp.err) {
+        this.setState({errinfo: resp.err})
+      } else {
+        // login done!!!!
+        this.props.loginDone(resp)
+        console.log(resp);
+        this.props.hideLogin()
+      }
 
-      })
-      .catch(err => {
-        this.setState({errinfo: err})
-      })
+    }).catch(err => {
+      console.log(err);
+      this.setState({errinfo: err})
+    })
   }
 
   render() {
@@ -105,63 +105,48 @@ class Login extends Component {
         <p>{ErrorInfo(this.state.errinfo)}</p>
       )
     }
-    let {location, path} = this.props;
+    let {hideLogin, showRegist} = this.props;
     return (
-      <QueueAnim type={['left', 'right']} ease={['easeOutQuart', 'easeInOutQuart']}>{location.pathname == path
-          ? <FullPage
-              key={path}
-              style={{
-              backgroundColor: 'transparent'
-            }}
-              onClick={e => {
-              this
-                .props
-                .history
-                .replace('/');
-            }}>
-              <div
-                className={style['login-box']}
-                onClick={e => {
-                e.stopPropagation();
-                return false;
-              }}>
-                <h1>登录</h1>
-                <div className={textFiled}><input
-                  type="text"
-                  onChange={this
-              .handleUsernameChange
-              .bind(this)}
-                  required/>
-                  <label data-content="账号">账号</label>
-                </div>
-                <div className={textFiled}><input
-                  type="password"
-                  onChange={this
-              .handlePasswordChange
-              .bind(this)}
-                  required
-                  onKeyPress={this
-              .handleKeyPress
-              .bind(this)}/>
-                  <label data-content="密码">密码</label>
-                </div>
-                {errinfo}
-                <br/>
-                <p>
-                  <button
-                    onClick={this
-                    .handleSigninClick
-                    .bind(this)}>登录</button>
-                </p>
-                <p><br/>
-                  <Link to='/'>返回首页</Link>&nbsp;
-                  <Link to='/regist' replace>前往注册</Link>
-                </p>
-              </div>
-            </FullPage>
-          : null}
-      </QueueAnim>
+      <FullPage
+        style={{
+        backgroundColor: 'transparent'
+      }}
+        onClick={hideLogin}>
+        <div
+          className={style['login-box']}
+          onClick={e => {
+          e.stopPropagation();
+          return false;
+        }}>
+          <h1>登录</h1>
+          <div className={textFiled}><input type="text" onChange={this.handleUsernameChange.bind(this)} required/>
+            <label data-content="账号">账号</label>
+          </div>
+          <div className={textFiled}><input
+            type="password"
+            onChange={this.handlePasswordChange.bind(this)}
+            required
+            onKeyPress={this.handleKeyPress.bind(this)}/>
+            <label data-content="密码">密码</label>
+          </div>
+          {errinfo}
+          <br/>
+          <p>
+            <button onClick={this.handleSigninClick.bind(this)}>登录</button>
+          </p>
+          <p><br/>
+            <a href='javascript:' onClick={hideLogin}>返回</a>&nbsp;
+            <a href='javascript:' onClick={showRegist}>前往注册</a>
+          </p>
+        </div>
+      </FullPage>
     )
   }
 }
-export default withRouter(Login)
+
+Login.propTypes = {
+  hideLogin: PropTypes.func.isRequired,
+  showRegist: PropTypes.func.isRequired,
+  loginDone: PropTypes.func.isRequired
+}
+export default Login

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import style from './Nav.css';
 import QueueAnim from 'rc-queue-anim';
 import {HashRouter as Router, Route, Link} from 'react-router-dom'
@@ -13,16 +14,12 @@ let {
 } = style;
 
 let beforeLogin = (props) => (
-  <ul>{/**
-     * <li>
-      <Link to='/api'>API</Link>
-    </li>
-     */}
+  <ul>
     <li>
-      <Link to='/login'>登录</Link>
+      <a href='javascript:' onClick={props.showLogin}>登录</a>
     </li>
     <li>
-      <Link to='/regist'>注册</Link>
+      <a href='javascript:' onClick={props.showRegist}>注册</a>
     </li>
     <li>
       <Link to='/sources'>来源管理</Link>
@@ -39,7 +36,7 @@ let beforeLogin = (props) => (
 let online = (props) => (
   <ul>
     <li>
-      <Link to='/home' title="前往个人中心">{props.nickname}</Link>
+      <Link to='/home' title="前往个人中心" replace>{props.user.nickname}</Link>
     </li>
     <li>
       <Link to='/sources'>来源管理</Link>
@@ -51,14 +48,14 @@ let online = (props) => (
       <Link to='/about'>关于Hitokoto</Link>
     </li>
     <li>
-      <Link to='/exit' onClick={props.navCallbacks.exit}>注销</Link>
+      <a href='javascript:' onClick={props.logout}>注销</a>
     </li>
   </ul>
 )
 
-export default function Nav(props) {
+function Nav(props) {
   let Child = null;
-  if (props.nickname) {
+  if (props.user.nickname) {
     Child = online;
   } else {
     Child = beforeLogin;
@@ -74,3 +71,12 @@ export default function Nav(props) {
     </div>
   )
 };
+
+Nav.propTypes = {
+  user: PropTypes.object.isRequired,
+  logout: PropTypes.func.isRequired,
+  showLogin: PropTypes.func.isRequired,
+  showRegist: PropTypes.func.isRequired
+}
+
+export default Nav;

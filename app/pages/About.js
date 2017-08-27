@@ -20,19 +20,21 @@ let {
 
 let {thanksList} = style2;
 class About extends Component {
+  goBack() {
+    this.props.history.go(-1);
+  }
   render() {
     let {path, location} = this.props;
     return (
-
       <FullPageCard key={path}>
         <header className={manageBox}>
           <h1 className={clearfix}>关于hitokoto
-            <Link to='/' className={closeButton}>
+            <a href="javascript:" onClick={() => this.goBack()} className={closeButton}>
               <i className={icon + ' ' + close}></i>
-            </Link>
-            <Link to='/' className={backButton}>
+            </a>
+            <a href="javascript:" onClick={() => this.goBack()} className={backButton}>
               <i className={icon + ' ' + back}></i>
-            </Link>
+            </a>
           </h1>
           <br/>
           <QueueAnim

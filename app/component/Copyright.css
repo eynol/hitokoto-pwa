@@ -1,6 +1,6 @@
 .copyright {
     position: absolute;
-    left: 0;
+    display: inline-block;
     right: 0;
     bottom: 16px;
     text-align: right;

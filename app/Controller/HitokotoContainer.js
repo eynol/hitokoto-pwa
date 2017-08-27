@@ -1,10 +1,11 @@
 import React, {Component} from 'react'
+import PropTypes from 'prop-types';
 import style from '../component/HitokotoLayout.css'
 
 import QueueAnim from 'rc-queue-anim';
 import hitokotoDriver from '../API/hitokotoDriver'
 
-import HitokotoDisplay from '../component/HitokotoDisplay'
+import HitokotoPlayer from '../component/HitokotoPlayer'
 
 import nextImg from '../img/next.png'
 
@@ -31,37 +32,24 @@ class HitokotoContainer extends Component {
       lastCount: 1,
       nextCount: 5
     };
-    hitokotoDriver
-      .initRollback(_instantHitokoto)
-      .registNextHitokotoHandler(this.nextHitokotoHandler.bind(this))
-      .registLastHitokotoHandler(this.lastHitokotoHandler.bind(this))
-      .registUIProcessingHandler(this.processingHandler.bind(this))
-      .start()
+
+    //bind functions
+    this.handleLast = this.handleLast.bind(this);
+    this.handleNext = this.handleNext.bind(this);
+
+    //regist resolver
+    hitokotoDriver.initRollback(_instantHitokoto).registNextHitokotoHandler(this.nextHitokotoHandler.bind(this)).registLastHitokotoHandler(this.lastHitokotoHandler.bind(this)).registUIProcessingHandler(this.processingHandler.bind(this)).start()
   }
 
   componentDidMount() {
-    if (/^\/$|^\/layoutsetting/.test(this.props.location.pathname)) {
-      console.log('componentDidMount start hitokoto')
-      hitokotoDriver.start()
-    } else {
-      console.log('componentDidMount stop hito')
-      hitokotoDriver.stop();
-    }
+
+    console.log('componentDidMount start hitokoto')
+    hitokotoDriver.start()
   }
   componentWillUnmount() {
     hitokotoDriver.stop()
   }
-  componentWillReceiveProps(nextProps) {
-    console.log('nextProps ', nextProps)
 
-    if (/^\/$|^\/layoutsetting/.test(nextProps.location.pathname)) {
-      console.log('start hitokoto')
-      hitokotoDriver.start()
-    } else {
-      console.log('stop hito')
-      hitokotoDriver.stop();
-    }
-  }
   processingHandler(processing) {
     this.setState({processing: processing})
   }
@@ -84,27 +72,25 @@ class HitokotoContainer extends Component {
   }
 
   render() {
-    let callbacks = {
-      handleNext: this
-        .handleNext
-        .bind(this),
-      handleLast: this
-        .handleLast
-        .bind(this)
-    };
     let hitokoto = this.state.hitokoto || this.state.instant;
-    return (
-      <HitokotoDisplay
-        hitokoto={hitokoto}
-        callbacks={callbacks}
-        direction={this.state.direction}
-        lastCount={this.state.lastCount}
-        nextCount={this.state.nextCount}
-        layout={this.props.layout}
-        processing={this.state.processing}></HitokotoDisplay>
-    )
+    return (<HitokotoPlayer
+      hitokoto={hitokoto}
+      callbacks={{
+      handleNext: this.handleNext,
+      handleLast: this.handleLast
+    }}
+      showLayoutSetting={this.props.showLayoutSetting}
+      direction={this.state.direction}
+      lastCount={this.state.lastCount}
+      nextCount={this.state.nextCount}
+      layout={this.props.layout}
+      processing={this.state.processing}/>)
   }
 
+}
+
+HitokotoContainer.propTypes = {
+  layout: PropTypes.object.isRequired
 }
 export default HitokotoContainer;
 

@@ -19,11 +19,7 @@ export default class SourceDisplay extends Component {
   handleUpdate() {
     let name = this.refs.sourceName.value;
     let url = this.refs.sourceUrl.value;
-    let adapter = this
-      .refs
-      .sourceAdapter
-      .value
-      .trim();
+    let adapter = this.refs.sourceAdapter.value.trim();
 
     adapter = adapter
       ? adapter
@@ -46,11 +42,7 @@ export default class SourceDisplay extends Component {
     let {hook, sid, source} = this.props;
     let name = this.refs.sourceName.value;
     let url = this.refs.sourceUrl.value;
-    let adapter = this
-      .refs
-      .sourceAdapter
-      .value
-      .trim();
+    let adapter = this.refs.sourceAdapter.value.trim();
 
     if (adapter.length == 0) {
       adapter == 0;
@@ -75,10 +67,7 @@ export default class SourceDisplay extends Component {
     let source = props.source;
     let areaheight;
     if (source && typeof source.adapter == 'string') {
-      areaheight = source
-        .adapter
-        .split('\n')
-        .length
+      areaheight = source.adapter.split('\n').length
     }
     if (areaheight < 10) {
       areaheight = 10;
@@ -90,22 +79,15 @@ export default class SourceDisplay extends Component {
           <button className={style.basicButton} onClick={props.hook.hide}>取消</button>&nbsp;
           <button
             className={style.deleteButton}
-            onClick={props
-            .hook
-            .delete
-            .bind(null, source.id)}>删除</button>&nbsp;
-          <button onClick={this
-            .handleUpdate
-            .bind(this)}>确认修改</button>
+            onClick={props.hook.delete.bind(null, source.id)}>删除</button>&nbsp;
+          <button onClick={this.handleUpdate.bind(this)}>确认修改</button>
         </div>
       )
     } else {
       oprations = (
         <div>
           <button className={style.basicButton} onClick={props.hook.hide}>取消</button>&nbsp;
-          <button onClick={this
-            .handleNewSource
-            .bind(this)}>确认添加</button>
+          <button onClick={this.handleNewSource.bind(this)}>确认添加</button>
         </div>
       )
     }

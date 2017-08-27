@@ -35,7 +35,7 @@ function timeoutPromise(ms, promise) {
   })
 }
 
-export default class HTTPManager {
+class HTTPManager {
   constructor() {
 
     this.initQ = []; //  暂存Promise未polyfill完成前的请求；
@@ -60,9 +60,7 @@ export default class HTTPManager {
           console.log('injected handler has been called')
         }
         s.src = 'http://cdn.heitaov.cn/promise.min.js';
-        document
-          .body
-          .appendChild(s);
+        document.body.appendChild(s);
       }
 
     }
@@ -81,9 +79,7 @@ export default class HTTPManager {
   }
   afterInited() {
     while (this.initQ.length) {
-      let walker = this
-        .initQ
-        .shift();
+      let walker = this.initQ.shift();
       if (walker) {
         walker();
       }
@@ -94,12 +90,10 @@ export default class HTTPManager {
     let _that = this;
 
     if (this.inited) {
-      return timeoutPromise(13000, fetch(url))
-        .then(this.parseToJSON)
-        .catch(e => {
-          console.log(e)
-          return Promise.reject('请求出错！' + e)
-        })
+      return timeoutPromise(13000, fetch(url)).then(this.parseToJSON).catch(e => {
+        console.log(e)
+        return Promise.reject('请求出错！' + e)
+      })
     } else {
 
       let chain = []; // store then and catch functions;
@@ -124,9 +118,7 @@ export default class HTTPManager {
         }
         chain = null;
       }
-      this
-        .initQ
-        .push(walker); //
+      this.initQ.push(walker); //
 
       return ret
     }
@@ -135,30 +127,24 @@ export default class HTTPManager {
 
   API_login(formData) {
     return fetch('/api/login', {
-        method: 'POST',
-        body: formData
-      })
-      .then(this.parseToJSON)
-      .catch(e => Promise.reject('请求出错：' + e))
+      method: 'POST',
+      body: formData
+    }).then(this.parseToJSON).catch(e => Promise.reject('请求出错：' + e))
   }
   API_regist(formData) {
     return fetch('/api/regist', {
-        method: 'POST',
-        body: formData
-      })
-      .then(this.parseToJSON)
-      .catch(e => Promise.reject('请求出错：' + e))
+      method: 'POST',
+      body: formData
+    }).then(this.parseToJSON).catch(e => Promise.reject('请求出错：' + e))
   }
 
   API_myCollections() {
     return fetch('/api/collections', {
-        method: 'get',
-        headers: {
-          'X-API-TOKEN': this.token
-        }
-      })
-      .then(this.parseToJSON)
-      .catch(e => Promise.reject('请求出错：' + e))
+      method: 'get',
+      headers: {
+        'X-API-TOKEN': this.token
+      }
+    }).then(this.parseToJSON).catch(e => Promise.reject('请求出错：' + e))
   }
   API_newCollection(formData) {
     return fetch('/api/collections', {
@@ -166,10 +152,8 @@ export default class HTTPManager {
       headers: {
         'X-API-TOKEN': this.token
       },
-        body: formData
-      })
-      .then(this.parseToJSON)
-      .catch(e => Promise.reject('请求出错：' + e))
+      body: formData
+    }).then(this.parseToJSON).catch(e => Promise.reject('请求出错：' + e))
   }
   API_updateCollectionName(formData) {
     return fetch('/api/collections', {
@@ -177,10 +161,8 @@ export default class HTTPManager {
       headers: {
         'X-API-TOKEN': this.token
       },
-        body: formData
-      })
-      .then(this.parseToJSON)
-      .catch(e => Promise.reject('请求出错：' + e))
+      body: formData
+    }).then(this.parseToJSON).catch(e => Promise.reject('请求出错：' + e))
   }
   API_deleteCollection(formData) {
     return fetch('/api/collections', {
@@ -188,20 +170,16 @@ export default class HTTPManager {
       headers: {
         'X-API-TOKEN': this.token
       },
-        body: formData
-      })
-      .then(this.parseToJSON)
-      .catch(e => Promise.reject('请求出错：' + e))
+      body: formData
+    }).then(this.parseToJSON).catch(e => Promise.reject('请求出错：' + e))
   }
   API_viewCollection(name) {
     return fetch('/api/collections/' + name, {
-        method: 'get',
-        headers: {
-          'X-API-TOKEN': this.token
-        }
-      })
-      .then(this.parseToJSON)
-      .catch(e => Promise.reject('请求出错：' + e))
+      method: 'get',
+      headers: {
+        'X-API-TOKEN': this.token
+      }
+    }).then(this.parseToJSON).catch(e => Promise.reject('请求出错：' + e))
   }
 
   API_newHitokoto(name, formData) {
@@ -210,9 +188,9 @@ export default class HTTPManager {
       headers: {
         'X-API-TOKEN': this.token
       },
-        body: formData
-      })
-      .then(this.parseToJSON)
-      .catch(e => Promise.reject('请求出错：' + e))
+      body: formData
+    }).then(this.parseToJSON).catch(e => Promise.reject('请求出错：' + e))
   }
 }
+
+export default new HTTPManager();

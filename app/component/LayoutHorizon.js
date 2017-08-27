@@ -1,30 +1,13 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import QueueAnim from 'rc-queue-anim';
+
 import Logo from './Logo'
 import {layout_horizon, Content, info, actions, love} from './HitokotoLayout.css'
-let ANIMATE_CONFIG = [
-  {
-    opacity: [
-      1, 0
-    ],
-    translateX: [0, -50]
-  }, {
-    opacity: [
-      1, 0
-    ],
-    position: 'absolute',
-    translateX: [0, 50]
-  }
-]
 
-let FONT_MAP = {
-  'default': 'inherit',
-  'simsun': "'Noto Serif CJK SC', 'Source Han Serif SC', 'Source Han Serif', source-han-serif" +
-      "-sc, '宋体', SimSun, '华文细黑', STXihei, serif",
-  'fangsong': 'Georgia,"Times New Roman", "FangSong", "仿宋", STFangSong, "华文仿宋", serif',
-  'kai': '"楷体",serif'
-}
-export default function LayoutHorizon(props) {
+import {FONT_MAP, ANIMATE_CONFIG_HORIZON} from '../configs'
+
+function LayoutHorizon(props) {
   let body,
     detail;
 
@@ -40,7 +23,8 @@ export default function LayoutHorizon(props) {
     layout: {
       font,
       fontWeight
-    }
+    },
+    animateConfig
   } = props;
   let OptionsChildren = null;
   if (props.children.length) {
@@ -59,7 +43,7 @@ export default function LayoutHorizon(props) {
   return (
     <div className={layout_horizon}>
       <Logo/>
-      <QueueAnim animConfig={ANIMATE_CONFIG} className={Content}>
+      <QueueAnim animConfig={animateConfig} className={Content}>
         <div className={info} key={id + 'info'}>
           <h1>
             <span title="序号">{id}</span>
@@ -68,7 +52,6 @@ export default function LayoutHorizon(props) {
             <span title="创建者">{creator}</span>
           </p>
         </div>
-
         <h1
           style={{
           fontFamily: FONT_MAP[font],
@@ -86,3 +69,9 @@ export default function LayoutHorizon(props) {
     </div>
   );
 }
+LayoutHorizon.PropTypes = {
+  hitokoto: PropTypes.object.isRequired,
+  layout: PropTypes.object.isRequired
+}
+
+export default LayoutHorizon

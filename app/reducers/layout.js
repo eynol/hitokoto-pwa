@@ -18,25 +18,17 @@ function $setInstantLayout(layout) {
   localStorage.setItem(INSTANT_LAYOUT_NAME, JSON.stringify(layout));
 }
 
-const layout = (state = $getInstantLayout(), action) => {
+import {UPDATE_LAYOUT} from '../actions'
+
+const layout = (layout = $getInstantLayout(), action) => {
   switch (action.type) {
-    case 'ADD_TODO':
-      return [
-        ...state, {
-          id: action.id,
-          text: action.text,
-          completed: false
-        }
-      ]
-    case 'TOGGLE_TODO':
-      return state.map(todo => (todo.id === action.id)
-        ? {
-          ...todo,
-          completed: !todo.completed
-        }
-        : todo)
+    case UPDATE_LAYOUT:
+
+    case UPDATE_LAYOUT:
+
     default:
-      return state
+
+      return layout
   }
 }
 

@@ -1,93 +1,128 @@
 import React, {Component} from 'react';
+import {connect} from 'react-redux'
+import PropTypes from 'prop-types';
+import QueueAnim from 'rc-queue-anim';
+import hitokotoDriver from '../API/hitokotoDriver'
 
-export default class Index extends Component {
-  renders() {
-    console.log('app container render')
-    let firstFrame = (
-      <div
-        key="firstFrame"
-        style={{
-        backgroundColor: this.state.layout.backgroundColor,
-        height: '100%',
-        overflow: 'hidden'
-      }}>
+import Login from '../containers/Login'
+import Regist from '../pages/Regist'
+import LayoutSetting from '../pages/LayoutSetting'
+import Copyright from '../component/Copyright'
+import HitokotoContainer from '../Controller/HitokotoContainer'
 
-        <HitokotoContainer location={this.props.location} layout={this.state.layout}/>
-        <Nav
-          inline={true}
-          nickname={this.state.nickname}
-          navCallbacks={{
-          exit: this
-            .handleSignOut
-            .bind(this)
-        }}/>
+import {GLOBAL_ANIMATE_TYPE, ANIMATE_CONFIG_NEXT} from '../configs'
+import Nav from '../component/Nav'
 
-        <Login
-          path='/login'
-          loginCallback={this
-          .handleSignIn
-          .bind(this)}
-          loginDone={this
-          .updateNameAndToken
-          .bind(this)}/>
-        <Regist
-          path='/regist'
-          registCallback={this
-          .handleSignUp
-          .bind(this)}
-          registDone={this
-          .updateNameAndToken
-          .bind(this)}/>
+let slyleobject = {
+  width: '100%',
+  position: 'relative',
+  height: '100%',
+  backgroundColor: 'white'
+};
 
-        <LayoutSetting
-          path='/layoutsetting'
-          layout={this.state.layout}
-          changeLayout={this
-          .handleLayoutChange
-          .bind(this)}
-          patterns={hitokotoDriver.patterManager.patterns}
-          currentPatternID={this.state.currentPatternID}
-          patternChange={this
-          .handlePatternChange
-          .bind(this)}/>
-        <Route
-          path='/exit'
-          render={({match, location, history}) => {
-          setTimeout(() => {
-            this.handleSignOut();
-          }, 200);
-          return (<Redirect to="/"/>)
-        }}/>
-        <Copyright/>
-      </div>
-    );
+class Index extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      status: '',
+      path: '/',
+      currentPatternID: hitokotoDriver.pattern.id
+    }
+
+    //bind this
+    this.handleLayoutChange = this.handleLayoutChange.bind(this)
+    this.showLogin = this.showLogin.bind(this);
+    this.showRegist = this.showRegist.bind(this);
+    this.hideLogin = this.hideRegist = this.hideLayoutSetting = this.hidePanel.bind(this);
+
+    this.showLayoutSetting = this.showLayoutSetting.bind(this);
+  }
+  handleLayoutChange(item, nextVal) {
+    let layout = this.props.layout;
+    if (layout[item] != nextVal) {
+      layout[item] = nextVal;
+      this.setState({'layout': layout});
+      $setInstantLayout(layout);
+    }
+    console.log(nextVal);
+  }
+  handlePatternChange(id) {
+    console.log('pattern change', id);
+    if (id !== hitokotoDriver.pattern.id) {
+      let pattern = hitokotoDriver.patterManager.getPatternById(id);
+      hitokotoDriver.drive(pattern).start();
+      this.setState({currentPatternID: id})
+    }
+  }
+  updateNameAndToken({nickname, token}) {
+    this.setState({nickname: nickname});
+    $setNickname(nickname)
+    hitokotoDriver.httpManager.updateToken(token);
+  }
+  hidePanel() {
+    this.setState({status: ''})
+  }
+  showLogin() {
+    this.setState({status: 'show login'})
+  }
+  showRegist() {
+    this.setState({status: 'show regist'})
+  }
+  showLayoutSetting() {
+    this.setState({status: 'show layoutsetting'})
+  }
+
+  handleSignOut() {
+    console.log('sign out');
+    this.updateNameAndToken({nickname: '', token: ''});
+  }
+  render() {
+    let {user, layout} = this.props,
+      backgroundColor = layout.backgroundColor;
+
+    let wrapperConfig = {
+      backgroundColor: backgroundColor,
+      height: "100%",
+      width: "100%",
+      overflow: "hidden"
+    };
+
+    let Child = null;
+    if (this.state.status === 'show login') {
+      Child = (<Login key='login' hideLogin={this.hideLogin} showRegist={this.showRegist}/>)
+    } else if (this.state.status === 'show regist') {
+      Child = <Regist key='regist' hideRegist={this.hideRegist} showLogin={this.showLogin}/>
+    } else if (this.state.status === 'show layoutsetting') {
+      Child = <LayoutSetting
+        key='/layoutsetting'
+        layout={this.props.layout}
+        changeLayout={this.handleLayoutChange.bind(this)}
+        patterns={hitokotoDriver.patterManager.patterns}
+        currentPatternID={this.state.currentPatternID}
+        patternChange={this.handlePatternChange.bind(this)}
+        hide={this.hideLayoutSetting}/>
+    }
 
     return (
-      <QueueAnim
-        style={{
-        width: '100%',
-        position: 'relative',
-        height: '100%',
-        backgroundColor: 'white'
-      }}
-        duration='1000'
-        animConfig={[
-        {
-          opacity: [
-            1, 0
-          ],
-          translateX: [0, -50]
-        }, {
-          opacity: [
-            1, 0
-          ],
-          position: 'absolute',
-          translateX: [0, 50]
-        }
-      ]}>
-        <Route path='/' key='/' render={Page1}/>
-        <Route path='/home' key='/home' render={Page2}/>
-      </QueueAnim>
+      <div key="firstFrame" style={wrapperConfig}>
+        <HitokotoContainer showLayoutSetting={this.showLayoutSetting} layout={layout}/>
+        <Nav
+          user={user}
+          logout={() => {}}
+          showLogin={this.showLogin}
+          showRegist={this.showRegist}/>
+        <QueueAnim type={GLOBAL_ANIMATE_TYPE} ease={['easeOutQuart', 'easeInOutQuart']}>
+          {Child}
+        </QueueAnim>
+        <Copyright/>
+      </div>
     )
   }
+
 }
+Index.propTypes = {
+  layout: PropTypes.object.isRequired,
+  user: PropTypes.object.isRequired
+}
+let mapStateToProp = (state) => ({layout: state.layout, user: state.user})
+export default connect(mapStateToProp)(Index);

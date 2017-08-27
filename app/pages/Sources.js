@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import {Link, withRouter} from 'react-router-dom';
 import QueueAnim from 'rc-queue-anim';
 
+import {GLOBAL_ANIMATE_TYPE} from '../configs'
+
 import hitokotoDriver from '../API/hitokotoDriver'
 import FullPageCard from '../component/FullPageCard'
 import SourceDisplay from '../component/SourceDisplay'
@@ -28,36 +30,25 @@ class Sources extends Component {
       newSource: undefined
     }
   }
-  shouldComponentUpdate(nextProps, nextState) {
-    return nextProps.location.pathname == nextProps.path || this.props.location.pathname == nextProps.path;
-  }
+
   showNewSource() {
-    this.setState({
-      newSource: Date.now()
-    })
+    this.setState({newSource: Date.now()})
   }
   handleNewSource(source, error) {
     if (source.adapter) {
-      hitokotoDriver
-        .testSourceAdapter(source.url, source.adapter)
-        .then(() => {
-          hitokotoDriver
-            .patterManager
-            .newSource(source);
-          this.setState({sources: hitokotoDriver.patterManager.sources, newSource: undefined})
-        })
-        .catch((e) => {
-          if (typeof e == 'string') {
-            alert(e);
-          } else if (typeof e == 'object') {
-            alert(e.message || e.err.message);
-          }
-        })
+      hitokotoDriver.testSourceAdapter(source.url, source.adapter).then(() => {
+        hitokotoDriver.patterManager.newSource(source);
+        this.setState({sources: hitokotoDriver.patterManager.sources, newSource: undefined})
+      }).catch((e) => {
+        if (typeof e == 'string') {
+          alert(e);
+        } else if (typeof e == 'object') {
+          alert(e.message || e.err.message);
+        }
+      })
 
     } else {
-      hitokotoDriver
-        .patterManager
-        .newSource(source);
+      hitokotoDriver.patterManager.newSource(source);
       this.setState({newSource: undefined})
     }
 
@@ -70,35 +61,26 @@ class Sources extends Component {
   }
   handleUpdate(source) {
     if (source.adapter) {
-      hitokotoDriver
-        .testSourceAdapter(source.url, source.adapter)
-        .then(() => {
-          hitokotoDriver
-            .patterManager
-            .updateSource(source.id, source);
-          this.setState({update: undefined})
-        })
-        .catch((e) => {
-          if (typeof e == 'string') {
-            alert(e);
-          } else if (typeof e == 'object') {
-            alert(e.message || e.err.message);
-          }
-        })
+      hitokotoDriver.testSourceAdapter(source.url, source.adapter).then(() => {
+        hitokotoDriver.patterManager.updateSource(source.id, source);
+        this.setState({update: undefined})
+      }).catch((e) => {
+        if (typeof e == 'string') {
+          alert(e);
+        } else if (typeof e == 'object') {
+          alert(e.message || e.err.message);
+        }
+      })
 
     } else {
-      hitokotoDriver
-        .patterManager
-        .updateSource(source.id, source);
+      hitokotoDriver.patterManager.updateSource(source.id, source);
       this.setState({update: undefined})
     }
   }
   handleDeleteSource(id) {
     if (confirm('确认删除该来源？')) {
 
-      hitokotoDriver
-        .patterManager
-        .deleteSource(id);
+      hitokotoDriver.patterManager.deleteSource(id);
 
       this.setState({update: undefined})
     }
@@ -107,54 +89,36 @@ class Sources extends Component {
     this.setState({update: undefined});
   }
   goBack() {
-    this
-      .props
-      .history
-      .goBack();
+    this.props.history.go(-1);
   }
   render() {
-    let lists = this
-      .state
-      .sources
-      .map((source) => {
-        return (
-          <li key={source.id}>
-            <p className={ellipsis}>
-              <button
-                onClick={this
-                .showUpdate
-                .bind(this, source.id)}>修改</button>&nbsp; {source.name}
-              - {source.url}</p>
-          </li>
-        )
-      })
+    let lists = this.state.sources.map((source) => {
+      return (
+        <li key={source.id}>
+          <p className={ellipsis}>
+            <button onClick={this.showUpdate.bind(this, source.id)}>修改</button>&nbsp; {source.name}
+            - {source.url}</p>
+        </li>
+      )
+    })
 
     let sourceDisplayC = null;
     if (this.state.update) {
-      let sourceToUpdate = this
-        .state
-        .sources
-        .find(source => {
-          if (source.id == this.state.update) {
-            return true;
-          } else {
-            return false;
-          }
-        })
+      let sourceToUpdate = this.state.sources.find(source => {
+        if (source.id == this.state.update) {
+          return true;
+        } else {
+          return false;
+        }
+      })
       sourceDisplayC = (<SourceDisplay
         key={this.state.update}
         title='修改'
         sid={this.state.update}
         hook={{
-        update: this
-          .handleUpdate
-          .bind(this),
-        delete: this
-          .handleDeleteSource
-          .bind(this),
-        hide: this
-          .hideUpdate
-          .bind(this)
+        update: this.handleUpdate.bind(this),
+        delete: this.handleDeleteSource.bind(this),
+        hide: this.hideUpdate.bind(this)
       }}
         source={sourceToUpdate}/>)
     } else if (this.state.newSource) {
@@ -162,66 +126,46 @@ class Sources extends Component {
         key={this.state.newSource}
         title='新增'
         hook={{
-        newSource: this
-          .handleNewSource
-          .bind(this),
-        hide: this
-          .hideNewSource
-          .bind(this)
+        newSource: this.handleNewSource.bind(this),
+        hide: this.hideNewSource.bind(this)
       }}/>)
     }
-    let {location, path} = this.props;
 
     return (
-      <QueueAnim type={['left', 'right']} ease={['easeOutQuart', 'easeInOutQuart']}>{location.pathname == path
-          ? <FullPageCard key={path}>
-              <div className={manageBox}>
-                <h1 className={clearfix}>来源管理
-                  <a
-                    href="javascript:"
-                    onClick={this
-                    .goBack
-                    .bind(this)}
-                    className={closeButton}>
-                    <i className={icon + ' ' + close}></i>
-                  </a>
-                  <a
-                    href="javascript:"
-                    onClick={this
-                    .goBack
-                    .bind(this)}
-                    className={backButton}>
-                    <i className={icon + ' ' + back}></i>
-                  </a>
-                </h1>
-                <br/>
-                <p>
-                  <i>Tips:</i>
-                  在这里添加其他域名下的hitokoto一言接口，然后在<Link to='/patterns'>模式管理</Link>中使用哦~</p>
-                <div>
-                  <QueueAnim
-                    component="ul"
-                    type={['left', 'right']}
-                    ease={['easeOutQuart', 'easeInOutQuart']}
-                    className={sourcesList}>
-                    {lists}
-                    <li key="new">
-                      <button
-                        onClick={this
-                        .showNewSource
-                        .bind(this)}
-                        style={{
-                        float: 'right'
-                      }}>添加</button>
-                    </li>
-                  </QueueAnim>
-                </div>
-                <QueueAnim type={['left', 'right']} ease={['easeOutQuart', 'easeInOutQuart']}>
-                  {sourceDisplayC}</QueueAnim>
-              </div>
-            </FullPageCard>
-          : null}
-      </QueueAnim>
+      <FullPageCard>
+        <div className={manageBox}>
+          <h1 className={clearfix}>来源管理
+            <a href="javascript:" onClick={this.goBack.bind(this)} className={closeButton}>
+              <i className={icon + ' ' + close}></i>
+            </a>
+            <a href="javascript:" onClick={this.goBack.bind(this)} className={backButton}>
+              <i className={icon + ' ' + back}></i>
+            </a>
+          </h1>
+          <br/>
+          <p>
+            <i>Tips:</i>
+            在这里添加其他域名下的hitokoto一言接口，然后在<Link to='/patterns'>模式管理</Link>中使用哦~</p>
+          <div>
+            <QueueAnim
+              component="ul"
+              type={GLOBAL_ANIMATE_TYPE}
+              ease={['easeOutQuart', 'easeInOutQuart']}
+              className={sourcesList}>
+              {lists}
+              <li key="new">
+                <button
+                  onClick={this.showNewSource.bind(this)}
+                  style={{
+                  float: 'right'
+                }}>添加</button>
+              </li>
+            </QueueAnim>
+          </div>
+          <QueueAnim type={['right', 'left']} ease={['easeOutQuart', 'easeInOutQuart']}>
+            {sourceDisplayC}</QueueAnim>
+        </div>
+      </FullPageCard>
 
     );
   }

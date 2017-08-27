@@ -10,13 +10,7 @@ import {
   love
 } from './HitokotoLayout.css'
 
-let FONT_MAP = {
-  'default': 'inherit',
-  'simsun': "'Noto Serif CJK SC', 'Source Han Serif SC', 'Source Han Serif', source-han-serif" +
-      "-sc, '宋体', SimSun, '华文细黑', STXihei, serif",
-  'fangsong': 'Georgia,"Times New Roman", "FangSong", "仿宋", STFangSong, "华文仿宋", serif',
-  'kai': '"楷体",serif'
-}
+import {FONT_MAP} from '../configs'
 
 export default function LayoutVertical(props) {
   let {

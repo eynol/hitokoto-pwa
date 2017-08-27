@@ -1,46 +1,17 @@
 import React, {Component} from 'react';
+import {connect} from 'react-redux'
+
 import QueueAnim from 'rc-queue-anim';
+import PropTypes from 'prop-types'
+import {Link} from 'react-router-dom'
 
 import LayoutHorizon from './LayoutHorizon'
 import LayoutVertical from './LayoutVertical'
-import {Link} from 'react-router-dom'
-
 import {love} from './HitokotoLayout.css'
-let ANIMATE_CONFIG_NEXT = [
-  {
-    opacity: [
-      1, 0
-    ],
-    translateZ: [
-      0, 20
-    ],
-    translateX: [0, -100]
-  }, {
-    opacity: [
-      1, 0
-    ],
-    position: 'absolute',
-    translateX: [0, 100]
-  }
-]
-let ANIMATE_CONFIG_LAST = [
-  {
-    opacity: [
-      1, 0
-    ],
-    translateZ: [
-      0, 20
-    ],
-    translateX: [0, 100]
-  }, {
-    opacity: [
-      1, 0
-    ],
-    position: 'absolute',
-    translateX: [0, -100]
-  }
-]
-class HitokotoDisplay extends Component {
+
+import {ANIMATE_CONFIG_LAST, ANIMATE_CONFIG_NEXT} from '../configs'
+
+class HitokotoPlayer extends Component {
   render() {
 
     let {
@@ -53,8 +24,8 @@ class HitokotoDisplay extends Component {
         direction,
         lastCount,
         nextCount,
-        processing,
-        preview
+        processing
+
       } = this.props,
       id = hitokoto.id,
       layoutHorizon = layout.layoutHorizon;
@@ -99,13 +70,11 @@ class HitokotoDisplay extends Component {
         </li>
       </ul>
     )
-
+    console.log(direction);
     if (layoutHorizon) {
       return (
         <QueueAnim
-          animConfig={direction == 'next'
-          ? ANIMATE_CONFIG_NEXT
-          : ANIMATE_CONFIG_LAST}
+          animConfig={ANIMATE_CONFIG_NEXT}
           ease={['easeOutQuart', 'easeInOutQuart']}
           className="animate-none-sense"
           style={{
@@ -113,7 +82,13 @@ class HitokotoDisplay extends Component {
           height: '100%',
           width: '100%'
         }}>
-          <LayoutHorizon key={id} hitokoto={hitokoto} layout={layout}>
+          <LayoutHorizon
+            animateConfig={direction == 'next'
+            ? ANIMATE_CONFIG_NEXT
+            : ANIMATE_CONFIG_LAST}
+            key={id}
+            hitokoto={hitokoto}
+            layout={layout}>
             {ActionsHorizon}
           </LayoutHorizon>
         </QueueAnim>
@@ -127,4 +102,15 @@ class HitokotoDisplay extends Component {
   }
 }
 
-export default HitokotoDisplay;
+HitokotoPlayer.PropTypes = {
+  hitokoto: PropTypes.object.isRequired,
+  layout: PropTypes.object.isRequired,
+  callbacks: PropTypes.shape({handleNext: PropTypes.func, handleLast: PropTypes.func}),
+  direction: PropTypes.string.isRequired,
+  lastCount: PropTypes.number,
+  nextCount: PropTypes.number,
+  processing: PropTypes.bool
+}
+
+let mapStateToProps = (state) => ({})
+export default connect(mapStateToProps)(HitokotoPlayer)

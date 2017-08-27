@@ -1,6 +1,6 @@
 import 'whatwg-fetch';
 import PatternManager, {SOURCE_UPDATE_KEYS} from './PatternManager'
-import HTTPManager from './HTTPManager'
+import httpManager from './httpManager'
 
 import {PERSE_ADAPTER_SAFE, AdapterValidate, PERSE_ADAPTER} from './AdapterValidate'
 import offlineWather from './Offline'
@@ -19,7 +19,7 @@ let PREFETCH = [],
 class HitokotoDriver {
   constructor() {
     this.patterManager = new PatternManager();
-    this.httpManager = new HTTPManager();
+    this.httpManager = httpManager;
     this.state = {}; //  状态 用于保存模式的进度信息
     this.adaptersMap = null; //  adapters map
     this.pattern = null;
@@ -40,15 +40,11 @@ class HitokotoDriver {
     console.log('hitokoto inited');
     this.windowBlur = false;
     window.addEventListener('blur', () => {
-      this
-        .stop()
-        .windowBlur = true;
+      this.stop().windowBlur = true;
     });
     window.addEventListener('focus', () => {
       if (this.windowBlur) {
-        this
-          .start()
-          .windowBlur = false;
+        this.start().windowBlur = false;
       } else {
         return;
       }
@@ -62,9 +58,7 @@ class HitokotoDriver {
       this.pattern = pattern;
       this.sources = pattern.sources;
       this.registAdapter(this.sources);
-      this.patternValid = this
-        .sources
-        .some(source => source.online || source.local)
+      this.patternValid = this.sources.some(source => source.online || source.local)
     }
 
     this.timmerDisabled = true
@@ -75,9 +69,7 @@ class HitokotoDriver {
     return this;
   }
   start() {
-    this.patternValid = this
-      .sources
-      .some(source => source.online || source.local);
+    this.patternValid = this.sources.some(source => source.online || source.local);
     if (this.patternValid) {
       this.timerDisabled = false;
     }
@@ -104,89 +96,59 @@ class HitokotoDriver {
       //  没有预缓存的数据
       if (this.signal.length == 0) {
         //  信号量为零，需要去获取hitokoto
-        let allowedURL = this
-          .sources
-          .filter(source => source.online);
+        let allowedURL = this.sources.filter(source => source.online);
         if (offlineWather.online && allowedURL.length !== 0) {
           //  在线采用在线的方式；
           let {type, id} = this.pattern;
           allowedURL.forEach((source, index) => {
             let pid = '' + Date.now() + index;
-            this
-              .signal
-              .push(pid)
-            this
-              .getHitokotoFromWEB(source.url, pid, type)
-              .then(hitokoto => {
-                let index = this
-                  .signal
-                  .findIndex(item => item === pid);
-                if (~ index) {
-                  this
-                    .signal
-                    .splice(index, 1)
-                  PREFETCH.push(hitokoto);
-                  if (this.processing) {
-                    this.updateProcessing(false);
-                    this.next();
-                  }
+            this.signal.push(pid)
+            this.getHitokotoFromWEB(source.url, pid, type).then(hitokoto => {
+              let index = this.signal.findIndex(item => item === pid);
+              if (~ index) {
+                this.signal.splice(index, 1)
+                PREFETCH.push(hitokoto);
+                if (this.processing) {
+                  this.updateProcessing(false);
+                  this.next();
                 }
-              })
-              .catch(e => {
-                let index = this
-                  .signal
-                  .findIndex(item => item === pid);
-                if (~ index) {
-                  this
-                    .signal
-                    .splice(index, 1)
-                  // return Promise.reject(reason);
-                }
-                console.log(e);
-                //  失败了 使用离线缓存
-                return indexedDBManager.getHitokotoRandom(source.url);
-              })
+              }
+            }).catch(e => {
+              let index = this.signal.findIndex(item => item === pid);
+              if (~ index) {
+                this.signal.splice(index, 1)
+                // return Promise.reject(reason);
+              }
+              console.log(e);
+              //  失败了 使用离线缓存
+              return indexedDBManager.getHitokotoRandom(source.url);
+            })
           })
         } else {
           //  采用离线的方式
-          allowedURL = this
-            .sources
-            .filter(source => source.local);
+          allowedURL = this.sources.filter(source => source.local);
           let {type, id} = this.pattern;
           allowedURL.forEach((source, index) => {
             let pid = '' + Date.now() + index;
-            this
-              .signal
-              .push(pid)
-            this
-              .getHitokotoFromIDB(source.url, pid, type)
-              .then((hitokoto) => {
-                let index = this
-                  .signal
-                  .findIndex(item => item === pid);
-                if (~ index) {
-                  this
-                    .signal
-                    .splice(index, 1)
-                  PREFETCH.push(hitokoto);
-                  if (this.processing) {
-                    this.updateProcessing(false);
-                    this.next();
-                  }
+            this.signal.push(pid)
+            this.getHitokotoFromIDB(source.url, pid, type).then((hitokoto) => {
+              let index = this.signal.findIndex(item => item === pid);
+              if (~ index) {
+                this.signal.splice(index, 1)
+                PREFETCH.push(hitokoto);
+                if (this.processing) {
+                  this.updateProcessing(false);
+                  this.next();
                 }
-              })
-              .catch(e => {
-                let index = this
-                  .signal
-                  .findIndex(item => item === pid);
-                if (~ index) {
-                  this
-                    .signal
-                    .splice(index, 1)
-                  // return Promise.reject(reason);
-                }
-                console.log(e);
-              })
+              }
+            }).catch(e => {
+              let index = this.signal.findIndex(item => item === pid);
+              if (~ index) {
+                this.signal.splice(index, 1)
+                // return Promise.reject(reason);
+              }
+              console.log(e);
+            })
           })
         }
       }
@@ -203,13 +165,9 @@ class HitokotoDriver {
   }
   whenGetHitokoto({hitokoto, pid}) {
 
-    let index = this
-      .signal
-      .findIndex(pid);
+    let index = this.signal.findIndex(pid);
     if (~ index) {
-      this
-        .signal
-        .splice(index, 1)
+      this.signal.splice(index, 1)
       PREFETCH.push(hitokoto);
       if (this.processing) {
         this.updateProcessing(false);
@@ -219,13 +177,9 @@ class HitokotoDriver {
   }
   errorGetHitokoto({reason, pid}) {
     console.log(this.signal, pid)
-    let index = this
-      .signal
-      .findIndex(pid);
+    let index = this.signal.findIndex(pid);
     if (~ index) {
-      this
-        .signal
-        .splice(index, 1)
+      this.signal.splice(index, 1)
       // return Promise.reject(reason);
     }
     console.log(reason);
@@ -294,43 +248,34 @@ class HitokotoDriver {
       console.error(e);
       return Promise.reject(e);
     }
-    return this
-      .httpManager
-      .getHitokoto(url)
-      .then(adapter)
-      .then((hitokoto) => {
-        console.log('[test.adapter.result]', hitokoto);
-        if (!hitokoto) {
-          return Promise.reject(hitokoto);
-        } else {
-          let missed = [];
-          HITOKOTO_KEYS.forEach((key) => {
-            if (!hitokoto[key]) {
-              missed.push(key);
-            }
-          });
-          if (missed.length > 0) {
-            return Promise.reject('返回的对象中缺少成员：' + JSON.stringify(missed));
-          } else {
-            return Promise.resolve(hitokoto);
+    return this.httpManager.getHitokoto(url).then(adapter).then((hitokoto) => {
+      console.log('[test.adapter.result]', hitokoto);
+      if (!hitokoto) {
+        return Promise.reject(hitokoto);
+      } else {
+        let missed = [];
+        HITOKOTO_KEYS.forEach((key) => {
+          if (!hitokoto[key]) {
+            missed.push(key);
           }
+        });
+        if (missed.length > 0) {
+          return Promise.reject('返回的对象中缺少成员：' + JSON.stringify(missed));
+        } else {
+          return Promise.resolve(hitokoto);
         }
-      })
+      }
+    })
   }
 
   getHitokotoFromIDB(url, pid, patternType, id) {
 
-    return indexedDBManager
-      .getHitokotoRandom(url)
-      .catch(e => {
-        return Promise.reject(e);
-      })
+    return indexedDBManager.getHitokotoRandom(url).catch(e => {
+      return Promise.reject(e);
+    })
   }
   getHitokotoFromWEB(url, pid, patternType, id) {
-    let p = this
-      .httpManager
-      .getHitokoto(url)
-      .then(this.getAdapter(url));
+    let p = this.httpManager.getHitokoto(url).then(this.getAdapter(url));
     //  并行存储hitokoto
     p.then(hitokoto => {
       indexedDBManager.putHitokoto(url, hitokoto)
@@ -345,34 +290,21 @@ class HitokotoDriver {
   }
 
   updateSource(id, sourceToUpdate) {
-    this
-      .patterManager
-      .updateSource(id, sourceToUpdate);
-    this
-      .pattern
-      .sources
-      .forEach((oldSource) => {
-        if (oldSource.id == id) {
-          SOURCE_UPDATE_KEYS.forEach((k) => {
-            oldSource[k] = sourceToUpdate[k];
-          })
-        }
-      });
-    this
-      .drive(this.pattern)
-      .start();
+    this.patterManager.updateSource(id, sourceToUpdate);
+    this.pattern.sources.forEach((oldSource) => {
+      if (oldSource.id == id) {
+        SOURCE_UPDATE_KEYS.forEach((k) => {
+          oldSource[k] = sourceToUpdate[k];
+        })
+      }
+    });
+    this.drive(this.pattern).start();
   }
   updatePattern(id, patternToUpdate) {
-    this
-      .patterManager
-      .updatePattern(id, patternToUpdate);
+    this.patterManager.updatePattern(id, patternToUpdate);
     if (this.pattern.id == id) {
-      let pattern = this
-        .patterManager
-        .getPatternById(id);
-      this
-        .drive(pattern)
-        .start();
+      let pattern = this.patterManager.getPatternById(id);
+      this.drive(pattern).start();
     }
   }
 }

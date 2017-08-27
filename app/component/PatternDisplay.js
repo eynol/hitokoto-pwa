@@ -36,16 +36,14 @@ export default class PatternDisplay extends Component {
       sourceIDMap[element.id] = true;
     });
 
-    props
-      .sources
-      .forEach((source) => {
-        if (!sourceIDMap[source.id]) {
-          let copy = JSON.parse(JSON.stringify(source))
-          copy.online = false; // 对于模式中没有包含的来源，应该为未开启状态
-          copy.local = false;
-          needTobeAppend.push(copy)
-        }
-      });
+    props.sources.forEach((source) => {
+      if (!sourceIDMap[source.id]) {
+        let copy = JSON.parse(JSON.stringify(source))
+        copy.online = false; // 对于模式中没有包含的来源，应该为未开启状态
+        copy.local = false;
+        needTobeAppend.push(copy)
+      }
+    });
     let concated = sourcesCopy.concat(needTobeAppend);
 
     this.state = {
@@ -62,10 +60,7 @@ export default class PatternDisplay extends Component {
 
     interval = Number(interval);
 
-    let sources = this
-      .state
-      .sourcesCopy
-      .filter((source) => (source.local || source.online));
+    let sources = this.state.sourcesCopy.filter((source) => (source.local || source.online));
 
     let valid = this.validatePattern(name, interval, sources)
     if (valid.length != 0) {
@@ -93,10 +88,7 @@ export default class PatternDisplay extends Component {
 
     interval = Number(interval);
 
-    let sources = this
-      .state
-      .sourcesCopy
-      .filter((source) => (source.local || source.online));
+    let sources = this.state.sourcesCopy.filter((source) => (source.local || source.online));
 
     let valid = this.validatePattern(name, interval, sources)
     if (valid.length != 0) {
@@ -151,64 +143,54 @@ export default class PatternDisplay extends Component {
           <button className={style.basicButton} onClick={props.hook.hide}>取消</button>&nbsp;
           <button
             className={style.deleteButton}
-            onClick={props
-            .hook
-            .delete
-            .bind(null, pattern.id)}>删除</button>&nbsp;
-          <button onClick={this
-            .handleUpdate
-            .bind(this)}>确认修改</button>
+            onClick={props.hook.delete.bind(null, pattern.id)}>删除</button>&nbsp;
+          <button onClick={this.handleUpdate.bind(this)}>确认修改</button>
         </div>
       )
     } else {
       oprations = (
         <div>
           <button className={style.basicButton} onClick={props.hook.hide}>取消</button>&nbsp;
-          <button onClick={this
-            .handleNewPattern
-            .bind(this)}>确认添加</button>
+          <button onClick={this.handleNewPattern.bind(this)}>确认添加</button>
         </div>
       )
     }
 
     pattern = pattern || {};
 
-    let sourcesList = this
-      .state
-      .sourcesCopy
-      .map((src, index) => {
-        return (
-          <li
-            key={src.id}
-            className={(src.local || src.online)
-            ? ''
-            : style.disabled}>
-            <p className={ellipsis}>{src.name}({src.url})</p>
-            <div>
-              <input
-                hidden
-                type="checkbox"
-                id={src.id + 'ol'}
-                defaultChecked={src.online}
-                onChange={(e) => {
-                this.sourceChange(index, 'online', e.target.checked);
-              }}/>
-              <label htmlFor={src.id + 'ol'}></label>
-              允许使用网络<br/>
-              <input
-                hidden
-                type="checkbox"
-                id={src.id + 'local'}
-                defaultChecked={src.local}
-                onChange={(e) => {
-                this.sourceChange(index, 'local', e.target.checked);
-              }}/>
-              <label htmlFor={src.id + 'local'}></label>
-              允许使用本地缓存
-            </div>
-          </li>
-        )
-      });
+    let sourcesList = this.state.sourcesCopy.map((src, index) => {
+      return (
+        <li
+          key={src.id}
+          className={(src.local || src.online)
+          ? ''
+          : style.disabled}>
+          <p className={ellipsis}>{src.name}({src.url})</p>
+          <div>
+            <input
+              hidden
+              type="checkbox"
+              id={src.id + 'ol'}
+              defaultChecked={src.online}
+              onChange={(e) => {
+              this.sourceChange(index, 'online', e.target.checked);
+            }}/>
+            <label htmlFor={src.id + 'ol'}></label>
+            允许使用网络<br/>
+            <input
+              hidden
+              type="checkbox"
+              id={src.id + 'local'}
+              defaultChecked={src.local}
+              onChange={(e) => {
+              this.sourceChange(index, 'local', e.target.checked);
+            }}/>
+            <label htmlFor={src.id + 'local'}></label>
+            允许使用本地缓存
+          </div>
+        </li>
+      )
+    });
 
     return (
       <FullPageCard>

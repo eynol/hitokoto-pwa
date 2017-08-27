@@ -18,5 +18,7 @@
   "wrap_line_length": 0,
   "e4x": false,
   "comma_first": false,
-  "operator_position": "before-newline"
+  "operator_position": "before-newline",
+  "methodchain": "chain",
+  "bracepadding":false
 }

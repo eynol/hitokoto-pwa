@@ -14,6 +14,8 @@ module.exports = {
       'dexie',
       'crypto-js/sha1',
       'react-textarea-autosize',
+      'redux',
+      'react-redux',
       'whatwg-fetch'
     ],
     bundle: __dirname + "/app/main.js"
@@ -48,11 +50,9 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: __dirname + "/app/index.tmpl.html"
     }),
-    new webpack
-      .optimize
-      .CommonsChunkPlugin({
-        name: ['vendor', 'runtime']
-      }),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: ['vendor', 'runtime']
+    }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin()
   ],

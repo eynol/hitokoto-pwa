@@ -13,6 +13,8 @@ module.exports = {
       'dexie',
       'crypto-js/sha1',
       'react-textarea-autosize',
+      'redux',
+      'react-redux',
       'whatwg-fetch'
     ],
     bundle: __dirname + "/app/main.js"
@@ -50,17 +52,11 @@ module.exports = {
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV) || 'production'
     }),
-    new webpack
-      .optimize
-      .CommonsChunkPlugin({
-        name: ['vendor', 'runtime']
-      }),
-    new webpack
-      .optimize
-      .OccurenceOrderPlugin(),
-    new webpack
-      .optimize
-      .UglifyJsPlugin(),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: ['vendor', 'runtime']
+    }),
+    new webpack.optimize.OccurenceOrderPlugin(),
+    new webpack.optimize.UglifyJsPlugin(),
     new ExtractTextPlugin("[name]-[hash].css")
   ]
 }
