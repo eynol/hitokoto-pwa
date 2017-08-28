@@ -6,6 +6,7 @@ import {HashRouter as Router, withRouter, Route, Redirect} from 'react-router-do
 import Patterns from '../pages/Patterns'
 import Sources from '../pages/Sources'
 import About from '../pages/About'
+import Tools from '../pages/Tools'
 import Home from '../containers/Home'
 
 import Index from '../containers/Index'
@@ -31,12 +32,18 @@ const ROUTES = [
     to: /^\/about/,
     component: About,
     name: '关于页面'
+  }, {
+    to: /^\/tools/,
+    component: Tools,
+    name: '工具页面'
   }
 ];
 
 const USER_NICKNAME = 'hitoUserNickname';
 class AppContainer extends Component {
-
+  constructor(props) {
+    super(props)
+  }
   getChildren(props) {
     const {location} = props;
     const mathPath = ROUTES.map(item => {
@@ -60,9 +67,13 @@ class AppContainer extends Component {
           height: '100%',
           backgroundColor: 'white'
         }}
-          leaveReverse
-          animConfig={ANIMATE_CONFIG_NEXT}
-          duration='1000'>
+          key="frameChange"
+          duration="900"
+          animConfig={ANIMATE_CONFIG_NEXT}>
+          {/**这里动画组件设置的计时器会因为没有触发而导致动画倒放，
+          必须要等到动画结束后等待一段时间，之前的组件才会消失。
+          如果在动画结束后，马上路由返回，先前的组件就会反向出现。
+         只好每次都重新渲染*/}
           <Child key={Date.now()}/>
         </QueueAnim>
       </div>
@@ -71,90 +82,6 @@ class AppContainer extends Component {
   render() {
     return (<Route render={this.getChildren}/>);
   }
-  renders() {
-    console.log('app container render')
-    let firstFrame = (
-      <div
-        key="firstFrame"
-        style={{
-        backgroundColor: this.state.layout.backgroundColor,
-        height: '100%',
-        overflow: 'hidden'
-      }}>
+}
 
-        <HitokotoContainer location={this.props.location} layout={this.state.layout}/>
-        <Nav
-          inline={true}
-          nickname={this.state.nickname}
-          navCallbacks={{
-          exit: this.handleSignOut.bind(this)
-        }}/>
-
-        <About path='/about'/>
-        <Login
-          path='/login'
-          loginCallback={this.handleSignIn.bind(this)}
-          loginDone={this.updateNameAndToken.bind(this)}/>
-        <Regist
-          path='/regist'
-          registCallback={this.handleSignUp.bind(this)}
-          registDone={this.updateNameAndToken.bind(this)}/>
-
-        <LayoutSetting
-          path='/layoutsetting'
-          layout={this.state.layout}
-          changeLayout={this.handleLayoutChange.bind(this)}
-          patterns={hitokotoDriver.patterManager.patterns}
-          currentPatternID={this.state.currentPatternID}
-          patternChange={this.handlePatternChange.bind(this)}/>
-        <Patterns path='/patterns'/>
-        <Sources path='/sources'/>
-
-        <Copyright/>
-      </div>
-    );
-
-    let secondFrame = (<Home
-      key='secondframe'
-      nickname={this.state.nickname}
-      layout={this.state.layout}
-      path='/home'/>)
-      let path = this.props.location.pathname,
-        frameToShow;
-      if (/(^\/home|^\/collections)/gim.test(path)) {
-        frameToShow = secondFrame;
-      } else {
-        frameToShow = firstFrame;
-      }
-
-      return (
-        <QueueAnim
-          style={{
-          width: '100%',
-          position: 'relative',
-          height: '100%',
-          backgroundColor: 'white'
-        }}
-          duration='1000'
-          animConfig={[
-          {
-            opacity: [
-              1, 0
-            ],
-            translateX: [0, -50]
-          }, {
-            opacity: [
-              1, 0
-            ],
-            position: 'absolute',
-            translateX: [0, 50]
-          }
-        ]}>
-          <Route path='/' key='/' render={Page1}/>
-          <Route path='/home' key='/home' render={Page2}/>
-        </QueueAnim>
-      )
-    }
-  }
-
-  export default AppContainer;
+export default AppContainer;

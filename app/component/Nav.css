@@ -1,16 +1,32 @@
-.navWrapper{
-    z-index: 200;
+.navWrapper {
+    z-index: 300;
 }
-.hamburger{
+
+.hamburger {
     cursor: pointer;
+    font-size: 28px;
+    font-weight: bold;
+    display: inline-block;
+    text-align: center;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    padding: 0 5px;
+    transition: background .3s;
+    border-radius: 40px;
 }
+
+.hamburger:hover {
+    background-color: rgba(0, 0, 0, .26)
+}
+
 .nav {
     position: absolute;
     top: 15px;
     right: 100px;
     border: 5px solid black;
     padding: 20px;
-    z-index: 200;
+    z-index: 302;
 }
 
 .nav ul {
@@ -29,7 +45,7 @@
 .nav ul li a {
     position: relative;
     text-decoration: none;
-    color: #444;
+    color: #111;
 }
 
 .nav ul li a:after {
@@ -55,16 +71,103 @@
 }
 
 .navWrapper #menu-open,
-.navWrapper #menu-close,.menu-dimmer {
+.navWrapper #menu-close,
+.menu-dimmer {
     text-rendering: optimizeLegibility;
     display: none;
 }
 
+.nav {
+    display: block;
+}
+
+.hamburger,
+.navPhone {
+    display: none;
+}
+
 @media screen and (max-width: 768px) {
-    .menu-dimmer{
+    .nav {
+        display: none;
+    }
+    .hamburger {
+        display: inline-block;
+        position: absolute;
+        
+        top: 20px;
+        left: 22px;
+    }
+    .navPhone {
+        display: block;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: white;
+        z-index: 300;
+        padding: 0 0 0 30px;
+        padding-top: 70px;
+    }
+    .navPhone ul {
+        margin: 0;
+        list-style: none;
+        position: relative;
+    }
+    .navPhone a ,.navPhone button{
+        font-size: 16px;
+        line-height: 2;
+        text-decoration: none;
+        font-weight: normal;
+        letter-spacing: .1em;
+        padding: 0;
+        color: #000;
+    }
+   
+    .navPhone ul::after {
+       
+        display: inline-block;
+        position: absolute;
+        left: 30px;
+        top: -40px;
+        width: 1px;
+        border-radius: 100px;
+        height: 114px;
+        background-color: #F8F72B;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, .26);
+        transform-origin: right top;
+        animation: material .3s ease-out 0s forwards;
+    }
+
+    .navPhone:before {
+        content: '';
+        display: inline-block;
+        position: absolute;
+        right: 30px;
+        top: 20px;
+        width: 80px;
+        height: 300px;
+        background-color: blue;
+        transform-origin: right top;
+        transform: scale(1,0);
+        box-shadow: 0 3px 10px rgba(0, 0, 0, .26);
+        animation: material .5s ease-out .5s forwards;
+    }
+    .navPhone:after {
+        content: 'HITOKOTO';
+        font-size: 40px;
+        writing-mode: vertical-lr;
+        position: absolute;
+        color: white;
+        top: 40px;
+        right: 40px;
+        opacity: 0;
+        animation: delayToshow .3s ease-out .6s forwards; 
+    }
+    .menu-dimmer {
         display: block;
     }
-    .menu-dimmer:before{
+    .menu-dimmer:before {
         content: '';
         display: block;
         position: fixed;
@@ -84,34 +187,33 @@
         right: 50px;
         font-size: 24px;
         font-weight: bolder;
-        display: block; /* Or inline-block */
+        display: block;
+        /* Or inline-block */
         font-size: 0;
-    
-        width: 25px; /* Width of lines */
-    
-        padding: 4px 0; /* Space between bar lines */
-    
+        width: 25px;
+        /* Width of lines */
+        padding: 4px 0;
+        /* Space between bar lines */
         /* Trigram sandwich */
-        border-top: 4px solid black !important;     
-        line-height: 4px;                           
-        border-bottom: 4px solid black !important;  
-    
-        background-clip: content-box; /* Creates line-height tall colored bar in middle */
-        background-color: black;        
+        border-top: 4px solid black !important;
+        line-height: 4px;
+        border-bottom: 4px solid black !important;
+        background-clip: content-box;
+        /* Creates line-height tall colored bar in middle */
+        background-color: black;
     }
     #nav-state~.nav {
         position: absolute;
         z-index: 300;
         top: 0;
-        left: auto;
-        right: 0;
+        left: 0;
         bottom: 0;
         padding: 50px 50px 20px 30px;
-        border:none;
+        border: none;
         background-color: white;
         transition: .25s ease-in-out;
         transform: translateX(110%);
-        box-shadow: -3px 0 10px rgba(0,0,0,.26);
+        box-shadow: -3px 0 10px rgba(0, 0, 0, .26);
     }
     #nav-state:checked~.nav {
         display: block;
@@ -120,7 +222,7 @@
     #nav-state:checked~#menu-open {
         display: none;
     }
-    #nav-state:checked ~ .menu-dimmer:before{
+    #nav-state:checked~.menu-dimmer:before {
         z-index: 1;
         opacity: 1;
     }
@@ -139,7 +241,6 @@
     .nav ul li a {
         position: relative;
         text-decoration: none;
-        color: #444;
     }
 }
 
@@ -152,5 +253,45 @@
     }
     100% {
         background-color: transparent;
+    }
+}
+
+@keyframes delayToshow {
+    0% {
+        opacity: 0;
+        transform: translateX(30px)
+    }
+    
+    100% {
+        opacity: 1;
+        transform: translateX(0px)
+    }
+}
+
+
+@keyframes material {
+    0% {
+        transform: scale(1, 0)
+    }
+    100% {
+        transform: scale(1, 1)
+    }
+}
+@keyframes slideOut {
+    0% {
+        transform-origin: top ;
+        transform: scale(1, 0)
+    }
+    25% {
+        transform-origin: top ;
+        transform: scale(1, 1)
+    }
+    50% {
+        transform: scale(1, 1);
+        transform-origin: bottom center;
+    }
+    100%{
+        transform-origin: bottom center;
+        transform: scale(1, 0)
     }
 }

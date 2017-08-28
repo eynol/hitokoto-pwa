@@ -113,7 +113,7 @@ class Sources extends Component {
       })
       sourceDisplayC = (<SourceDisplay
         key={this.state.update}
-        title='修改'
+        title='修改来源'
         sid={this.state.update}
         hook={{
         update: this.handleUpdate.bind(this),
@@ -124,7 +124,7 @@ class Sources extends Component {
     } else if (this.state.newSource) {
       sourceDisplayC = (<SourceDisplay
         key={this.state.newSource}
-        title='新增'
+        title='添加来源'
         hook={{
         newSource: this.handleNewSource.bind(this),
         hide: this.hideNewSource.bind(this)

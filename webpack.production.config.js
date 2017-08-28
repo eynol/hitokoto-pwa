@@ -9,12 +9,12 @@ module.exports = {
       "react-dom",
       'react-router',
       'react-router-dom',
+      'redux',
+      'react-redux',
       'rc-queue-anim',
       'dexie',
       'crypto-js/sha1',
       'react-textarea-autosize',
-      'redux',
-      'react-redux',
       'whatwg-fetch'
     ],
     bundle: __dirname + "/app/main.js"
@@ -53,7 +53,7 @@ module.exports = {
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV) || 'production'
     }),
     new webpack.optimize.CommonsChunkPlugin({
-      name: ['vendor', 'runtime']
+      name: 'vendor', //['vendor', 'runtime']
     }),
     new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.optimize.UglifyJsPlugin(),

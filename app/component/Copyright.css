@@ -1,16 +1,30 @@
 .copyright {
     position: absolute;
     display: inline-block;
-    right: 0;
+    left: 0;
     bottom: 16px;
     text-align: right;
-    padding: 0 50px 1px 20px;
+    padding: 0 20px 1px 50px;
     color: #666;
 }
 
 .copyright-open,
 .copyright-close {
     display: none;
+}
+
+@media screen and (min-width:768px) {
+    .copyright .hoverToShow {
+        display: inline-block;
+        position: relative;
+        opacity: 0;
+        transition: transform .5s, opacity .3s;
+        transform:translateX(50px)
+    }
+    .copyright:hover .hoverToShow {
+        transform:translateX(10px);
+        opacity: 1;
+    }
 }
 
 @media screen and (max-width:768px) {
@@ -21,11 +35,11 @@
         width: 20px;
         position: absolute;
         left: calc(50% - 10px);
-        bottom: 16px;
+        bottom: 10px;
     }
-    .copyright-close{
+    .copyright-close {
         margin-left: -10px;
-        bottom:5px;
+        bottom: 5px;
     }
     .copyright-open:before {
         content: 'i';

@@ -86,7 +86,7 @@ class Patterns extends Component {
 
       patternDisplay = (<PatternDisplay
         pattern={patternToUpdate}
-        title="修改"
+        title="修改模式"
         key={this.state.update}
         sources={hitokotoDriver.patterManager.sources}
         hook={{
@@ -96,7 +96,7 @@ class Patterns extends Component {
       }}/>)
     } else if (this.state.newPattern) {
       patternDisplay = (<PatternDisplay
-        title="新增"
+        title="添加模式"
         sources={hitokotoDriver.patterManager.sources}
         key={this.state.newPattern}
         hook={{

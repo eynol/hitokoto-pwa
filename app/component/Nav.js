@@ -3,12 +3,13 @@ import PropTypes from 'prop-types';
 import style from './Nav.css';
 import QueueAnim from 'rc-queue-anim';
 import {HashRouter as Router, Route, Link} from 'react-router-dom'
-
+import {PANEL_OPEN} from '../actions'
 let {
   'nav-state': navState,
   'menu-open': menuOpen,
   navWrapper,
   nav,
+  navPhone,
   'menu-dimmer': menuDimmer,
   hamburger
 } = style;
@@ -29,6 +30,9 @@ let beforeLogin = (props) => (
     </li>
     <li>
       <Link to='/about'>关于Hitokoto</Link>
+    </li>
+    <li>
+      <Link to='/tools'>清除工具（用于测试）</Link>
     </li>
   </ul>
 )
@@ -54,20 +58,39 @@ let online = (props) => (
 )
 
 function Nav(props) {
-  let Child = null;
+  let Child,
+    PhoneChild = null;
   if (props.user.nickname) {
     Child = online;
   } else {
     Child = beforeLogin;
   }
+  let panel = props.panel;
+  if (panel === PANEL_OPEN + 'nav') {
+
+    PhoneChild = <div key="nav" className={navPhone}>
+      {Child(props)}
+      <button onClick={props.hideNav}>关闭</button>
+    </div>
+  };
   return (
     <div className={navWrapper}>
-      <input type="checkbox" id={navState} hidden/>
-      <label id={menuOpen} htmlFor={navState} className={hamburger}>&#9776;</label>
-      <label htmlFor={navState} className={menuDimmer}></label>
+      <a className={hamburger} onClick={props.showNav}>&#9776;</a>
+      <div className={menuDimmer}></div>
       <div className={nav}>
         {Child(props)}
       </div>
+      <QueueAnim
+        animConfig={[
+        {
+          translateX: [0, "-100"]
+        }, {
+          translateX: [0, "-100%"]
+        }
+      ]}
+        ease={['easeOutQuart', 'easeInOutQuart']}>
+        {PhoneChild}
+      </QueueAnim>
     </div>
   )
 };
@@ -76,7 +99,10 @@ Nav.propTypes = {
   user: PropTypes.object.isRequired,
   logout: PropTypes.func.isRequired,
   showLogin: PropTypes.func.isRequired,
-  showRegist: PropTypes.func.isRequired
+  showRegist: PropTypes.func.isRequired,
+  panel: PropTypes.string.isRequired,
+  showNav: PropTypes.func.isRequired,
+  hideNav: PropTypes.func.isRequired
 }
 
 export default Nav;

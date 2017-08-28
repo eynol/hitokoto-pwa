@@ -9,6 +9,9 @@ import style from './login.css';
 import FullPage from '../component/FullPage'
 import TextFiledCss from '../component/TextFiled.css'
 
+import {PANEL_OPEN} from '../actions'
+import {GLOBAL_ANIMATE_TYPE} from '../configs'
+
 let {'text-filed': textFiled} = TextFiledCss;
 
 let errorStyle = {
@@ -182,7 +185,7 @@ class Regist extends Component {
     form.append('nickname', nickname);
 
     let that = this;
-    this.props.registCallback(form).then((resp) => {
+    httpManager.API_regist(form).then((resp) => {
       if (resp.err) {
         return Promise.reject(resp.err);
       } else {
@@ -205,111 +208,129 @@ class Regist extends Component {
       errinfo = (
         <p>{ErrorInfo(this.state.errinfo)}</p>
       )
-    }
-    if (this.state.step == 1) {
-      return (
-        <FullPage
-          key="regist-step1"
-          style={{
-          backgroundColor: 'transparent'
-        }}
-          onClick={this.props.hideRegist}
-          key='step1'>
-          <div
-            className={style['login-box']}
-            onClick={e => {
-            e.stopPropagation();
-            return false;
-          }}>
-            <h1>注册</h1>
-            <div className={textFiled}><input
-              type="text"
-              required
-              onChange={this.handleUsernameChange.bind(this)}
-              defaultValue={this.state.username}/>
-              <label data-content="用户名">用户名</label>
+    };
+    let {panel, showLogin, hideRegist} = this.props,
+      Child;
+
+    if (panel === PANEL_OPEN + 'regist') {
+      if (this.state.step == 1) {
+        Child = (
+          <FullPage
+            key="regist-step1"
+            style={{
+            backgroundColor: 'transparent'
+          }}
+            onClick={this.props.hideRegist}
+            key='step1'>
+            <div
+              className={style['login-box']}
+              onClick={e => {
+              e.stopPropagation();
+              return false;
+            }}>
+              <h1>注册</h1>
+              <div className={textFiled}><input
+                type="text"
+                required
+                onChange={this.handleUsernameChange.bind(this)}
+                defaultValue={this.state.username}/>
+                <label data-content="用户名">用户名</label>
+              </div>
+              <div className={textFiled}><input
+                type="password"
+                required
+                onChange={this.handlePasswordChange.bind(this)}
+                defaultValue={this.state.password}/>
+                <label data-content="密码(任意字符至少七位)">密码</label>
+              </div>
+              <div className={textFiled}><input
+                type="password"
+                required
+                onChange={this.handlePassword2Change.bind(this)}
+                defaultValue={this.state.password2}/>
+                <label data-content="请再次确认您的密码">请再次确认您的密码</label>
+              </div>
+              <div className={textFiled}><input
+                type="text"
+                required
+                onChange={this.handleEmailChange.bind(this)}
+                defaultValue={this.state.email}/>
+                <label data-content="验证邮箱(非常重要)">验证邮箱(非常重要)</label>
+              </div>
+              <div className={textFiled}><input
+                type="text"
+                required
+                maxLength="20"
+                onChange={this.handleNicknameChange.bind(this)}
+                defaultValue={this.state.nickname}/>
+                <label data-content="显示的昵称">显示的昵称</label>
+              </div>
+              {errinfo}
+              <p>
+                <br/>
+                <button onClick={this.handleRegist.bind(this)}>下一步</button>
+                <button onClick={this.props.showLogin}>前往登录</button>
+              </p>
+              <p><br/>
+                <button href="javascript:" onClick={this.props.hideRegist}>关闭</button>&nbsp;
+              </p>
             </div>
-            <div className={textFiled}><input
-              type="password"
-              required
-              onChange={this.handlePasswordChange.bind(this)}
-              defaultValue={this.state.password}/>
-              <label data-content="密码(任意字符至少七位)">密码</label>
+          </FullPage>
+        )
+      } else {
+        Child = (
+          <FullPage
+            key="regist-step2"
+            style={{
+            backgroundColor: 'transparent'
+          }}
+            key='step2'>
+            <div className={style['login-box']}>
+              <h1>请输入您收到的验证码</h1>
+              <p>
+                <div className={textFiled}>
+                  <input
+                    type="text"
+                    required
+                    maxLength="4"
+                    onChange={this.handleCodeChange.bind(this)}/>
+
+                  <label data-content="验证码">验证码</label>
+                </div>
+              </p>
+              {errinfo}
+              <p>没有收到验证码？
+                <button onClick={this.handleRegist.bind(this)}>重新发送</button>
+              </p>
+              <p>
+                <br/>
+                <button
+                  onClick={(e) => {
+                  this.setState({step: 1, errinfo: undefined})
+                }}>上一步</button>&nbsp;
+                <button onClick={this.handleRegist2.bind(this)}>立即注册</button>
+              </p>
             </div>
-            <div className={textFiled}><input
-              type="password"
-              required
-              onChange={this.handlePassword2Change.bind(this)}
-              defaultValue={this.state.password2}/>
-              <label data-content="请再次确认您的密码">请再次确认您的密码</label>
-            </div>
-            <div className={textFiled}><input
-              type="text"
-              required
-              onChange={this.handleEmailChange.bind(this)}
-              defaultValue={this.state.email}/>
-              <label data-content="验证邮箱(非常重要)">验证邮箱(非常重要)</label>
-            </div>
-            <div className={textFiled}><input
-              type="text"
-              required
-              maxLength="20"
-              onChange={this.handleNicknameChange.bind(this)}
-              defaultValue={this.state.nickname}/>
-              <label data-content="显示的昵称">显示的昵称</label>
-            </div>
-            {errinfo}
-            <p>
-              <br/>
-              <button onClick={this.handleRegist.bind(this)}>下一步</button>
-            </p>
-            <p><br/>
-              <a href="javascript:" onClick={this.props.hideRegist}>返回</a>&nbsp;
-              <a href="javascript:" onClick={this.props.showLogin}>马上登录</a>
-            </p>
-          </div>
-        </FullPage>
-      )
+          </FullPage>
+        );
+      }
     } else {
-      return (
-        <FullPage
-          key="regist-step2"
-          style={{
-          backgroundColor: 'transparent'
-        }}
-          key='step2'>
-          <div className={style['login-box']}>
-            <h1>请输入您收到的验证码</h1>
-            <p><input
-              type="text"
-              placeholder="验证码"
-              onChange={this.handleCodeChange.bind(this)}/></p>
-            {errinfo}
-            <p>
-              <br/>
-              <button
-                style={{
-                backgroundColor: '#c6c7c8'
-              }}
-                onClick={(e) => {
-                this.setState({step: 1, errinfo: undefined})
-              }}>上一步</button>&nbsp;
-              <button onClick={this.handleRegist2.bind(this)}>立即注册</button>
-            </p>
-            <p>没有收到？
-              <a href="javascript:" onClick={this.handleRegist.bind(this)}>重新发送</a>
-            </p>
-          </div>
-        </FullPage>
-      );
+      Child = <div key='none'></div>
     }
+
+    return (
+      <QueueAnim type={GLOBAL_ANIMATE_TYPE} ease={['easeOutQuart', 'easeInOutQuart']}>
+        {Child}
+      </QueueAnim>
+    )
+
   }
 }
 
 Regist.propTypes = {
-  registCallback: PropTypes.func.isRequired,
   registDone: PropTypes.func.isRequired,
   showLogin: PropTypes.func.isRequired,
-  hideRegist: PropTypes.func.isRequired
+  hideRegist: PropTypes.func.isRequired,
+  panel: PropTypes.string.isRequired
 }
 export default Regist

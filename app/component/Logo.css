@@ -6,11 +6,17 @@
   left: 50px;
   z-index: 200;
   cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
 }
 @media screen and (max-width:768px){
 
+  .logo{
+    left: 80px;
+  }
   .logo h1{
-    margin: 5px ;
+    margin: 5px;
+    
   }
   
 }

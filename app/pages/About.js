@@ -27,7 +27,7 @@ class About extends Component {
     let {path, location} = this.props;
     return (
       <FullPageCard key={path}>
-        <header className={manageBox}>
+        <div className={manageBox}>
           <h1 className={clearfix}>关于hitokoto
             <a href="javascript:" onClick={() => this.goBack()} className={closeButton}>
               <i className={icon + ' ' + close}></i>
@@ -95,7 +95,7 @@ class About extends Component {
               </ul>
             </section>
           </QueueAnim>
-        </header>
+        </div>
       </FullPageCard>
     )
   }

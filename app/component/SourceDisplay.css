@@ -16,10 +16,9 @@
   border: 1px solid #6d92ff;
 }
 .basicButton{
-  background-color: #a6a6a6;
-
+  color: #a6a6a6;
 }
 
 .deleteButton{
-  background-color:#f00056;
+  color:#f00056;
 }

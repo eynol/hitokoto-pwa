@@ -39,11 +39,11 @@
 
 .text-filed input[type=text]:focus,
 .text-filed input[type=password]:focus {
-    border-bottom: 1px solid #03A9F4;
+    border-bottom: 1px solid #758a99;
 }
 
 .text-filed label::after {
-    background: #03A9F4;
+    background: #758a99;
 }
 
 .text-filed label {
@@ -114,6 +114,6 @@
 
 .text-filed input:focus {
     /*background-color: #e2ecff;*/
-    border-color: #0095d9;
+    border-color: #758a99;
     outline: none;
 }

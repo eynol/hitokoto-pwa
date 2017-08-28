@@ -83,7 +83,8 @@
   content: ' ';
   font-size: 1.5em;
   position: absolute;
-  background: linear-gradient(-135deg, #37bc98 0%, #a0d468 100%);
+  /* background: linear-gradient(-135deg, #37BC97 0%, #a0d468 100%); */
+  background-color: #37BC97;
   box-shadow: 0 0 1px #40be93;
 }
 
@@ -98,11 +99,11 @@
   border: 1px solid #6d92ff;
 } */
 .basicButton{
-  background-color: #a6a6a6;
+  color: #a6a6a6;
 }
 
 .deleteButton{
-  background-color:#f00056;
+  color:#f00056;
 }
 
 .form li {

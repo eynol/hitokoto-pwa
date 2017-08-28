@@ -15,8 +15,9 @@ export const SOURCES = [
     id: 1002,
     name: 'hitoapi.cc',
     url: 'https://hitoapi.cc/s/',
-    adapter: 'function(resp){return { type:resp.catname,creator:resp.author,created_at:resp.da' +
-        'te,id:resp.id,hitokoto:resp.text,from:resp.source}}',
+    adapter: 'function(resp){\n  var id = String(resp.id).slice(0,6);\nreturn { type:resp.catn' +
+        'ame,creator:resp.author,created_at:resp.date,id:id,hitokoto:resp.text,from:resp.' +
+        'source}}',
     online: true,
     local: true
   }, {
@@ -31,9 +32,9 @@ export const SOURCES = [
     id: 1006,
     name: 'https://api.satori.moe/hitokoto.php',
     url: 'https://api.satori.moe/hitokoto.php',
-    adapter: 'function (resp){\nreturn {\n  hitokoto:resp.hitokoto,\n  type: resp.cat,\n  id: ' +
-        'resp.id,\n  from:resp.source?resp.source:"无来源",\n  creator:"佚名",\n  created_at:r' +
-        'esp.addtime\n  }\n}',
+    adapter: 'function (resp){ \n  var id = String(resp.id).slice(0,6);\nreturn {\n  hitokoto:' +
+        'resp.hitokoto,\n  type: resp.cat,\n  id: id,\n  from:resp.source?resp.source:"无来' +
+        '源",\n  creator:"佚名",\n  created_at:resp.addtime\n  }\n}',
     online: true,
     local: true
   }
@@ -92,17 +93,13 @@ export default class SourceManager {
       //  用map缓存已有的本地的url
       let urlMap = {};
       let needUpdateSource = false;
-      this
-        .sources
-        .forEach(function (item) {
-          urlMap[item.url] = true;
-        });
+      this.sources.forEach(function (item) {
+        urlMap[item.url] = true;
+      });
       SOURCES.forEach((src) => {
         if (!urlMap[src.url]) {
           //url不存在,添加至_sources
-          this
-            .sources
-            .push(src);
+          this.sources.push(src);
           needUpdateSource = true;
         }
       });
@@ -114,9 +111,7 @@ export default class SourceManager {
   }
 
   newSource(source) {
-    this
-      .sources
-      .push(source);
+    this.sources.push(source);
     $setSources(this.sources);
   }
   updateSource(id, source) {
@@ -130,9 +125,7 @@ export default class SourceManager {
   deleteSource(id) {
     for (var i = 0, len = this.sources.length; i < len; i++) {
       if (this.sources[i].id == id) {
-        this
-          .sources
-          .splice(i, 1);
+        this.sources.splice(i, 1);
         i--;
         len--;
       }

@@ -1,12 +1,22 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import QueueAnim from 'rc-queue-anim';
+import windowSize from '../API/windowSize'
 
 import Logo from './Logo'
-import {layout_horizon, Content, info, actions, love} from './HitokotoLayout.css'
+import {layout_horizon, Content, info, actions, overLoadHitokoto} from './HitokotoLayout.css'
+
+let JUDESIZE = windowSize.width > 768
+  ? 140
+  : 40;
+windowSize.subscriptb(() => {
+  JUDESIZE = windowSize.width > 768
+    ? 140
+    : 40;
+})
 
 import {FONT_MAP, ANIMATE_CONFIG_HORIZON} from '../configs'
-
+import Nav from '../containers/Nav'
 function LayoutHorizon(props) {
   let body,
     detail;
@@ -21,12 +31,18 @@ function LayoutHorizon(props) {
       type
     },
     layout: {
+      backgroundColor,
       font,
       fontWeight
     },
     animateConfig
   } = props;
-  let OptionsChildren = null;
+  let OptionsChildren = null,
+    overLoad = false;
+
+  if (hitokoto.length > JUDESIZE) {
+    overLoad = true;
+  }
   if (props.children.length) {
     for (let i = 0, len = props.children.length; i < len; i++) {
       let one = props.children[i];
@@ -41,16 +57,22 @@ function LayoutHorizon(props) {
   }
 
   return (
-    <div className={layout_horizon}>
+    <div
+      className={layout_horizon}
+      style={{
+      backgroundColor: backgroundColor
+    }}>
       <Logo/>
-      <QueueAnim animConfig={animateConfig} className={Content}>
-        <div className={info} key={id + 'info'}>
-          <h1>
-            <span title="序号">{id}</span>
-          </h1>
-          <p >
-            <span title="创建者">{creator}</span>
-          </p>
+      <Nav/>
+      <QueueAnim
+        animConfig={animateConfig}
+        className={Content + (overLoad
+        ? ' ' + overLoadHitokoto
+        : '')}>
+        <div className={info} key={id + 'info'} data-id={id}>
+          <b title="创建者">
+            {creator}
+          </b>
         </div>
         <h1
           style={{

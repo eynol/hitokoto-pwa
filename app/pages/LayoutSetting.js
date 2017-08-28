@@ -4,17 +4,31 @@ import PropTypes from 'prop-types'
 import {Link, withRouter} from 'react-router-dom';
 import QueueAnim from 'rc-queue-anim';
 import FullPage from '../component/FullPage';
+import hitokotoDriver from '../API/hitokotoDriver'
 
 import {clearfix} from './UI.css';
 import {settingWrapper, left, right} from './LayoutSetting.css'
+import {PANEL_OPEN} from '../actions'
+import {GLOBAL_ANIMATE_TYPE} from '../configs'
 
 class LayoutSetting extends Component {
-
+  constructor(props) {
+    super(props);
+    this.state = {
+      currentPatternID: hitokotoDriver.pattern.id
+    }
+  }
+  handlePatternChange(id) {
+    console.log('pattern change', id);
+    if (id !== hitokotoDriver.pattern.id) {
+      let pattern = hitokotoDriver.patterManager.getPatternById(id);
+      hitokotoDriver.drive(pattern).start();
+      this.setState({currentPatternID: id})
+    }
+  }
   render() {
     let {
       changeLayout,
-      patterns,
-      currentPatternID,
       layout: {
         font,
         fontWeight,
@@ -22,9 +36,12 @@ class LayoutSetting extends Component {
         backgroundColor
       },
       hide,
-      patternChange
+      patternChange,
+      panel
     } = this.props;
 
+    let patterns = hitokotoDriver.patterManager.patterns,
+      currentPatternID = this.state.currentPatternID;
     let patternOptions;
     if (patterns) {
       patternOptions = patterns.map((pattern) => (
@@ -38,101 +55,110 @@ class LayoutSetting extends Component {
             <select
               name="mode"
               onChange={event => {
-              patternChange(Number(event.target.value));
+              this.handlePatternChange(Number(event.target.value));
             }}
               defaultValue={currentPatternID}>{patternOptions}</select>
           </dd>
         </dl>
       )
     }
+    let Child;
+    if (panel === PANEL_OPEN + 'layoutSetting') {
+      Child = (
+        <FullPage
+          style={{
+          backgroundColor: "rgba(255,255,255,.01)"
+        }}
+          key='layoutsetting'
+          onClick={hide}>
+          <div
+            className={settingWrapper}
+            onClick={e => {
+            console.dir(e);
+            e.stopPropagation();
+            return false;
+          }}>
+            <div className={clearfix}>
+              <dl>
+                <dt>字体</dt>
+                <dd>
+                  <select
+                    value={font}
+                    onChange={(event) => {
+                    changeLayout('font', event.target.value)
+                  }}>
+                    <option value="default">默认</option>
+                    <option value="simsun">宋体</option>
+                    <option value="fangsong">仿宋</option>
+                    <option value="kai">楷体</option>
+                  </select>
+                </dd>
+              </dl>
+              <dl key="s-frontw">
+                <dt>字重</dt>
+                <dd>
+                  <select
+                    defaultValue={fontWeight}
+                    onChange={(event) => {
+                    changeLayout('fontWeight', event.target.value)
+                  }}>
+                    <option value="100">100</option>
+                    <option value="200">200</option>
+                    <option value="300">300</option>
+                    <option value="400">400</option>
+                    <option value="500">500</option>
+                    <option value="600">600</option>
+                    <option value="700">700</option>
+                    <option value="800">800</option>
+                    <option value="900">900</option>
 
-    return (
-      <FullPage
-        style={{
-        backgroundColor: "rgba(255,255,255,.01)"
-      }}
-        onClick={hide}>
-        <div
-          className={settingWrapper}
-          onClick={e => {
-          e.stopPropagation();
-          return false;
-        }}>
-          <div className={clearfix}>
-            <dl>
-              <dt>字体</dt>
-              <dd>
-                <select
-                  value={font}
-                  onChange={(event) => {
-                  changeLayout('font', event.target.value)
-                }}>
-                  <option value="default">默认</option>
-                  <option value="simsun">宋体</option>
-                  <option value="fangsong">仿宋</option>
-                  <option value="kai">楷体</option>
-                </select>
-              </dd>
-            </dl>
-            <dl key="s-frontw">
-              <dt>字重</dt>
-              <dd>
-                <select
-                  defaultValue={fontWeight}
-                  onChange={(event) => {
-                  changeLayout('fontWeight', event.target.value)
-                }}>
-                  <option value="100">100</option>
-                  <option value="200">200</option>
-                  <option value="300">300</option>
-                  <option value="400">400</option>
-                  <option value="500">500</option>
-                  <option value="600">600</option>
-                  <option value="700">700</option>
-                  <option value="800">800</option>
-                  <option value="900">900</option>
-
-                </select>
-              </dd>
-            </dl>
-            <dl key="s-frontd">
-              <dt>文字方向</dt>
-              <dd>
-                <select
-                  defaultValue={layoutHorizon}
-                  onChange={event => {
-                  changeLayout('layoutHorizon', event.target.value == 'true')
-                }}>
-                  <option value="true">横向</option>
-                  <option value="false">竖向</option>
-                </select>
-              </dd>
-            </dl>
-            <dl key="s-bgc">
-              <dt>页面背景颜色</dt>
-              <dd>
-                <input
-                  type="color"
-                  onChange={(event) => {
-                  changeLayout('backgroundColor', event.target.value)
-                }}
-                  defaultValue={backgroundColor}/>
-              </dd>
-            </dl>
-            {patternOptions}
+                  </select>
+                </dd>
+              </dl>
+              <dl key="s-frontd">
+                <dt>文字方向</dt>
+                <dd>
+                  <select
+                    defaultValue={layoutHorizon}
+                    onChange={event => {
+                    changeLayout('layoutHorizon', event.target.value == 'true')
+                  }}>
+                    <option value="true">横向</option>
+                    <option value="false">竖向</option>
+                  </select>
+                </dd>
+              </dl>
+              <dl key="s-bgc">
+                <dt>页面背景颜色</dt>
+                <dd>
+                  <input
+                    type="color"
+                    onChange={(event) => {
+                    changeLayout('backgroundColor', event.target.value)
+                  }}
+                    defaultValue={backgroundColor}/>
+                </dd>
+              </dl>
+              {patternOptions}
+            </div>
           </div>
-        </div>
-      </FullPage>
+        </FullPage>
+      )
+    } else {
+      Child = <div key='none'></div>
+    }
+    return (
+      <QueueAnim type={GLOBAL_ANIMATE_TYPE} ease={['easeOutQuart', 'easeInOutQuart']}>
+        {Child}
+      </QueueAnim>
     );
   }
 }
 LayoutSetting.propTypes = {
   changeLayout: PropTypes.func.isRequired,
-  patterns: PropTypes.array.isRequired,
-  currentPatternID: PropTypes.number.isRequired,
-  layout: PropTypes.shape({font: PropTypes.string.isRequired, fontWeight: PropTypes.number.isRequired, layoutHorizon: PropTypes.bool.isRequired, backgroundColor: PropTypes.string.isRequired}),
+  layout: PropTypes.shape({font: PropTypes.string.isRequired, fontWeight: PropTypes.string.isRequired, layoutHorizon: PropTypes.bool.isRequired, backgroundColor: PropTypes.string.isRequired}),
   hide: PropTypes.func.isRequired,
-  patternChange: PropTypes.func
+  panel: PropTypes.string.isRequired
 }
 
 export default withRouter(LayoutSetting)

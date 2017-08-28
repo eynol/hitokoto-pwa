@@ -1,3 +1,5 @@
+import update from 'immutability-helper';
+
 const DEFAULT_LAYOUT = {
   font: 'simsun',
   fontWeight: '600',
@@ -18,13 +20,18 @@ function $setInstantLayout(layout) {
   localStorage.setItem(INSTANT_LAYOUT_NAME, JSON.stringify(layout));
 }
 
-import {UPDATE_LAYOUT} from '../actions'
+import {LAYOUT_CHANGE} from '../actions'
 
 const layout = (layout = $getInstantLayout(), action) => {
   switch (action.type) {
-    case UPDATE_LAYOUT:
-
-    case UPDATE_LAYOUT:
+    case LAYOUT_CHANGE:
+      let nextLayout = update(layout, {
+        [action.prop]: {
+          $set: action.value
+        }
+      });
+      $setInstantLayout(nextLayout);
+      return nextLayout;
 
     default:
 

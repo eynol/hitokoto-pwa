@@ -7,11 +7,15 @@ import {Link} from 'react-router-dom'
 
 import LayoutHorizon from './LayoutHorizon'
 import LayoutVertical from './LayoutVertical'
-import {love} from './HitokotoLayout.css'
+import {love, setting} from './HitokotoLayout.css'
+import {showPanel} from '../actions'
 
 import {ANIMATE_CONFIG_LAST, ANIMATE_CONFIG_NEXT} from '../configs'
 
 class HitokotoPlayer extends Component {
+  constructor(props) {
+    super(props)
+  }
   render() {
 
     let {
@@ -24,8 +28,8 @@ class HitokotoPlayer extends Component {
         direction,
         lastCount,
         nextCount,
-        processing
-
+        processing,
+        showLayoutSetting
       } = this.props,
       id = hitokoto.id,
       layoutHorizon = layout.layoutHorizon;
@@ -33,40 +37,38 @@ class HitokotoPlayer extends Component {
     let ActionsHorizon = (
       <ul data-role="actions">
         <li>
-          <a href="javascript:" className={love}></a>
-        </li>
-        <li>
-          <Link to="/layoutsetting">显示设置</Link>
           {lastCount > 1
-            ? '·'
+            ? <button href='javascript:' onClick={handleLast}>上一条</button>
             : null}
-          {lastCount > 1
-            ? <a href='javascript:' onClick={handleLast}>上一条</a>
-            : null}
-          ·
-          <a href="javascript:" onClick={handleNext}>{processing
+          <button onClick={handleNext}>{processing
               ? 'emm..'
-              : '下一条'}</a>
+              : '下一条'}</button>
+          <div style={{
+            float: "right"
+          }}>
+            <a href="javascript:" className={love}></a>&nbsp;
+            <a href="javascript:" onClick={showLayoutSetting} className={setting}></a>
+          </div>
         </li>
       </ul>
     );
     let ActionsVertical = (
       <ul data-role="actions">
         <li key={id + 'love'}>
-          <a href="javascript:" className={love}></a>
+          <a href="javascript:" className={love}></a>&nbsp;
         </li>
-        <li key={id + 'pagesetting'}>
-          <Link to="/layoutsetting">显示设置</Link>
+        <li key={id + 'setting'}>
+          <a href="javascript:" onClick={showLayoutSetting} className={setting}></a>
         </li>
         {lastCount > 1
           ? <li key={id + 'last'}>
-              <a href='javascript:' onClick={handleLast}>上一条</a>
+              <button href='javascript:' onClick={handleLast}>上一条</button>
             </li>
           : null}
         <li key={id + 'next'}>
-          <a href="javascript:" onClick={handleNext}>{processing
+          <button href="javascript:" onClick={handleNext}>{processing
               ? 'emm..'
-              : '下一条'}</a>
+              : '下一条'}</button>
         </li>
       </ul>
     )
@@ -74,7 +76,9 @@ class HitokotoPlayer extends Component {
     if (layoutHorizon) {
       return (
         <QueueAnim
-          animConfig={ANIMATE_CONFIG_NEXT}
+          animConfig={direction == 'next'
+          ? ANIMATE_CONFIG_NEXT
+          : ANIMATE_CONFIG_LAST}
           ease={['easeOutQuart', 'easeInOutQuart']}
           className="animate-none-sense"
           style={{
@@ -109,8 +113,12 @@ HitokotoPlayer.PropTypes = {
   direction: PropTypes.string.isRequired,
   lastCount: PropTypes.number,
   nextCount: PropTypes.number,
-  processing: PropTypes.bool
+  processing: PropTypes.bool,
+  showLayoutSetting: PropTypes.func.isRequired
 }
 
-let mapStateToProps = (state) => ({})
-export default connect(mapStateToProps)(HitokotoPlayer)
+let mapStateToProps = (state) => ({layout: state.layout});
+let mapActionsToProps = (dispatch) => ({
+  showLayoutSetting: () => dispatch(showPanel("layoutSetting"))
+});
+export default connect(mapStateToProps, mapActionsToProps)(HitokotoPlayer)

@@ -10,12 +10,12 @@ module.exports = {
       "react-dom",
       'react-router',
       'react-router-dom',
+      'react-redux',
+      'redux',
       'rc-queue-anim',
       'dexie',
       'crypto-js/sha1',
       'react-textarea-autosize',
-      'redux',
-      'react-redux',
       'whatwg-fetch'
     ],
     bundle: __dirname + "/app/main.js"

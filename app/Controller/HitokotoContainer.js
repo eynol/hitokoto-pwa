@@ -79,19 +79,15 @@ class HitokotoContainer extends Component {
       handleNext: this.handleNext,
       handleLast: this.handleLast
     }}
-      showLayoutSetting={this.props.showLayoutSetting}
       direction={this.state.direction}
       lastCount={this.state.lastCount}
       nextCount={this.state.nextCount}
-      layout={this.props.layout}
       processing={this.state.processing}/>)
   }
 
 }
 
-HitokotoContainer.propTypes = {
-  layout: PropTypes.object.isRequired
-}
+// HitokotoContainer.propTypes = {   layout: PropTypes.object }
 export default HitokotoContainer;
 
 function getInstantHitokoto() {

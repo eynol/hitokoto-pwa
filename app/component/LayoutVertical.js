@@ -1,16 +1,29 @@
 import React from 'react';
 import Logo from './Logo'
 import QueueAnim from 'rc-queue-anim';
+import windowSize from '../API/windowSize'
+
+let JUDESIZE = windowSize.width > 768
+  ? 140
+  : 40;
+windowSize.subscriptb(() => {
+  JUDESIZE = windowSize.width > 768
+    ? 140
+    : 40;
+})
+
 import {
   layout_vertical,
   info,
   oprations,
   actions,
   Content,
-  love
+  verticalAnimate,
+  overLoadHitokoto
 } from './HitokotoLayout.css'
 
 import {FONT_MAP} from '../configs'
+import Nav from '../containers/Nav'
 
 export default function LayoutVertical(props) {
   let {
@@ -23,11 +36,18 @@ export default function LayoutVertical(props) {
       type
     },
     layout: {
+      backgroundColor,
       font,
       fontWeight
     }
   } = props;
-  let OptionsChildren = null;
+  let OptionsChildren = null,
+    overLoad = false;
+
+  if (hitokoto.length > JUDESIZE) {
+    overLoad = true;
+  };
+
   if (props.children.length) {
     for (let i = 0, len = props.children.length; i < len; i++) {
       let one = props.children[i];
@@ -40,50 +60,40 @@ export default function LayoutVertical(props) {
       OptionsChildren = props.children.props.children;
     }
   }
+  let Child = (
+    <div
+      className={Content + (overLoad
+      ? ' ' + overLoadHitokoto
+      : '')}
+      style={{
+      fontFamily: FONT_MAP[font],
+      fontWeight: fontWeight
+    }}
+      key={id}>
+      <h1>{hitokoto}</h1>
+      <p>
+        <i>——</i>&nbsp;&nbsp;&nbsp;{fromwhere}</p>
+    </div>
+  )
 
   return (
-    <div className={layout_vertical}>
+    <div
+      className={layout_vertical}
+      style={{
+      backgroundColor: backgroundColor
+    }}>
       <Logo/>
-      <div className={info}>
-        <h1>
-          <span title="序号">{id}</span>
-        </h1>
-        <p>
-          <span title="创建者">{creator}</span>
-        </p>
-        <div className={oprations}>
-          <QueueAnim component="ul" className={actions}>
-            {OptionsChildren}
-          </QueueAnim>
-        </div>
+      <Nav/>
+      <div className={info} data-id={id}>
+        <b title="创建者">{creator}</b>
       </div>
-      <QueueAnim
-        animConfig={[
-        {
-          opacity: [
-            1, 0
-          ],
-          translateX: [0, -50]
-        }, {
-          opacity: [
-            1, 0
-          ],
-          position: 'absolute',
-          translateX: [0, 50]
-        }
-      ]}
-        className="animate-none-sense">
-        <div
-          className={Content}
-          style={{
-          fontFamily: FONT_MAP[font],
-          fontWeight: fontWeight
-        }}
-          key={id}>
-          <h1>{hitokoto}</h1>
-          <p>
-            <i>——</i>&nbsp;&nbsp;&nbsp;{fromwhere}</p>
-        </div>
+      <div className={oprations}>
+        <QueueAnim component="ul" className={actions}>
+          {OptionsChildren}
+        </QueueAnim>
+      </div>
+      <QueueAnim duration='1000' className={verticalAnimate}>
+        {Child}
       </QueueAnim>
     </div>
   )

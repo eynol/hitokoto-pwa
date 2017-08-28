@@ -13,10 +13,14 @@ const user = (user = $getUser(), action) => {
           });
         $setUser(nextUser);
         return nextUser;
-        break;
+
       }
 
     case USER_LOGOUT:
+      {
+        $setUser({nickname: '', token: ''})
+        return {nickname: '', token: ''}
+      }
 
     case USER_UPDATE_USERNICKNAME:
     default:

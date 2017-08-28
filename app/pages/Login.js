@@ -6,9 +6,11 @@ import here$you$are from '../API/PublicEncrypt';
 import style from './login.css';
 import FullPage from '../component/FullPage'
 import TextFiledCss from '../component/TextFiled.css'
-
 import hitokotoDriver from '../API/hitokotoDriver'
 import httpManager from '../API/httpManager'
+
+import {PANEL_OPEN} from '../actions'
+import {GLOBAL_ANIMATE_TYPE} from '../configs'
 
 let {'text-filed': textFiled} = TextFiledCss;
 
@@ -105,12 +107,14 @@ class Login extends Component {
         <p>{ErrorInfo(this.state.errinfo)}</p>
       )
     }
-    let {hideLogin, showRegist} = this.props;
-    return (
-      <FullPage
+    let {hideLogin, showRegist, panel} = this.props;
+    let Child;
+    if (panel === PANEL_OPEN + 'login') {
+      Child = <FullPage
         style={{
         backgroundColor: 'transparent'
       }}
+        key='login'
         onClick={hideLogin}>
         <div
           className={style['login-box']}
@@ -132,14 +136,23 @@ class Login extends Component {
           {errinfo}
           <br/>
           <p>
-            <button onClick={this.handleSigninClick.bind(this)}>登录</button>
+            <button onClick={this.handleSigninClick.bind(this)}>立即登录</button>
+            <button onClick={showRegist}>前往注册</button>
           </p>
           <p><br/>
-            <a href='javascript:' onClick={hideLogin}>返回</a>&nbsp;
-            <a href='javascript:' onClick={showRegist}>前往注册</a>
+            <button onClick={hideLogin}>关闭</button>&nbsp;
           </p>
         </div>
       </FullPage>
+
+    } else {
+      Child = <div key='none'></div>;
+    }
+    return (
+      <QueueAnim type={GLOBAL_ANIMATE_TYPE} ease={['easeOutQuart', 'easeInOutQuart']}>
+        {Child}
+      </QueueAnim>
+
     )
   }
 }

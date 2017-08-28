@@ -1,8 +1,8 @@
 import {combineReducers} from 'redux'
 import layout from './layout'
 import user from './user'
-import hitokotoDisplay from './hitokotoDisplay'
+import panel from './panel'
 
-let hitokotoApp = combineReducers({hitokotoDisplay, user, layout})
+let hitokotoApp = combineReducers({panel, user, layout})
 // hitokotoApp = layout
 export default hitokotoApp;
