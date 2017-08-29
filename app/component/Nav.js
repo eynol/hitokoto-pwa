@@ -4,15 +4,7 @@ import style from './Nav.css';
 import QueueAnim from 'rc-queue-anim';
 import {HashRouter as Router, Route, Link} from 'react-router-dom'
 import {PANEL_OPEN} from '../actions'
-let {
-  'nav-state': navState,
-  'menu-open': menuOpen,
-  navWrapper,
-  nav,
-  navPhone,
-  'menu-dimmer': menuDimmer,
-  hamburger
-} = style;
+let {navWrapper, nav, navPhone, hamburger} = style;
 
 let beforeLogin = (props) => (
   <ul>
@@ -32,7 +24,7 @@ let beforeLogin = (props) => (
       <Link to='/about'>关于Hitokoto</Link>
     </li>
     <li>
-      <Link to='/tools'>清除工具（用于测试）</Link>
+      <Link to='/tools'>调试工具</Link>
     </li>
   </ul>
 )
@@ -75,8 +67,13 @@ function Nav(props) {
   };
   return (
     <div className={navWrapper}>
-      <a className={hamburger} onClick={props.showNav}>&#9776;</a>
-      <div className={menuDimmer}></div>
+      {/**
+      * <a className={hamburger} onClick={props.showNav}>&#9776;</a>
+      */}
+      <a className={hamburger} onClick={props.showNav}>
+        <span></span>
+      </a>
+
       <div className={nav}>
         {Child(props)}
       </div>

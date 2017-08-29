@@ -26,7 +26,7 @@ class Tools extends Component {
   clearLS() {
     window.localStorage.clear();
     alert('已清除！');
-    location.href = '/';
+    location.href = '#';
   }
   render() {
     let {path, location} = this.props;
@@ -42,7 +42,7 @@ class Tools extends Component {
             </a>
           </h1>
           <br/>
-          <h3>开发期间，如果您发现样式大便或者操作有错误，建议点击以下按钮，清除部分数据。</h3>
+          <h3>开发期间，如果您发现样式大变或者操作有错误，建议点击以下按钮，清除部分数据。</h3>
           <dl>
             <dt>
               <a href="javascript:" onClick={() => this.clearLS()}>清除Localstorage缓存</a>
