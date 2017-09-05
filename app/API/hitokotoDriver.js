@@ -119,7 +119,7 @@ class HitokotoDriver {
                 this.signal.splice(index, 1)
                 // return Promise.reject(reason);
               }
-              console.log(e);
+              console.log('oops', e);
               //  失败了 使用离线缓存
               return indexedDBManager.getHitokotoRandom(source.url);
             })
@@ -277,16 +277,18 @@ class HitokotoDriver {
   getHitokotoFromWEB(url, pid, patternType, id) {
     let p = this.httpManager.getHitokoto(url).then(this.getAdapter(url));
     //  并行存储hitokoto
-    p.then(hitokoto => {
-      indexedDBManager.putHitokoto(url, hitokoto)
+    return p.then(hitokoto => {
+      try {
+        indexedDBManager.putHitokoto(url, hitokoto)
+      } catch (e) {
+        console.log(e);
+      }
       return hitokoto
     }).catch(e => {
-      console.log(e);
-    });
-    return p.catch((e) => {
-      console.error(e);
+      console.log('oopppsss', e);
       return Promise.reject(e);
-    })
+    });
+
   }
 
   updateSource(id, sourceToUpdate) {

@@ -92,7 +92,7 @@ class HTTPManager {
     if (this.inited) {
       return timeoutPromise(13000, fetch(url)).then(this.parseToJSON).catch(e => {
         console.log(e)
-        return Promise.reject('请求出错！' + e)
+        return Promise.reject('请求失败！' + e)
       })
     } else {
 
@@ -102,6 +102,7 @@ class HTTPManager {
           chain.push({t: true, f: func}); // store as then function
           return this;
         }, catch: function (func) {
+          func('Working on Promise Polyfill ...')
           chain.push({t: false, f: func}); //store as catch function
           return this;
         }
@@ -111,9 +112,9 @@ class HTTPManager {
         while (chain.length) {
           let atempt = chain.shift();
           if (atempt.t) {
-            req.then(atempt.f);
+            req = req.then(atempt.f);
           } else {
-            req.catch(atempt.f);
+            req = req.catch(atempt.f);
           }
         }
         chain = null;
