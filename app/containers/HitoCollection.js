@@ -1,11 +1,10 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux'
-import Home from '../pages/Home'
+import HitoList from '../pages/HitoCollection'
 
-import {fetchCollectionSuccess, requestCollectionHitokotos} from '../actions'
+import {fetchCollectionSuccess, enterCollection} from '../actions'
 const mapStoreToProps = (state) => ({layout: state.layout, collections: state.collections, user: state.user})
 const mapActionToProps = (dispatch) => ({
-  requestCollectionHitokotos: (name) => dispatch(requestCollectionHitokotos(name)),
   fetchCollectionSuccess: (data) => dispatch(fetchCollectionSuccess(data))
 })
-export default connect(mapStoreToProps, mapActionToProps)(Home)
+export default connect(mapStoreToProps, mapActionToProps)(HitoList)

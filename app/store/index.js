@@ -27,7 +27,7 @@ store = configureStore();
 
 export default store;
 
-let fakeState = {
+let fakeState = ({
   user: {
     nickname: String,
     token: String
@@ -42,5 +42,9 @@ let fakeState = {
     processing: Boolean,
     lastCount: Number,
     nextCount: Number
+  },
+  collections: {
+    inited: Boolean,
+    data: Array
   }
-}
+}, 2);

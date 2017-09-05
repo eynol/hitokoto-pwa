@@ -1,4 +1,6 @@
 import React, {Component} from 'react';
+import PropTypes from 'prop-types'
+import {matchPath} from 'react-router'
 import {Link, withRouter} from 'react-router-dom';
 import QueueAnim from 'rc-queue-anim';
 import FullPageCard from '../component/FullPageCard'
@@ -20,22 +22,32 @@ let {
 } = style;
 
 class NewHitokoto extends Component {
-  shouldComponentUpdate(nextProps, nextState) {
-    return nextProps.location.pathname == nextProps.path || this.props.location.pathname == nextProps.path;
+  constructor(props) {
+    super(props);
+    this.goBack = this.goBack.bind(this);
+    this.handlePreviewClick = this.handlePreviewClick.bind(this);
+    this.publish = this.publish.bind(this);
+  }
+  componentWillMount() {
+    let pathname = this.props.location.pathname;
+
+    let match = matchPath(pathname, {path: '/home/:name/new'})
+
+    if (match) {
+      let {params: {
+          name
+        }} = match;
+
+    }
   }
   goBack() {
     console.log(this.props.history);
-    this
-      .props
-      .history
-      .go(-1);
+    this.props.history.go(-1);
   }
   handlePreviewClick() {
     let hitokoto = this.getHitokoto();
     if (hitokoto) {
-      this
-        .props
-        .preview(hitokoto);
+      this.props.preview(hitokoto);
     }
   }
   getHitokoto() {
@@ -59,17 +71,19 @@ class NewHitokoto extends Component {
   publish() {
     let hitokoto = this.getHitokoto();
     if (hitokoto) {
-      this
-        .props
-        .publish(hitokoto);
+      this.props.publish(hitokoto).then(result => {
+        console.log(result);
+      });
     }
   }
   render() {
-    let {location, path} = this.props;
+    let {location: {
+        pathname
+      }} = this.props;
     let child = '';
-
+    let reg = /^\/home\/[^\/]*\/(new|preview)$/im;
     return (
-      <QueueAnim type={['left', 'right']} ease={['easeOutQuart', 'easeInOutQuart']}>{location.pathname == path || location.pathname == '/home/hitokoto/preview'
+      <QueueAnim type={['right', 'left']} ease={['easeOutQuart', 'easeInOutQuart']}>{reg.test(pathname)
           ? <FullPageCard
               key="23"
               style={{
@@ -77,20 +91,10 @@ class NewHitokoto extends Component {
             }}>
               <div className={manageBox}>
                 <h1 className={clearfix}>添加Hitokoto
-                  <a
-                    href='javascript:void'
-                    onClick={this
-                    .goBack
-                    .bind(this)}
-                    className={closeButton}>
+                  <a href='javascript:void' onClick={this.goBack} className={closeButton}>
                     <i className={icon + ' ' + close}></i>
                   </a>
-                  <a
-                    href='javascript:void'
-                    onClick={this
-                    .goBack
-                    .bind(this)}
-                    className={backButton}>
+                  <a href='javascript:void' onClick={this.goBack} className={backButton}>
                     <i className={icon + ' ' + back}></i>
                   </a>
                 </h1>
@@ -130,14 +134,8 @@ class NewHitokoto extends Component {
                   </div>
 
                   <div className={operations}>
-                    <button
-                      onClick={this
-                      .handlePreviewClick
-                      .bind(this)}>预览</button>&nbsp;
-                    <button
-                      onClick={this
-                      .publish
-                      .bind(this)}>发布</button>
+                    <button onClick={this.handlePreviewClick}>预览</button>&nbsp;
+                    <button onClick={this.publish}>发布</button>
                   </div>
                 </div>
               </div>
@@ -145,6 +143,10 @@ class NewHitokoto extends Component {
           : null}</QueueAnim>
     )
   }
+}
+NewHitokoto.propTypes = {
+  preview: PropTypes.func.isRequired,
+  publish: PropTypes.func.isRequired
 }
 
 export default withRouter(NewHitokoto);

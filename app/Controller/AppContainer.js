@@ -7,8 +7,8 @@ import Patterns from '../pages/Patterns'
 import Sources from '../pages/Sources'
 import About from '../pages/About'
 import Tools from '../pages/Tools'
-import Home from '../containers/Home'
 
+import Home from '../containers/Home'
 import Index from '../containers/Index'
 import {ANIMATE_CONFIG_NEXT, GLOBAL_ANIMATE_TYPE} from '../configs'
 const ROUTES = [
@@ -25,7 +25,7 @@ const ROUTES = [
     component: Patterns,
     name: '模式管理'
   }, {
-    to: /^\/home$/,
+    to: /^\/home\/?/,
     component: Home,
     name: '个人中心页面'
   }, {
@@ -74,7 +74,7 @@ class AppContainer extends Component {
           必须要等到动画结束后等待一段时间，之前的组件才会消失。
           如果在动画结束后，马上路由返回，先前的组件就会反向出现。
          只好每次都重新渲染*/}
-          <Child key={Date.now()}/>
+          <Child key={mathPath.name}/>
         </QueueAnim>
       </div>
     );

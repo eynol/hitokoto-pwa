@@ -132,8 +132,8 @@ class Regist extends Component {
 
     this.setState({errinfo: undefined});
 
-    let $username = here$you$are(username).toString();
-    let $password = here$you$are(password).toString();
+    let $username = here$you$are(username);
+    let $password = here$you$are(password);
     console.log('encrypted username', $username);
     console.log('encrypted password', $password);
     this.setState({

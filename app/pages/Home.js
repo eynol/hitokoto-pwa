@@ -5,11 +5,11 @@ import PropTypes from 'prop-types'
 
 import NewHitokoto from '../pages/NewHitokoto'
 import hitokotoDriver from '../API/hitokotoDriver';
-import HitoCollection from './HitoCollection';
-import HitokotoList from './HitokotoList';
+import HitoCollection from '../containers/HitoCollection';
+import HitoList from '../containers/HitoList';
 import HitokotoPreview from './HitokotoPreview';
 
-let httpMangaer = hitokotoDriver.httpManager;
+let httpManager = hitokotoDriver.httpManager;
 
 import {home, username, menu, left, right} from './Home.css';
 class Home extends Component {
@@ -22,126 +22,57 @@ class Home extends Component {
       hitokotos: [],
       previewHitokoto: ''
     }
+    this.previewHitokoto = this.previewHitokoto.bind(this);
+    this.pubulishHitokoto = this.pubulishHitokoto.bind(this);
+    this.switchLayout = this.switchLayout.bind(this);
   }
   componentDidMount() {
     console.log('[home]CDM')
-    httpMangaer.API_myCollections().then(ret => {
-      console.log('result mycollection')
-      if (ret.err) {
-        alert(ret.err);
-      } else {
-        this.setState(state => {
-          console.log(state)
-          if (state.loadingCollect) {
-            state.loadingCollect = false;
-          }
-          state.collections = ret.collections;
-          return state;
-        })
-      }
-      console.log(ret);
-    }).catch(e => alert(e));
-    console.log('result mycollection')
   }
-  viewCollection(name) {
-    this.props.history.push('/home/' + name);
-    this.setState({currentCollectionName: name})
-    return httpMangaer.API_viewCollection(name).then(result => {
-      if (result.err) {
-        alert(result.err);
-      } else {
-        this.setState(state => {
-          console.log(state)
-          state.hitokotos = result.hitokotos
-          if (state.loadingHito) {
-            state.loadingHito = false;
-          }
-          return state;
-        })
-      }
-      console.log('result', result);
-    });
-  }
-  newCollection(name) {
-    let form = new FormData();
-    form.append('name', name);
 
-    return httpMangaer.API_newCollection(form).then(result => {
-      if (result.err) {
-        alert(result.err);
-      } else {
-        this.setState({collections: result.collections})
-      }
-      console.log('result', result);
-    });
-  }
-  changeCollectionName(oldname, newname) {
-    if (oldname === '默认句集') {
-      console.log('默认句集无法修改')
-      return;
-    }
-    let form = new FormData();
-    form.append('oldname', oldname);
-    form.append('newname', newname);
-    httpMangaer.API_updateCollectionName(form).then(result => {
-      if (result.err) {
-        alert(result.err);
-      } else {
-        this.setState({collections: result.collections})
-      }
-      console.log('result', result);
-    });
-  }
   switchLayout() {
     this.setState(state => {
       state.horizon = !state.horizon;
       return state;
     })
   }
+
   previewHitokoto(hitokoto) {
-    hitokoto.creator = this.props.nickname;
+    hitokoto.creator = this.props.user.nickname;
     let date = new Date();
     hitokoto.id = '' + date.getFullYear() + date.getMonth() + date.getDate()
     this.setState({previewHitokoto: hitokoto})
-    this.props.history.push('/home/hitokoto/preview');
+    this.props.history.replace(this.props.location.pathname.replace(/new$/im, 'preview'));
   }
   pubulishHitokoto(hitokoto) {
-    let collectionName = this.state.currentCollectionName;
+
+    let reg = /^\/home\/([^\/]*)\/(new|preview)$/im,
+      matchs = reg.exec(this.props.location.pathname);
+    let collectionName = matchs[1];
     let form = new FormData();
 
     form.append('hitokoto', hitokoto.hitokoto);
     form.append('from', hitokoto.from);
-    form.append('creator', this.props.nickname);
+    form.append('creator', this.props.user.nickname);
     form.append('type', hitokoto.type);
-    return httpMangaer.API_newHitokoto(collectionName, form).then(result => {
-
+    return httpManager.API_newHitokoto(collectionName, form).then(result => {
       console.log(result);
+      if (result.err) {
+        alert(result.err)
+      } else {
+        this.props.history.push('/home/' + collectionName);
+        this.props.requestCollectionHitokotos(collectionName)
+      }
       return result
     });
   }
-  deleteCollection(name) {
-    if (name === '默认句集') {
-      console.log('默认句集无法删除')
-      return;
-    }
-    let form = new FormData();
-    form.append('name', name);
 
-    httpMangaer.API_deleteCollection(form).then(result => {
-      if (result.err) {
-        alert(result.err);
-      } else {
-        this.setState({collections: result.collections})
-      }
-      console.log('result', result);
-    });
-  }
   componentWillUpdate(e) {
-    console.log('[home]CWU', JSON.stringify(e))
+    console.log('[home]CWU')
   }
 
   componentWillReceiveProps(props) {
-    console.log('[home]CWRP', JSON.stringify(props))
+    console.log('[home]CWRP')
   }
 
   componentDidUpdate(d) {
@@ -159,28 +90,11 @@ class Home extends Component {
     let frameToShow = null;
 
     if (/^\/home$/gim.test(pathname)) {
+      frameToShow = (<HitoCollection key='hitocollections'/>)
+    } else if (/^\/home\/[^\/]*/gim.test(pathname)) {
+      frameToShow = (<HitoList key='hitolist'/>)
+    }
 
-      frameToShow = (<HitoCollection
-        changeName={this.changeCollectionName.bind(this)}
-        deleteCollection={this.deleteCollection.bind(this)}
-        newCollection={this.newCollection.bind(this)}
-        viewCollection={this.viewCollection.bind(this)}
-        key='hitocollections'
-        collections={this.state.collections}/>)
-    } else if (/^\/home\//gim.test(pathname)) {
-      frameToShow = (<HitokotoList
-        loading={this.state.loadingHito}
-        key='hitolist'
-        hitokotos={this.state.hitokotos}/>)
-    }
-    class Test extends Component {
-      render() {
-        return (
-          <div>hhhh
-          </div>
-        )
-      }
-    }
     return (
       <div key='home' className={home}>
         <div className={left}>
@@ -190,12 +104,11 @@ class Home extends Component {
               <Link to='/'>返回首页</Link>
             </li>
             <li>
-              <Link to='/home'>Hitokoto</Link>
+              <Link to='/home'>所有句集</Link>
             </li>
             <li>资料设置</li>
             <li>修改密码</li>
           </ul>
-          <Route key="frame" path="/home" component={withRouter(Test)}></Route>
         </div>
         <QueueAnim
           className={right}
@@ -204,26 +117,26 @@ class Home extends Component {
             opacity: [
               1, 0
             ],
-            translateX: [0, -50]
+            translateY: [0, -50]
           }, {
             opacity: [
               1, 0
             ],
             position: 'absolute',
-            translateX: [0, 50]
+            translateY: [0, 50]
           }
         ]}>
           {frameToShow}
           <NewHitokoto
             path='/home/hitokoto/new'
-            publish={this.pubulishHitokoto.bind(this)}
-            preview={this.previewHitokoto.bind(this)}/>
+            publish={this.pubulishHitokoto}
+            preview={this.previewHitokoto}/>
         </QueueAnim>
         <HitokotoPreview
           path="/home/hitokoto/preview"
           layout={this.props.layout}
-          switchLayout={this.switchLayout.bind(this)}
-          publish={this.pubulishHitokoto.bind(this)}
+          switchLayout={this.switchLayout}
+          publish={this.pubulishHitokoto}
           hitokoto={this.state.previewHitokoto}
           layoutHorizon={this.state.horizon}/>
       </div>

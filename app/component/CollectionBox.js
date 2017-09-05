@@ -153,7 +153,7 @@ class CollectionBox extends Component {
             <p className={ellipsis}>{name}</p>
             <span>{count}条</span>
             <div
-              className={menu + ' ' + Card_options + (defaultcol
+              className={menu + ' ' + Card_options + (name == '默认句集'
               ? ' ' + hide
               : '')}>
               <a

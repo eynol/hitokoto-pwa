@@ -1,4 +1,5 @@
 import update from 'immutability-helper';
+import httpManager from '../API/httpManager'
 import {USER_LOGIN, USER_LOGOUT, USER_UPDATE_USERNICKNAME} from '../actions'
 const user = (user = $getUser(), action) => {
   switch (action.type) {
@@ -12,6 +13,7 @@ const user = (user = $getUser(), action) => {
             }
           });
         $setUser(nextUser);
+        httpManager.updateToken(ret.token)
         return nextUser;
 
       }
@@ -19,6 +21,7 @@ const user = (user = $getUser(), action) => {
     case USER_LOGOUT:
       {
         $setUser({nickname: '', token: ''})
+        httpManager.updateToken('')
         return {nickname: '', token: ''}
       }
 

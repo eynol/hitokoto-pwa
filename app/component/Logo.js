@@ -7,7 +7,7 @@ export default function Logo(props) {
     <div
       className={style.logo}
       onClick={RequestFullscreen.toggleFullScreen.bind(RequestFullscreen)}>
-      <h1 title="点击此处开启全屏或退出全屏">Hitokoto</h1>
+      <h1 title="点击此处开启全屏或退出全屏">一言</h1>
     </div>
   )
 }

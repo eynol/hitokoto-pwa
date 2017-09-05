@@ -80,7 +80,8 @@ export default function LayoutVertical(props) {
     <div
       className={layout_vertical}
       style={{
-      backgroundColor: backgroundColor
+      backgroundColor: backgroundColor,
+      overflow: 'hidden'
     }}>
       <Logo/>
       <Nav/>

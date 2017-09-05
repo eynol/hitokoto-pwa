@@ -3,23 +3,8 @@ import {Link} from 'react-router-dom'
 import QueueAnim from 'rc-queue-anim';
 import hitokotoDriver from '../API/hitokotoDriver';
 
-let httpMangaer = hitokotoDriver.httpManager;
-
-import FullPageCard from '../component/FullPageCard'
-
-import {Card, Card_options, Card_content} from '../pages/HitoCollection.css'
-import {menu} from '../pages/Home.css'
-import style from '../pages/UI.css'
-let {
-  ellipsis,
-  manageBox,
-  clearfix,
-  'close-button': closeButton,
-  icon,
-  close,
-  back,
-  backButton
-} = style
+import {hitokoto} from './HitoView.css'
+let httpManager = hitokotoDriver.httpManager;
 
 class HitoView extends Component {
   constructor(props) {
@@ -30,7 +15,6 @@ class HitoView extends Component {
   }
 
   render() {
-    console.log(this.props)
 
     let {newone, newHitokoto, data} = this.props;
     if (newone) {
@@ -40,16 +24,15 @@ class HitoView extends Component {
         </div>
       )
     } else {
-      let hitokoto = data.hitokoto,
+      let hitokotoText = data.hitokoto,
         source = data.from,
         date = new Date(data.created_at);
-      console.log(data);
       return (
-        <div>
+        <div className={hitokoto}>
+          <p>{hitokotoText}</p>
           <span>
             <p>{date.toLocaleString()}</p>
           </span>
-          <p>{hitokoto}</p>
           <span>—— {source}</span>
         </div>
       )

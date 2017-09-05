@@ -24,51 +24,42 @@ let ANIMATE_CONFIG_NEXT = [
 ]
 
 class HitokotoPreview extends Component {
+  constructor(props) {
+    super(props);
+    this.goBack = this.goBack.bind(this);
+
+  }
   publish() {
-    this
-      .props
-      .publish(this.props.hitokoto)
-      .then(result => {
-        alert(result);
-      });
+    this.props.publish(this.props.hitokoto).then(result => {
+      alert(result);
+    });
   }
   goBack() {
-    this
-      .props
-      .history
-      .goBack();
+    this.props.history.replace(this.props.location.pathname.replace(/preview$/im, 'new'));
   }
   render() {
     let {hitokoto, layout, layoutHorizon, path, location: {
           pathname
         }} = this.props,
-      id = hitokoto.id;
-    if (path != pathname) {
+      id = hitokoto.id,
+      pathReg = /^\/home\/[^\/]*\/preview$/im;
+
+    if (!pathReg.test(pathname)) {
       return null;
     }
     if (typeof hitokoto == 'string') {
       return <FullPageCard>
         <h1>hitokoto已被清空</h1>
-        <button onClick={this
-          .goBack
-          .bind(this)}>返回</button>
+        <button onClick={this.goBack}>返回</button>
       </FullPageCard>
     }
     let Actions = (
       <ul data-role="actions">
         <li key={id + 'return'}>
-          <a
-            href="javascript:"
-            onClick={this
-            .goBack
-            .bind(this)}>返回编辑</a>
+          <a href="javascript:" onClick={this.goBack}>返回编辑</a>
         </li>
         <li key={id + 'publish'}>
-          <a
-            href='javascript:'
-            onClick={this
-            .publish
-            .bind(this)}>立即发布</a>
+          <a href='javascript:' onClick={this.publish.bind(this)}>立即发布</a>
         </li>
         <li key={id + 'style'}>
           <a href="javascript:" onClick={this.props.switchLayout}>更换排版</a>

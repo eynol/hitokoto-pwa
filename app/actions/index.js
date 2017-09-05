@@ -39,3 +39,24 @@ export const hitokotoNext = () => dispatch => {
 
 export const LAYOUT_CHANGE = 'layout change';
 export const changeLayout = (prop, value) => ({type: LAYOUT_CHANGE, prop, value})
+
+export const COLLECTIONS_FETCHED_SUCCESS = 'collection fetched success'
+export const COLLECTIONS_FETCHED_FAILED = 'collection fetched failed'
+export const fetchCollectionSuccess = (collections) => ({type: COLLECTIONS_FETCHED_SUCCESS, value: collections})
+export const fetchCollectionFailed = (reason) => ({type: COLLECTIONS_FETCHED_FAILED, value: reason})
+
+export const LEAVE_COLLECTION = 'collection leave';
+export const leaveCollection = () => ({type: LEAVE_COLLECTION, value: ''})
+
+export const requestCollectionHitokotos = (name) => dispatch => {
+  return httpManager.API_viewCollection(name).then(result => {
+    console.log(result);
+    if (result.err) {
+      return Promise.reject(result.err);
+    } else {
+      return dispatch(fetchHitokotosSuccess(result.hitokotos))
+    }
+  });
+};
+export const FETCH_COLLECTION_HITO_SUCCESS = 'hitokotos of collection'
+export const fetchHitokotosSuccess = (hitokotos) => ({type: FETCH_COLLECTION_HITO_SUCCESS, value: hitokotos})
