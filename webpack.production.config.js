@@ -1,6 +1,7 @@
 var webpack = require('webpack');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var Visualizer = require('webpack-visualizer-plugin');
 
 module.exports = {
   entry: {
@@ -46,6 +47,7 @@ module.exports = {
   postcss: [require('autoprefixer')],
 
   plugins: [
+    new Visualizer({filename: './statistics-production.html'}),
     new HtmlWebpackPlugin({
       template: __dirname + "/app/index.tmpl.html"
     }),
