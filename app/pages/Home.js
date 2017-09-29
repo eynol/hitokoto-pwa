@@ -8,6 +8,7 @@ import hitokotoDriver from '../API/hitokotoDriver';
 import HitoCollection from '../containers/HitoCollection';
 import HitoList from '../containers/HitoList';
 import HitokotoPreview from './HitokotoPreview';
+import UpdateHitokoto from '../pages/UpdateHitokoto'
 
 let httpManager = hitokotoDriver.httpManager;
 
@@ -22,6 +23,7 @@ class Home extends Component {
       hitokotos: [],
       previewHitokoto: ''
     }
+    this.storeHitokotoToUpdate = this.storeHitokotoToUpdate.bind(this);
     this.previewHitokoto = this.previewHitokoto.bind(this);
     this.pubulishHitokoto = this.pubulishHitokoto.bind(this);
     this.switchLayout = this.switchLayout.bind(this);
@@ -38,11 +40,18 @@ class Home extends Component {
   }
 
   previewHitokoto(hitokoto) {
-    hitokoto.creator = this.props.user.nickname;
-    let date = new Date();
-    hitokoto.id = '' + date.getFullYear() + date.getMonth() + date.getDate()
+    if (!hitokoto.creator) {
+      hitokoto.creator = this.props.user.nickname;
+    }
+    if (!hitokoto.id) {
+      let date = new Date();
+      hitokoto.id = '' + date.getFullYear() + date.getMonth() + date.getDate()
+    }
     this.setState({previewHitokoto: hitokoto})
-    this.props.history.replace(this.props.location.pathname.replace(/new$/im, 'preview'));
+    this.props.history.push(this.props.location.pathname.replace(/(new|update)$/im, 'preview'));
+  }
+  storeHitokotoToUpdate(hitokotoToUpdate) {
+    this.setState({previewHitokoto: hitokotoToUpdate});
   }
   pubulishHitokoto(hitokoto) {
 
@@ -54,7 +63,7 @@ class Home extends Component {
     form.append('hitokoto', hitokoto.hitokoto);
     form.append('from', hitokoto.from);
     form.append('creator', this.props.user.nickname);
-    form.append('type', hitokoto.type);
+    form.append('category', hitokoto.category);
     return httpManager.API_newHitokoto(collectionName, form).then(result => {
       console.log(result);
       if (result.err) {
@@ -90,9 +99,9 @@ class Home extends Component {
     let frameToShow = null;
 
     if (/^\/home$/gim.test(pathname)) {
-      frameToShow = (<HitoCollection key='hitocollections'/>)
+      frameToShow = (<HitoCollection/>)
     } else if (/^\/home\/[^\/]*/gim.test(pathname)) {
-      frameToShow = (<HitoList key='hitolist'/>)
+      frameToShow = (<HitoList updateHitokoto={this.storeHitokotoToUpdate}/>)
     }
 
     return (
@@ -127,16 +136,15 @@ class Home extends Component {
           }
         ]}>
           {frameToShow}
-          <NewHitokoto
-            path='/home/hitokoto/new'
-            publish={this.pubulishHitokoto}
+          <NewHitokoto publish={this.pubulishHitokoto} preview={this.previewHitokoto}/>
+          <UpdateHitokoto
+            hitokoto={this.state.previewHitokoto}
+            update={this.pubulishHitokoto}
             preview={this.previewHitokoto}/>
         </QueueAnim>
         <HitokotoPreview
-          path="/home/hitokoto/preview"
           layout={this.props.layout}
           switchLayout={this.switchLayout}
-          publish={this.pubulishHitokoto}
           hitokoto={this.state.previewHitokoto}
           layoutHorizon={this.state.horizon}/>
       </div>

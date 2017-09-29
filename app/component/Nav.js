@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import style from './Nav.css';
 import QueueAnim from 'rc-queue-anim';
-import {HashRouter as Router, Route, Link} from 'react-router-dom'
+import {withRouter, HashRouter as Router, Route, Link} from 'react-router-dom'
 import {PANEL_OPEN} from '../actions'
 let {navWrapper, nav, navPhone, hamburger} = style;
 
@@ -57,6 +57,8 @@ function Nav(props) {
   } else {
     Child = beforeLogin;
   }
+  let pathname = props.location.pathname;
+
   let panel = props.panel;
   if (panel === PANEL_OPEN + 'nav') {
 
@@ -65,6 +67,19 @@ function Nav(props) {
       <button onClick={props.hideNav}>关闭</button>
     </div>
   };
+
+  if (/preview$/im.test(pathname)) {
+    return (
+      <div className={navWrapper}>
+        {/**
+      * <a className={hamburger} onClick={props.showNav}>&#9776;</a>
+      */}
+        <a className={hamburger}>
+          <span></span>
+        </a>
+      </div>
+    )
+  }
   return (
     <div className={navWrapper}>
       {/**
@@ -102,4 +117,4 @@ Nav.propTypes = {
   hideNav: PropTypes.func.isRequired
 }
 
-export default Nav;
+export default withRouter(Nav);

@@ -16,7 +16,9 @@ class HitoList extends Component {
     super(props);
     this.state = {
       status: 'collections'
-    }
+    };
+    this.newHitokoto = this.newHitokoto.bind(this);
+    this.updateHitokoto = this.updateHitokoto.bind(this);
   }
 
   componentDidMount() {
@@ -34,6 +36,10 @@ class HitoList extends Component {
     }
     let match = matchPath(pathname, {path: '/home/:name'})
 
+    if (!match) {
+      return;
+    }
+    console.log(match, pathname);
     let {params: {
         name
       }} = match;
@@ -49,6 +55,10 @@ class HitoList extends Component {
     }
 
   }
+  updateHitokoto(data) {
+    this.props.updateHitokoto(data);
+    this.props.history.push(this.props.location.pathname + '/update');
+  }
   newHitokoto() {
     this.props.history.push(this.props.location.pathname + '/new');
   }
@@ -57,10 +67,20 @@ class HitoList extends Component {
     let {hitokotos, location: {
           pathname
         }} = this.props,
-      ListToShow = [(<HitoView newone={true} newHitokoto={this.newHitokoto.bind(this)} key='newone'/>)];
+      ListToShow = [(
+          <HitoView
+            newone={true}
+            update={this.updateHitokoto}
+            newHitokoto={this.newHitokoto}
+            key='newone'>
+            <button onClick={() => {
+              alert('来源')
+            }}>加入来源</button>
+          </HitoView>
+        )];
 
     if (hitokotos.length > 0) {
-      ListToShow = ListToShow.concat(hitokotos.map((hitokoto) => (<HitoView key={hitokoto.id} data={hitokoto}/>)));;
+      ListToShow = ListToShow.concat(hitokotos.map((hitokoto) => (<HitoView key={hitokoto.id} update={this.updateHitokoto} data={hitokoto}/>)));;
     }
 
     console.log(ListToShow);

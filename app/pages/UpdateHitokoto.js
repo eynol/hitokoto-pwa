@@ -3,6 +3,9 @@ import PropTypes from 'prop-types'
 import {matchPath} from 'react-router'
 import {Link, withRouter} from 'react-router-dom';
 import QueueAnim from 'rc-queue-anim';
+
+import _asign from 'lodash/assign';
+
 import FullPageCard from '../component/FullPageCard'
 import style from './NewHitokoto.css';
 import Textarea from 'react-textarea-autosize';
@@ -21,23 +24,28 @@ let {
   operations
 } = style;
 
-class NewHitokoto extends Component {
+class UpdateHitokoto extends Component {
   constructor(props) {
     super(props);
     this.goBack = this.goBack.bind(this);
     this.handlePreviewClick = this.handlePreviewClick.bind(this);
-    this.publish = this.publish.bind(this);
+    this.update = this.update.bind(this);
   }
   componentWillMount() {
     let pathname = this.props.location.pathname;
 
-    let match = matchPath(pathname, {path: '/home/:name/new'})
+    let match = matchPath(pathname, {path: '/home/:name/update'})
 
     if (match) {
       let {params: {
           name
         }} = match;
 
+      if (!this.props.hitokoto) {
+        setTimeout(() => {
+          this.props.history.replace(pathname.replace(/\/update$/, ''));
+        }, 0)
+      }
     }
   }
   goBack() {
@@ -47,6 +55,7 @@ class NewHitokoto extends Component {
   handlePreviewClick() {
     let hitokoto = this.getHitokoto();
     if (hitokoto) {
+      hitokoto = _asign(JSON.parse(JSON.stringify(this.props.hitokoto)), hitokoto)
       this.props.preview(hitokoto);
     }
   }
@@ -56,7 +65,7 @@ class NewHitokoto extends Component {
           value: source
         },
         type: {
-          value: type
+          value: category
         }
       } = this.refs,
       content = this.textarea.value;
@@ -66,12 +75,13 @@ class NewHitokoto extends Component {
     if (source.length == 0) {
       return alert('hitokoto来源不能为空！')
     }
-    return {hitokoto: content, from: source, category: type}
+    return {hitokoto: content, from: source, category}
   }
-  publish() {
+  update() {
     let hitokoto = this.getHitokoto();
     if (hitokoto) {
-      this.props.publish(hitokoto).then(result => {
+      hitokoto = _asign(JSON.parse(JSON.stringnify(this.props.hitokoto)), hitokoto)
+      this.props.update(hitokoto).then(result => {
         console.log(result);
       });
     }
@@ -79,9 +89,11 @@ class NewHitokoto extends Component {
   render() {
     let {location: {
         pathname
-      }} = this.props;
+      }, hitokoto} = this.props;
+
+    console.log(hitokoto)
     let child = '';
-    let reg = /^\/home\/[^\/]*\/(new|preview)$/im;
+    let reg = /^\/home\/[^\/]*\/update$/im;
     return (
       <QueueAnim type={['right', 'left']} ease={['easeOutQuart', 'easeInOutQuart']}>{reg.test(pathname)
           ? <FullPageCard
@@ -90,7 +102,7 @@ class NewHitokoto extends Component {
               backgroundColor: '#fff'
             }}>
               <div className={manageBox}>
-                <h1 className={clearfix}>添加Hitokoto
+                <h1 className={clearfix}>修改Hitokoto
                   <a href='javascript:void' onClick={this.goBack} className={closeButton}>
                     <i className={icon + ' ' + close}></i>
                   </a>
@@ -105,18 +117,20 @@ class NewHitokoto extends Component {
                       minRows={3}
                       inputRef={textarea => this.textarea = textarea}
                       className={hitokotoTextarea}
-                      placeholder="请在此输入hitokoto"/>
+                      placeholder="请在此输入hitokoto"
+                      defaultValue={hitokoto.hitokoto}/>
                   </div>
                   <div>
                     <input
                       type="text"
+                      defaultValue={hitokoto.from}
                       ref='source'
                       placeholder="...在这里写来源出处"
                       className={hitokotoSouceInput}/>
                   </div>
                   <div className={hitokotoSouceTypeBlock}>
                     <p>先选择来源类别：
-                      <select defaultValue='其他' ref='type'>
+                      <select defaultValue={hitokoto.category} ref='type'>
                         <option value="动漫">动漫</option>
                         <option value="小说">小说</option>
                         <option value="散文随笔">散文随笔</option>
@@ -135,7 +149,8 @@ class NewHitokoto extends Component {
 
                   <div className={operations}>
                     <button onClick={this.handlePreviewClick}>预览</button>&nbsp;
-                    <button onClick={this.publish}>发布</button>
+                    <button onClick={this.update}>确认修改</button>
+                    <button onClick={this.goBack}>取消</button>
                   </div>
                 </div>
               </div>
@@ -144,9 +159,9 @@ class NewHitokoto extends Component {
     )
   }
 }
-NewHitokoto.propTypes = {
+UpdateHitokoto.propTypes = {
   preview: PropTypes.func.isRequired,
-  publish: PropTypes.func.isRequired
+  update: PropTypes.func.isRequired
 }
 
-export default withRouter(NewHitokoto);
+export default withRouter(UpdateHitokoto);

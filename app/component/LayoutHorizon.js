@@ -17,6 +17,7 @@ windowSize.subscriptb(() => {
 
 import {FONT_MAP, ANIMATE_CONFIG_HORIZON} from '../configs'
 import Nav from '../containers/Nav'
+
 function LayoutHorizon(props) {
   let body,
     detail;

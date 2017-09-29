@@ -3,7 +3,7 @@ import {Link} from 'react-router-dom'
 import QueueAnim from 'rc-queue-anim';
 import hitokotoDriver from '../API/hitokotoDriver';
 
-import {hitokoto} from './HitoView.css'
+import {hitokoto, time, actions} from './HitoView.css'
 let httpManager = hitokotoDriver.httpManager;
 
 class HitoView extends Component {
@@ -16,11 +16,12 @@ class HitoView extends Component {
 
   render() {
 
-    let {newone, newHitokoto, data} = this.props;
+    let {newone, newHitokoto, data, update, remove} = this.props;
     if (newone) {
       return (
         <div>
           <button onClick={newHitokoto}>添加hitokoto</button>
+          {this.props.children}
         </div>
       )
     } else {
@@ -29,11 +30,17 @@ class HitoView extends Component {
         date = new Date(data.created_at);
       return (
         <div className={hitokoto}>
-          <p>{hitokotoText}</p>
           <span>
-            <p>{date.toLocaleString()}</p>
+            <p className={time}>{date.toLocaleString()}</p>
           </span>
+          <p>{hitokotoText}</p>
           <span>—— {source}</span>
+          <div className={actions}>
+            <button onClick={() => {
+              update(data);
+            }}>修改</button>
+            <button onClick={remove}>删除</button>
+          </div>
         </div>
       )
     }

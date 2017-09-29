@@ -1,13 +1,21 @@
 import React, {Component} from 'react'
 import {Link, withRouter} from 'react-router-dom';
 
-import {Card, Card_options, Card_content, default as style} from '../pages/HitoCollection.css'
+import style from '../pages/HitoCollection.css'
 import {menu} from '../pages/Home.css'
 import {ellipsis} from '../pages/UI.css'
 import TextFiledCss from '../component/TextFiled.css'
 
 let {'text-filed': textFiled} = TextFiledCss;
-let {'Card--change': cardChange, hide, newone} = style;
+let {
+  'Card--change': cardChange,
+  hide,
+  newone,
+  Card,
+  Card_options,
+  Card_content,
+  menuIcon
+} = style;
 
 /****
  * 显示一个句集的盒子，有显示(normal) 修改(change) 新增按钮()新增(newone)四个状态

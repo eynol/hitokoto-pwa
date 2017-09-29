@@ -1,6 +1,20 @@
 .hitokoto{
-  border-left: 2px solid #23D0D2;
   padding-left: 1em ;
   margin:1em 0;
-  border-radius: 1em 0em 0em 1em;
+  /* border-radius: 1em 0em 0em 1em; */
+  border-left: 2px solid transparent;
+  transition: border .3s ease
+}
+.actions{
+  opacity: 0;
+  transition: opacity .3s ease;
+}
+.hitokoto:hover{
+  border-left: 2px solid #4E4E4E;
+}
+.hitokoto:hover .actions{
+  opacity: 1;
+}
+.time{
+  font-size: 14px;
 }
