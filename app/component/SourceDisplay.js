@@ -76,18 +76,18 @@ export default class SourceDisplay extends Component {
     if (source) {
       oprations = (
         <div>
-          <button className={style.basicButton} onClick={props.hook.hide}>取消</button>&nbsp;
+          <button onClick={this.handleUpdate.bind(this)}>确认修改</button>
           <button
             className={style.deleteButton}
             onClick={props.hook.delete.bind(null, source.id)}>删除</button>&nbsp;
-          <button onClick={this.handleUpdate.bind(this)}>确认修改</button>
+          <button className={style.basicButton} onClick={props.hook.hide}>取消</button>&nbsp;
         </div>
       )
     } else {
       oprations = (
         <div>
-          <button className={style.basicButton} onClick={props.hook.hide}>取消</button>&nbsp;
           <button onClick={this.handleNewSource.bind(this)}>确认添加</button>
+          <button className={style.basicButton} onClick={props.hook.hide}>取消</button>&nbsp;
         </div>
       )
     }

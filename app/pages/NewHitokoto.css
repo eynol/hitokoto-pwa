@@ -147,6 +147,7 @@ blockquote {
     border-radius: 4px;
     line-height: 1.7;
     letter-spacing: 1.2px;
+    border: 1px solid #303030;
 }
 
 .hitokotoSouceTypeBlock select:focus{

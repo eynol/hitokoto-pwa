@@ -45,7 +45,6 @@
     background-color: black;
     height: 100%;
     transition: .5s cubic-bezier(0.23, 1, 0.32, 1);
-    ;
     transform-origin: top left;
     transform: scale(1, .005)
 }
@@ -99,4 +98,13 @@
     text-align: center;
     padding: 13px 0;
     margin-bottom: 15px;
+}
+.menuIcon{
+    display: inline-block;
+    vertical-align: top;
+    line-height: 20px;
+    width: 20px;
+    height:20px;
+    background: url(../img/icon-menu-h.png) no-repeat;
+    background-size: contain;
 }

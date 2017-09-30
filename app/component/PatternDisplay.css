@@ -6,7 +6,8 @@
   text-align: right;
   outline: none;
   padding: 3px 4px;
-  border: 1px dashed gray;
+  border: 1px solid gray;
+  border-radius: 3px;
   margin-bottom: 2px;
   text-overflow: ellipsis;
 }
@@ -119,7 +120,8 @@
 }
 .form select {
   padding: 3px 10px;
-  border: 1px dashed gray;
+  border: 1px solid gray;
+  border-radius: 3px;
   margin-bottom: 2em;
   margin-left: 10px;
 }

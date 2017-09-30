@@ -65,7 +65,9 @@ class AppContainer extends Component {
           width: '100%',
           position: 'relative',
           height: '100%',
-          backgroundColor: 'white'
+          backgroundColor: 'white',
+          overflow: 'hidden',
+          'willChange': 'contents'
         }}
           key="frameChange"
           duration="900"

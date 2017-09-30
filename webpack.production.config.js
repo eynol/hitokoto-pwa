@@ -16,7 +16,12 @@ module.exports = {
       'dexie',
       'crypto-js/sha1',
       'react-textarea-autosize',
-      'whatwg-fetch'
+      'lodash',
+      'whatwg-fetch',
+      'core-js/es6/promise',
+      'core-js/es6/array',
+      'core-js/es6/map',
+      'core-js/es6/set'
     ],
     bundle: __dirname + "/app/main.js"
   },

@@ -38,7 +38,7 @@ class HitokotoPreview extends Component {
           pathname
         }} = this.props,
       id = hitokoto.id,
-      pathReg = /^\/home\/[^\/]*\/preview$/im;
+      pathReg = /^\/home\/[^\/]*\/preview$/;
 
     if (!pathReg.test(pathname)) {
       return null;

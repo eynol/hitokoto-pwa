@@ -80,7 +80,12 @@ class HitoList extends Component {
         )];
 
     if (hitokotos.length > 0) {
-      ListToShow = ListToShow.concat(hitokotos.map((hitokoto) => (<HitoView key={hitokoto.id} update={this.updateHitokoto} data={hitokoto}/>)));;
+      ListToShow = ListToShow.concat(hitokotos.map((hitokoto) => (<HitoView
+        key={hitokoto.id}
+        preview={this.props.preview}
+        update={this.updateHitokoto}
+        remove={this.props.remove}
+        data={hitokoto}/>)));;
     }
 
     console.log(ListToShow);
@@ -107,6 +112,9 @@ class HitoList extends Component {
 
 HitoList.propTypes = {
   hitokotos: PropTypes.arrayOf(PropTypes.object).isRequired,
-  leaveCollection: PropTypes.func.isRequired
+  leaveCollection: PropTypes.func.isRequired,
+  updateHitokoto: PropTypes.func.isRequired,
+  remove: PropTypes.func.isRequired,
+  preview: PropTypes.func.isRequired
 }
 export default withRouter(HitoList)

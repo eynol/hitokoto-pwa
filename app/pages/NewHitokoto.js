@@ -81,7 +81,7 @@ class NewHitokoto extends Component {
         pathname
       }} = this.props;
     let child = '';
-    let reg = /^\/home\/[^\/]*\/(new|preview)$/im;
+    let reg = /^\/home\/[^\/]*\/(new|preview)$/;
     return (
       <QueueAnim type={['right', 'left']} ease={['easeOutQuart', 'easeInOutQuart']}>{reg.test(pathname)
           ? <FullPageCard
@@ -136,6 +136,7 @@ class NewHitokoto extends Component {
                   <div className={operations}>
                     <button onClick={this.handlePreviewClick}>预览</button>&nbsp;
                     <button onClick={this.publish}>发布</button>
+                    <button onClick={this.goBack}>取消</button>
                   </div>
                 </div>
               </div>

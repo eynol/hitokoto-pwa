@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 import {Link, Route, withRouter} from 'react-router-dom';
+
+import update from 'immutability-helper';
 import QueueAnim from 'rc-queue-anim';
 import PropTypes from 'prop-types'
 
@@ -24,9 +26,11 @@ class Home extends Component {
       previewHitokoto: ''
     }
     this.storeHitokotoToUpdate = this.storeHitokotoToUpdate.bind(this);
+    this.doUpdateHitokoto = this.doUpdateHitokoto.bind(this)
     this.previewHitokoto = this.previewHitokoto.bind(this);
     this.pubulishHitokoto = this.pubulishHitokoto.bind(this);
     this.switchLayout = this.switchLayout.bind(this);
+    this.removeHitokoto = this.removeHitokoto.bind(this);
   }
   componentDidMount() {
     console.log('[home]CDM')
@@ -40,6 +44,10 @@ class Home extends Component {
   }
 
   previewHitokoto(hitokoto) {
+    let {location: {
+        pathname
+      }, history} = this.props
+
     if (!hitokoto.creator) {
       hitokoto.creator = this.props.user.nickname;
     }
@@ -48,14 +56,19 @@ class Home extends Component {
       hitokoto.id = '' + date.getFullYear() + date.getMonth() + date.getDate()
     }
     this.setState({previewHitokoto: hitokoto})
-    this.props.history.push(this.props.location.pathname.replace(/(new|update)$/im, 'preview'));
+
+    if (/(new|update)$/.test(pathname)) {
+      history.push(pathname.replace(/(new|update)$/, 'preview'));
+    } else {
+      history.push(pathname + '/preview');
+    }
   }
   storeHitokotoToUpdate(hitokotoToUpdate) {
     this.setState({previewHitokoto: hitokotoToUpdate});
   }
   pubulishHitokoto(hitokoto) {
 
-    let reg = /^\/home\/([^\/]*)\/(new|preview)$/im,
+    let reg = /^\/home\/([^\/]*)\/new$/,
       matchs = reg.exec(this.props.location.pathname);
     let collectionName = matchs[1];
     let form = new FormData();
@@ -75,7 +88,50 @@ class Home extends Component {
       return result
     });
   }
+  doUpdateHitokoto(hitokoto) {
+    let reg = /^\/home\/([^\/]*)\/update$/,
+      matchs = reg.exec(this.props.location.pathname);
+    let collectionName = matchs[1];
+    let form = new FormData();
+    form.append('id', hitokoto._id)
+    form.append('from', hitokoto.from);
+    form.append('hitokoto', hitokoto.hitokoto);
+    form.append('creator', this.props.user.nickname);
+    form.append('category', hitokoto.category);
+    return httpManager.API_updateHitokoto(collectionName, form).then(result => {
+      console.log(result);
+      if (result.err) {
+        alert(result.err)
+      } else {
 
+        this.props.history.push('/home/' + collectionName);
+        this.props.requestCollectionHitokotos(collectionName)
+      }
+      return result
+    });
+  }
+
+  removeHitokoto(hitokotoToRemove) {
+    if (!confirm('你确定删除该hitokoto?')) {
+      return;
+    }
+
+    let reg = /^\/home\/([^\/]*)$/,
+      matchs = reg.exec(this.props.location.pathname);
+    let collectionName = matchs[1];
+    let form = new FormData();
+    form.append('id', hitokotoToRemove._id)
+    return httpManager.API_deleteHitokoto(collectionName, form).then(result => {
+      console.log(result);
+
+      if (result.err) {
+        alert(result.err)
+      } else {
+        this.props.removeHitokotosSuccess(hitokotoToRemove._id)
+      }
+      return result
+    });
+  }
   componentWillUpdate(e) {
     console.log('[home]CWU')
   }
@@ -101,7 +157,10 @@ class Home extends Component {
     if (/^\/home$/gim.test(pathname)) {
       frameToShow = (<HitoCollection/>)
     } else if (/^\/home\/[^\/]*/gim.test(pathname)) {
-      frameToShow = (<HitoList updateHitokoto={this.storeHitokotoToUpdate}/>)
+      frameToShow = (<HitoList
+        updateHitokoto={this.storeHitokotoToUpdate}
+        remove={this.removeHitokoto}
+        preview={this.previewHitokoto}/>)
     }
 
     return (
@@ -139,7 +198,7 @@ class Home extends Component {
           <NewHitokoto publish={this.pubulishHitokoto} preview={this.previewHitokoto}/>
           <UpdateHitokoto
             hitokoto={this.state.previewHitokoto}
-            update={this.pubulishHitokoto}
+            update={this.doUpdateHitokoto}
             preview={this.previewHitokoto}/>
         </QueueAnim>
         <HitokotoPreview
@@ -154,6 +213,7 @@ class Home extends Component {
 
 Home.propTypes = {
   layout: PropTypes.object.isRequired,
-  user: PropTypes.object.isRequired
+  user: PropTypes.object.isRequired,
+  removeHitokotosSuccess: PropTypes.func.isRequired
 }
 export default withRouter(Home)

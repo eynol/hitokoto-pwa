@@ -68,7 +68,7 @@ function Nav(props) {
     </div>
   };
 
-  if (/preview$/im.test(pathname)) {
+  if (/preview$/.test(pathname)) {
     return (
       <div className={navWrapper}>
         {/**

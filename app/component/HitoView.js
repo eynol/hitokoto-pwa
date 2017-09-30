@@ -1,4 +1,6 @@
 import React, {Component} from 'react'
+
+import PropTypes from 'prop-types'
 import {Link} from 'react-router-dom'
 import QueueAnim from 'rc-queue-anim';
 import hitokotoDriver from '../API/hitokotoDriver';
@@ -16,7 +18,14 @@ class HitoView extends Component {
 
   render() {
 
-    let {newone, newHitokoto, data, update, remove} = this.props;
+    let {
+      newone,
+      newHitokoto,
+      data,
+      update,
+      remove,
+      preview
+    } = this.props;
     if (newone) {
       return (
         <div>
@@ -37,14 +46,24 @@ class HitoView extends Component {
           <span>—— {source}</span>
           <div className={actions}>
             <button onClick={() => {
+              preview(data);
+            }}>预览</button>
+            <button onClick={() => {
               update(data);
             }}>修改</button>
-            <button onClick={remove}>删除</button>
+            <button onClick={() => {
+              remove(data)
+            }}>删除</button>
           </div>
         </div>
       )
     }
 
   }
+}
+HitoView.propTypes = {
+  preview: PropTypes.func,
+  update: PropTypes.func,
+  remove: PropTypes.func
 }
 export default HitoView

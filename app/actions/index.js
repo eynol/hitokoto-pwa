@@ -60,3 +60,6 @@ export const requestCollectionHitokotos = (name) => dispatch => {
 };
 export const FETCH_COLLECTION_HITO_SUCCESS = 'hitokotos of collection'
 export const fetchHitokotosSuccess = (hitokotos) => ({type: FETCH_COLLECTION_HITO_SUCCESS, value: hitokotos})
+
+export const REMOVE_ONE_HITO_SUCCESS = 'hitokotos remove one success'
+export const removeHitokotosSuccess = (_id) => ({type: REMOVE_ONE_HITO_SUCCESS, value: _id})

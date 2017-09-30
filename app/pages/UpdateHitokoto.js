@@ -80,7 +80,7 @@ class UpdateHitokoto extends Component {
   update() {
     let hitokoto = this.getHitokoto();
     if (hitokoto) {
-      hitokoto = _asign(JSON.parse(JSON.stringnify(this.props.hitokoto)), hitokoto)
+      hitokoto = _asign(JSON.parse(JSON.stringify(this.props.hitokoto)), hitokoto)
       this.props.update(hitokoto).then(result => {
         console.log(result);
       });
@@ -93,7 +93,7 @@ class UpdateHitokoto extends Component {
 
     console.log(hitokoto)
     let child = '';
-    let reg = /^\/home\/[^\/]*\/update$/im;
+    let reg = /^\/home\/[^\/]*\/update$/;
     return (
       <QueueAnim type={['right', 'left']} ease={['easeOutQuart', 'easeInOutQuart']}>{reg.test(pathname)
           ? <FullPageCard
