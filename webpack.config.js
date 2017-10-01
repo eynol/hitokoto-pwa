@@ -1,4 +1,5 @@
 var webpack = require('webpack');
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
@@ -29,14 +30,26 @@ module.exports = {
     loaders: [
       {
         test: /\.json$/,
-        loader: "json"
+        loader: "json-loader"
       }, {
         test: /\.js$/,
         exclude: /node_modules/,
-        loader: 'babel'
+        loader: 'babel-loader'
       }, {
         test: /\.css$/,
-        loader: 'style!css?modules!postcss'
+        loader: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: [
+            {
+              loader: 'css-loader',
+              options: {
+                importLoaders: 1,
+                modules: true
+              }
+            },
+            'postcss-loader'
+          ]
+        })
       }, {
         test: /\.(png|svg|jpg|gif)$/,
         loader: 'file-loader'
@@ -44,27 +57,36 @@ module.exports = {
     ]
   },
 
-  postcss: [require('autoprefixer')],
-
   plugins: [
+    new webpack.LoaderOptionsPlugin({
+      options: {
+        postcss: function () {
+          return [require('autoprefixer')];
+        }
+      },
+      devServer: {
+        colors: true,
+        historyApiFallback: true,
+        port: process.env.PORT || 8080,
+        inline: true,
+        hot: true,
+        proxy: {
+          "/api/**": "http://127.0.0.1:9999/"
+        }
+      }
+    }),
     new HtmlWebpackPlugin({
       template: __dirname + "/app/index.tmpl.html"
     }),
     new webpack.optimize.CommonsChunkPlugin({
-      name: ['vendor', 'runtime']
+      name: [
+        'vendor', 'manifest'
+      ],
+      minChunks: Infinity
     }),
-    new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoErrorsPlugin()
-  ],
+    new ExtractTextPlugin("[name]-[chunkhash].css"),
 
-  devServer: {
-    colors: true,
-    historyApiFallback: true,
-    port: process.env.PORT || 8080,
-    inline: true,
-    hot: true,
-    proxy: {
-      "/api/**": "http://127.0.0.1:9999/"
-    }
-  }
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.HashedModuleIdsPlugin()
+  ]
 }

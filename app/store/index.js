@@ -1,7 +1,5 @@
 import {createStore, applyMiddleware} from 'redux'
 import thunkMiddleware from 'redux-thunk'
-import {createLogger} from 'redux-logger'
-const loggerMiddleware = createLogger();
 
 import reducer from '../reducers'
 
@@ -11,6 +9,9 @@ let middlewares,
 if (process.env.NODE_ENV === 'production') {
   middlewares = [thunkMiddleware]
 } else {
+  let createLogger = require('redux-logger').createLogger;
+  let loggerMiddleware = createLogger();
+
   middlewares = [thunkMiddleware, loggerMiddleware]
   if (module.hot) {
     // Enable Webpack hot module replacement for reducers
