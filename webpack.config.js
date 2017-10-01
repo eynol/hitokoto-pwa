@@ -56,22 +56,22 @@ module.exports = {
       }
     ]
   },
-
+  devServer: {
+    bonjour: true,
+    progress: true,
+    historyApiFallback: true,
+    port: process.env.PORT || 8080,
+    inline: true,
+    hot: true,
+    proxy: {
+      "/api/**": "http://127.0.0.1:9999/"
+    }
+  },
   plugins: [
     new webpack.LoaderOptionsPlugin({
       options: {
         postcss: function () {
           return [require('autoprefixer')];
-        }
-      },
-      devServer: {
-        colors: true,
-        historyApiFallback: true,
-        port: process.env.PORT || 8080,
-        inline: true,
-        hot: true,
-        proxy: {
-          "/api/**": "http://127.0.0.1:9999/"
         }
       }
     }),
