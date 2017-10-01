@@ -57,8 +57,6 @@ module.exports = {
     ]
   },
   devServer: {
-    bonjour: true,
-    progress: true,
     historyApiFallback: true,
     port: process.env.PORT || 8080,
     inline: true,
@@ -87,6 +85,6 @@ module.exports = {
     new ExtractTextPlugin("[name]-[chunkhash].css"),
 
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.HashedModuleIdsPlugin()
+    new webpack.NamedModulesPlugin()
   ]
 }

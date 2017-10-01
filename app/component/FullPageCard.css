@@ -8,7 +8,8 @@
   z-index: 500;
   overflow: auto;
   background-color: #f0f0f0;
-  will-change: opacity,translate;
+  backface-visibility: hidden;
+  will-change:contents;
 }
 .paper{
   max-width: 900px;

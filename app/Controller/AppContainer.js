@@ -7,6 +7,7 @@ import Patterns from '../pages/Patterns'
 import Sources from '../pages/Sources'
 import About from '../pages/About'
 import Tools from '../pages/Tools'
+import NavManagement from '../pages/NavManagement'
 
 import Home from '../containers/Home'
 import Index from '../containers/Index'
@@ -16,6 +17,10 @@ const ROUTES = [
     to: /^\/$/,
     component: Index,
     name: '首页'
+  }, {
+    to: /^\/nav-management$/,
+    component: NavManagement,
+    name: '管理导航'
   }, {
     to: /^\/sources$/,
     component: Sources,
@@ -28,6 +33,14 @@ const ROUTES = [
     to: /^\/home\/?/,
     component: Home,
     name: '个人中心页面'
+  }, {
+    to: /^\/profile$/,
+    component: Home,
+    name: '个人资料页面'
+  }, {
+    to: /^\/explore$/,
+    component: Home,
+    name: '广场页面'
   }, {
     to: /^\/about/,
     component: About,

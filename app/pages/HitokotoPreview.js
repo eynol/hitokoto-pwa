@@ -5,23 +5,6 @@ import LayoutHorizon from '../component/LayoutHorizon'
 import LayoutVertical from '../component/LayoutVertical'
 import FullPage from '../component/FullPage'
 import FullPageCard from '../component/FullPage'
-let ANIMATE_CONFIG_NEXT = [
-  {
-    opacity: [
-      1, 0
-    ],
-    translateZ: [
-      0, 20
-    ],
-    translateX: [0, -100]
-  }, {
-    opacity: [
-      1, 0
-    ],
-    position: 'absolute',
-    translateX: [0, 100]
-  }
-]
 
 class HitokotoPreview extends Component {
   constructor(props) {
@@ -66,7 +49,23 @@ class HitokotoPreview extends Component {
           backgroundColor: layout.backgroundColor
         }}>
           <QueueAnim
-            animConfig={ANIMATE_CONFIG_NEXT}
+            animConfig={[
+            {
+              opacity: [
+                1, 0
+              ],
+              translateZ: [
+                0, 20
+              ],
+              translateY: [0, -100]
+            }, {
+              opacity: [
+                1, 0
+              ],
+              position: 'absolute',
+              translateY: [0, 100]
+            }
+          ]}
             ease={['easeOutQuart', 'easeInOutQuart']}
             className="animate-none-sense"
             style={{

@@ -5,6 +5,8 @@ import {Link, withRouter} from 'react-router-dom'
 import QueueAnim from 'rc-queue-anim';
 import httpManager from '../API/httpManager';
 
+import hitokotoDriver from '../API/hitokotoDriver'
+
 import {Card, Card_options, Card_content} from './HitoCollection.css'
 import {menu} from './Home.css'
 import {ellipsis} from './UI.css'
@@ -19,14 +21,68 @@ class HitoList extends Component {
     };
     this.newHitokoto = this.newHitokoto.bind(this);
     this.updateHitokoto = this.updateHitokoto.bind(this);
+    this.isSourcesContians = this.isSourcesContians.bind(this);
   }
 
   componentDidMount() {
-    console.log('cdu');
     this.fetchHitokotos();
   }
   componentWillUnmount() {
     this.props.leaveCollection()
+  }
+  getURL() {
+    let pathname = this.props.location.pathname;
+    let match = matchPath(pathname, {path: '/home/:name'});
+    if (match) {
+
+      let col_name = match.params.name;
+      let username = this.props.user.nickname;
+      let url = location.protocol + '//' + location.host + '/api/' + username + '/' + col_name;
+      return {url, username, name: col_name};
+    } else {
+      return;
+    }
+  }
+  addToSources() {
+
+    let url = this.getURL();
+
+    if (url) {
+
+      hitokotoDriver.patterManager.newSource({
+        id: Date.now(),
+        url: url.url,
+        name: url.name,
+        adapter: 0,
+        online: true,
+        local: true
+      });
+      this.forceUpdate();
+    }
+
+  }
+
+  isSourcesContians() {
+
+    let url = this.getURL()
+    if (url) {
+      let reg = new RegExp('^' + url.url);
+      let index = hitokotoDriver.patterManager.sources.findIndex((source => {
+
+        console.log(reg, source.url, reg.test(source.url))
+        if (reg.test(source.url)) {
+          return true;
+        } else {
+          return false;
+        }
+      }));
+      if (~ index) {
+        return true;
+      }
+    }
+
+    return false;
+
   }
   fetchHitokotos() {
     let pathname = this.props.location.pathname;
@@ -39,16 +95,12 @@ class HitoList extends Component {
     if (!match) {
       return;
     }
-    console.log(match, pathname);
+
     let {params: {
         name
       }} = match;
     if (name && name.length) {
-      this.props.requestCollectionHitokotos(name).then(result => {
-        console.log(result)
-      }, (e) => {
-        console.log(e)
-      })
+      this.props.requestCollectionHitokotos(name).then(result => {}, (e) => {})
     } else {
       alert('路径名不正确');
       this.props.history.push('/home');
@@ -73,9 +125,15 @@ class HitoList extends Component {
             update={this.updateHitokoto}
             newHitokoto={this.newHitokoto}
             key='newone'>
-            <button onClick={() => {
-              alert('来源')
-            }}>加入来源</button>
+            {this.isSourcesContians()
+              ? ''
+              : <button onClick={() => {
+                this.addToSources()
+              }}>将此句集加入来源</button>}
+            <button
+              onClick={() => {
+              alert('链接地址为：\n' + this.getURL().url)
+            }}>API链接</button>
           </HitoView>
         )];
 
@@ -88,7 +146,6 @@ class HitoList extends Component {
         data={hitokoto}/>)));;
     }
 
-    console.log(ListToShow);
     return (
       <QueueAnim
         animConfig={[
@@ -113,6 +170,7 @@ class HitoList extends Component {
 HitoList.propTypes = {
   hitokotos: PropTypes.arrayOf(PropTypes.object).isRequired,
   leaveCollection: PropTypes.func.isRequired,
+  user: PropTypes.object.isRequired,
   updateHitokoto: PropTypes.func.isRequired,
   remove: PropTypes.func.isRequired,
   preview: PropTypes.func.isRequired

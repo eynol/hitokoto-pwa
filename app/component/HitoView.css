@@ -5,6 +5,9 @@
   border-left: 2px solid transparent;
   transition: border .3s ease
 }
+.hitokoto p {
+   white-space: pre-line;
+}
 .actions{
   opacity: 0;
   transition: opacity .3s ease;

@@ -32,16 +32,16 @@ let beforeLogin = (props) => (
 let online = (props) => (
   <ul>
     <li>
-      <Link to='/home' title="前往个人中心" replace>{props.user.nickname}</Link>
+      <Link to='/home' title="前往个人中心">个人中心</Link>
     </li>
     <li>
-      <Link to='/sources'>来源管理</Link>
+      <Link to='/explore'>探索</Link>
     </li>
     <li>
-      <Link to='/patterns'>模式管理</Link>
+      <Link to='/nav-management'>管理</Link>
     </li>
     <li>
-      <Link to='/about'>关于Hitokoto</Link>
+      <Link to='/about'>关于</Link>
     </li>
     <li>
       <a href='javascript:' onClick={props.logout}>注销</a>

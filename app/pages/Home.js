@@ -12,7 +12,6 @@ import HitoList from '../containers/HitoList';
 import HitokotoPreview from './HitokotoPreview';
 import UpdateHitokoto from '../pages/UpdateHitokoto'
 
-console.log('test');
 let httpManager = hitokotoDriver.httpManager;
 
 import {home, username, menu, left, right} from './Home.css';

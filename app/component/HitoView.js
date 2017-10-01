@@ -29,7 +29,7 @@ class HitoView extends Component {
     if (newone) {
       return (
         <div>
-          <button onClick={newHitokoto}>添加hitokoto</button>
+          <button onClick={newHitokoto}>新增一言</button>
           {this.props.children}
         </div>
       )

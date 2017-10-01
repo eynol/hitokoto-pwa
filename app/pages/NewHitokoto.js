@@ -24,6 +24,12 @@ let {
 class NewHitokoto extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      hitokoto: {
+        category: '其他'
+      }
+    }
+
     this.goBack = this.goBack.bind(this);
     this.handlePreviewClick = this.handlePreviewClick.bind(this);
     this.publish = this.publish.bind(this);
@@ -48,6 +54,7 @@ class NewHitokoto extends Component {
     let hitokoto = this.getHitokoto();
     if (hitokoto) {
       this.props.preview(hitokoto);
+      this.setState({hitokoto})
     }
   }
   getHitokoto() {
@@ -73,6 +80,7 @@ class NewHitokoto extends Component {
     if (hitokoto) {
       this.props.publish(hitokoto).then(result => {
         console.log(result);
+        this.setState({hitokoto: ({})})
       });
     }
   }
@@ -80,8 +88,10 @@ class NewHitokoto extends Component {
     let {location: {
         pathname
       }} = this.props;
+
+    let hitokoto = this.state.hitokoto;
     let child = '';
-    let reg = /^\/home\/[^\/]*\/(new|preview)$/;
+    let reg = /^\/home\/[^\/]*\/new$/;
     return (
       <QueueAnim type={['right', 'left']} ease={['easeOutQuart', 'easeInOutQuart']}>{reg.test(pathname)
           ? <FullPageCard
@@ -105,18 +115,20 @@ class NewHitokoto extends Component {
                       minRows={3}
                       inputRef={textarea => this.textarea = textarea}
                       className={hitokotoTextarea}
-                      placeholder="请在此输入hitokoto"/>
+                      placeholder="请在此输入hitokoto"
+                      defaultValue={hitokoto.hitokoto}/>
                   </div>
                   <div>
                     <input
                       type="text"
                       ref='source'
                       placeholder="...在这里写来源出处"
-                      className={hitokotoSouceInput}/>
+                      className={hitokotoSouceInput}
+                      defaultValue={hitokoto.from}/>
                   </div>
                   <div className={hitokotoSouceTypeBlock}>
                     <p>先选择来源类别：
-                      <select defaultValue='其他' ref='type'>
+                      <select defaultValue={hitokoto.category} ref='type'>
                         <option value="动漫">动漫</option>
                         <option value="小说">小说</option>
                         <option value="散文随笔">散文随笔</option>

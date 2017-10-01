@@ -56,7 +56,11 @@
     display: block;
     text-align: right;
 }
-
+@media screen and (min-width:768px){
+    .nav ul li{
+        min-width: 100px;
+    }    
+}
 .nav ul li {
     /* display: inline-block; */
     vertical-align: top;
@@ -73,7 +77,7 @@
     content: '';
     position: absolute;
     right: -14px;
-    top: 8px;
+    top: 5px;
     /* background-color: black; */
     display: block;
     height: 4px;

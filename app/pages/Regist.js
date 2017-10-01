@@ -263,7 +263,7 @@ class Regist extends Component {
                 maxLength="20"
                 onChange={this.handleNicknameChange.bind(this)}
                 defaultValue={this.state.nickname}/>
-                <label data-content="显示的昵称">显示的昵称</label>
+                <label data-content="显示的昵称">显示的昵称(不可修改)</label>
               </div>
               {errinfo}
               <p>

@@ -49,3 +49,12 @@
     overflow: auto;
     height: 100%;
 }
+@media screen and (max-width:768px){
+    .left{
+        width: 120px;
+        padding: 100px 20px;
+    }
+    .right{
+        margin-left: 120px;
+    }
+}
