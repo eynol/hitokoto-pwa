@@ -7,10 +7,6 @@ import httpManager from '../API/httpManager';
 
 import hitokotoDriver from '../API/hitokotoDriver'
 
-import {Card, Card_options, Card_content} from './HitoCollection.css'
-import {menu} from './Home.css'
-import {ellipsis} from './UI.css'
-
 import HitoView from '../component/HitoView'
 
 class HitoList extends Component {

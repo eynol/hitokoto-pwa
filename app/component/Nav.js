@@ -15,16 +15,13 @@ let beforeLogin = (props) => (
       <a href='javascript:' onClick={props.showRegist}>注册</a>
     </li>
     <li>
-      <Link to='/sources'>来源管理</Link>
+      <Link to='/explore'>探索</Link>
     </li>
     <li>
-      <Link to='/patterns'>模式管理</Link>
+      <Link to='/nav-management'>管理</Link>
     </li>
     <li>
-      <Link to='/about'>关于Hitokoto</Link>
-    </li>
-    <li>
-      <Link to='/tools'>调试工具</Link>
+      <Link to='/about'>关于</Link>
     </li>
   </ul>
 )

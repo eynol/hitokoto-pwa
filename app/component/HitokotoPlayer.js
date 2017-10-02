@@ -7,8 +7,9 @@ import {Link} from 'react-router-dom'
 
 import LayoutHorizon from './LayoutHorizon'
 import LayoutVertical from './LayoutVertical'
-import {love, setting} from './HitokotoLayout.css'
 import {showPanel} from '../actions'
+
+import {love, setting} from './HitokotoLayout.css'
 
 import {ANIMATE_CONFIG_LAST, ANIMATE_CONFIG_NEXT} from '../configs'
 
@@ -37,38 +38,49 @@ class HitokotoPlayer extends Component {
     let ActionsHorizon = (
       <ul data-role="actions">
         <li>
+          <a href="javascript:">
+            <i className="iconfont icon-favor"></i>
+          </a>&nbsp;
+          <a href="javascript:" onClick={showLayoutSetting}>
+            <i className="iconfont icon-setup"></i>
+          </a>
+
           {lastCount > 1
-            ? <button href='javascript:' onClick={handleLast}>上一条</button>
-            : null}
-          <button onClick={handleNext}>{processing
-              ? 'emm..'
-              : '下一条'}</button>
-          <div style={{
-            float: "right"
-          }}>
-            <a href="javascript:" className={love}></a>&nbsp;
-            <a href="javascript:" onClick={showLayoutSetting} className={setting}></a>
-          </div>
+            ? <a href='javascript:' onClick={handleLast}>
+                <i className="iconfont icon-pull-left"></i>
+              </a>
+            : null}&nbsp;
+          <a href='javascript:' onClick={handleNext}>{processing
+              ? <i className="iconfont icon-loading-anim"></i>
+              : <i className="iconfont icon-pull-right"></i>}</a>
+
         </li>
+
       </ul>
     );
     let ActionsVertical = (
       <ul data-role="actions">
         <li key={id + 'love'}>
-          <a href="javascript:" className={love}></a>&nbsp;
+          <a href="javascript:">
+            <i className="iconfont icon-favor"></i>
+          </a>
         </li>
         <li key={id + 'setting'}>
-          <a href="javascript:" onClick={showLayoutSetting} className={setting}></a>
+          <a href="javascript:" onClick={showLayoutSetting}>
+            <i className="iconfont icon-setup"></i>
+          </a>
         </li>
         {lastCount > 1
           ? <li key={id + 'last'}>
-              <button href='javascript:' onClick={handleLast}>上一条</button>
+              <a href='javascript:' onClick={handleLast}>
+                <i className="iconfont icon-pull-left"></i>
+              </a>
             </li>
           : null}
         <li key={id + 'next'}>
-          <button href="javascript:" onClick={handleNext}>{processing
-              ? 'emm..'
-              : '下一条'}</button>
+          <a href="javascript:" onClick={handleNext}>{processing
+              ? <i className="iconfont icon-loading-anim"></i>
+              : <i className="iconfont icon-pull-right"></i>}</a>
         </li>
       </ul>
     )

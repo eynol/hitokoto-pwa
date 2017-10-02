@@ -6,6 +6,7 @@ import QueueAnim from 'rc-queue-anim';
 import hitokotoDriver from '../API/hitokotoDriver';
 
 import {hitokoto, time, actions} from './HitoView.css'
+
 let httpManager = hitokotoDriver.httpManager;
 
 class HitoView extends Component {

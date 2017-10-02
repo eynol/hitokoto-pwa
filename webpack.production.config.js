@@ -48,12 +48,21 @@ module.exports = {
               loader: 'css-loader',
               options: {
                 importLoaders: 1,
-                modules: true
+                modules: true,
+                minimize: true
               }
             },
             'postcss-loader'
           ]
         })
+      }, {
+        test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+        exclude: /node_modules/,
+        loader: 'file-loader?limit=1024&name=fonts/[name].[ext]'
+      }, {
+        test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+        exclude: /node_modules/,
+        loader: "file-loader?limit=1024&name=fonts/[name].[ext]"
       }, {
         test: /\.(png|svg|jpg|gif)$/,
         loader: 'file-loader'

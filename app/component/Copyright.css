@@ -42,17 +42,19 @@
         bottom: 5px;
     }
     .copyright-open:before {
-        content: 'i';
+        content:  "\e6e5";
+        font-family: iconfont;
         display: inline-block;
-        color: white;
+        color: #444;
         border-radius: 10px;
         width: 20px;
         height: 20px;
-        background-color: #555;
+        
     }
     .copyright-close:before {
-        content: 'CLOSE';
-        font-family: sans-serif;
+        content:"\e7ef";
+        color: #444;
+        font-family: iconfont;
     }
     .copyright {
         position: fixed;

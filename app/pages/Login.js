@@ -3,16 +3,15 @@ import PropTypes from 'prop-types';
 import QueueAnim from 'rc-queue-anim';
 import {Link, withRouter} from 'react-router-dom';
 import here$you$are from '../API/PublicEncrypt';
-import style from './login.css';
 import FullPage from '../component/FullPage'
-import TextFiledCss from '../component/TextFiled.css'
+
 import hitokotoDriver from '../API/hitokotoDriver'
 import httpManager from '../API/httpManager'
 
 import {PANEL_OPEN} from '../actions'
 import {GLOBAL_ANIMATE_TYPE} from '../configs'
 
-let {'text-filed': textFiled} = TextFiledCss;
+import style from './login.css';
 
 let errorStyle = {
   display: 'inline-block',
@@ -123,10 +122,10 @@ class Login extends Component {
           return false;
         }}>
           <h1>登录</h1>
-          <div className={textFiled}><input type="text" onChange={this.handleUsernameChange.bind(this)} required/>
+          <div className="text-filed"><input type="text" onChange={this.handleUsernameChange.bind(this)} required/>
             <label data-content="账号">账号</label>
           </div>
-          <div className={textFiled}><input
+          <div className="text-filed"><input
             type="password"
             onChange={this.handlePasswordChange.bind(this)}
             required

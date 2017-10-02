@@ -1,3 +1,10 @@
 .thanksList ul{
   list-style: none;
 }
+.debug{
+  margin: 20px auto;
+}
+.article p{
+  margin-bottom: 1em;
+}
+.article h2 {margin: 1.4em 0 1em;}

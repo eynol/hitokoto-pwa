@@ -1,11 +1,7 @@
 import React, {Component} from 'react';
 import FullPageCard from './FullPageCard'
 
-import style from './PatternDisplay.css';
-import {ellipsis} from '../pages/UI.css'
-import TextFiledCss from '../component/TextFiled.css'
-
-let {'text-filed': textFiled, blocked} = TextFiledCss;
+import {timerbox} from './PatternDisplay.css';
 
 let showDemo = () => {
   setTimeout(function () {
@@ -48,9 +44,35 @@ export default class PatternDisplay extends Component {
 
     this.state = {
       sourcesCopy: concated
-    }
-  }
+    };
 
+    //bind functions
+    this.increase = this.increase.bind(this);
+    this.decrease = this.decrease.bind(this);
+
+  }
+  increase() {
+    let interval = Number(this.refs.interval.value);
+    if (interval !== interval) {
+      interval = 0;
+    } else {
+      interval = interval < 0
+        ? 0
+        : interval + 1;
+    }
+    this.refs.interval.value = interval;
+  }
+  decrease() {
+    let interval = Number(this.refs.interval.value);
+    if (interval !== interval) {
+      interval = 0;
+    } else {
+      interval = interval < 1
+        ? 0
+        : interval - 1;
+    }
+    this.refs.interval.value = interval;
+  }
   handleUpdate() {
     let {hook, pattern} = this.props;
     let name = this.refs.name.value;
@@ -142,16 +164,16 @@ export default class PatternDisplay extends Component {
         <div>
           <button onClick={this.handleUpdate.bind(this)}>确认修改</button>
           <button
-            className={style.deleteButton}
+            className="color-red"
             onClick={props.hook.delete.bind(null, pattern.id)}>删除</button>&nbsp;
-          <button className={style.basicButton} onClick={props.hook.hide}>取消</button>&nbsp;
+          <button className="color-basic" onClick={props.hook.hide}>取消</button>&nbsp;
         </div>
       )
     } else {
       oprations = (
         <div>
           <button onClick={this.handleNewPattern.bind(this)}>确认添加</button>
-          <button className={style.basicButton} onClick={props.hook.hide}>取消</button>&nbsp;
+          <button className="color-basic" onClick={props.hook.hide}>取消</button>&nbsp;
         </div>
       )
     }
@@ -164,8 +186,8 @@ export default class PatternDisplay extends Component {
           key={src.id}
           className={(src.local || src.online)
           ? ''
-          : style.disabled}>
-          <p className={ellipsis}>{src.name}({src.url})</p>
+          : "disabled"}>
+          <p className="ellipsis">{src.name}({src.url})</p>
           <div>
             <input
               hidden
@@ -193,56 +215,57 @@ export default class PatternDisplay extends Component {
     });
 
     return (
-      <FullPageCard>
-        <div className={style.displaybox}>
-          <h1>{props.title}</h1>
+      <FullPageCard cardname={props.title} close={this.props.hook.hide}>
+        <div className="form">
+          <div className="text-filed blocked">
+            <input type="text" ref="name" required defaultValue={pattern.name}/>
+            <label data-content="模式名称（取一个好名字吧）">模式名称</label>
+          </div>
           <br/>
-          <div className={style.form}>
-            <div className={textFiled + ' ' + blocked}>
-              <input type="text" ref="name" required defaultValue={pattern.name}/>
-              <label data-content="模式名称（取一个好名字吧）">模式名称</label>
-            </div>
-            <br/>
-            <label htmlFor="">默认模式：</label>
-            <input
-              type="checkbox"
-              id={pattern.id + 'default'}
-              defaultChecked={pattern.default}
-              ref='default'
-              hidden/>
-            <label htmlFor={pattern.id + 'default'}></label>
-            <p>
-              <i>tips:</i>默认模式将在应用重新载入时被使用</p><br/>
-            <label htmlFor="">定时刷新：</label><input
+          <label htmlFor="">默认模式：</label>
+          <input
+            type="checkbox"
+            id={pattern.id + 'default'}
+            defaultChecked={pattern.default}
+            ref='default'
+            hidden/>
+          <label htmlFor={pattern.id + 'default'}></label>
+          <p>
+            <i>tips:</i>默认模式将在应用重新载入时被使用</p><br/>
+          <div className={timerbox}>
+            <label htmlFor="">定时刷新：</label>
+            <i className="iconfont icon-jian" onClick={this.decrease}></i>&nbsp;<input
               type="number"
               ref='interval'
               defaultValue={pattern.interval
         ? pattern.interval
         : 0}
-              placeholder='秒数'/>
+              placeholder='秒数'/>&nbsp;
+            <i className="iconfont icon-jia" onClick={this.increase}></i>&nbsp;
             <p>
               <i>tips:</i>单位为秒，每隔指定秒数后自动刷新hitokoto。设置为0表示不使用定时刷新。秒数必须大于等于5秒。</p>
-            <br/>
-
-            <label htmlFor="">请求类型:</label>
-            <select
-              ref='type'
-              defaultValue={pattern.type
-              ? pattern.type
-              : 'random'}>
-              <option value="random">随机</option>
-              <option value="next">遍历</option>
-            </select>
-            <br/>
-            <label htmlFor="">来源:</label><br/>
-            <p>
-              <i>tips:</i>每个来源请求的hitokoto都会缓存一份到浏览器数据库中，在离线时或仅使用本地数据时使用。可以在个人中心缓存某个来源的全部数据到本地的浏览器数据库。</p>
-            <ul>
-              {sourcesList}
-            </ul>
           </div>
-          {oprations}
+          <br/>
+
+          <label htmlFor="">请求类型:</label>
+          <select
+            ref='type'
+            defaultValue={pattern.type
+            ? pattern.type
+            : 'random'}>
+            <option value="random">随机</option>
+            <option value="next">遍历</option>
+          </select>
+          <br/>
+          <label htmlFor="">来源:</label><br/>
+          <p>
+            <i>tips:</i>每个来源请求的hitokoto都会缓存一份到浏览器数据库中，在离线时或仅使用本地数据时使用。可以在个人中心缓存某个来源的全部数据到本地的浏览器数据库。</p>
+          <ul>
+            {sourcesList}
+          </ul>
         </div>
+        {oprations}
+
       </FullPageCard>
     );
   }

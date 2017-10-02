@@ -7,8 +7,6 @@ import hitokotoDriver from '../API/hitokotoDriver'
 
 import HitokotoPlayer from '../component/HitokotoPlayer'
 
-import nextImg from '../img/next.png'
-
 const INSTANT_HITOKOTO_NAME = "instantHitokoto";
 const DEFAULT_HITOKOTO = {
   creator: "Tao.Da",

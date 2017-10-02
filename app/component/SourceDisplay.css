@@ -1,22 +1,7 @@
 
-.forms input{
-  
-  text-overflow: ellipsis;
-}
-.forms input:focus{
-  border-bottom: 1px solid #6d92ff;
-}
 
-.form textarea{
-  border: dashed 1px gray;
-  white-space: pre;
-  width: 100%;
-}
-.form textarea:focus{
-  border: 1px solid #6d92ff;
-}
 .basicButton{
-  color: #a6a6a6;
+  
 }
 
 .deleteButton{

@@ -8,6 +8,7 @@ export const ANIMATE_CONFIG_NEXT = [
     opacity: [
       1, 0
     ],
+    zIndex: -1,
     position: 'absolute',
     translateX: [0, -100]
   }
@@ -25,6 +26,7 @@ export const ANIMATE_CONFIG_LAST = [
     opacity: [
       1, 0
     ],
+    zIndex: -1,
     position: 'absolute',
     translateX: [0, 100]
   }
@@ -40,6 +42,7 @@ export const ANIMATE_CONFIG_HORIZON = [
     opacity: [
       1, 0
     ],
+    zIndex: -1,
     position: 'absolute',
     translateX: [0, 50]
   }

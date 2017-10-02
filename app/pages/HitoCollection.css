@@ -99,12 +99,3 @@
     padding: 13px 0;
     margin-bottom: 15px;
 }
-.menuIcon{
-    display: inline-block;
-    vertical-align: top;
-    line-height: 20px;
-    width: 20px;
-    height:20px;
-    background: url(../img/icon-menu-h.png) no-repeat;
-    background-size: contain;
-}

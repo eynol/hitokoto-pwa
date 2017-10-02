@@ -3,10 +3,7 @@ import {Link, withRouter} from 'react-router-dom';
 
 import style from '../pages/HitoCollection.css'
 import {menu} from '../pages/Home.css'
-import {ellipsis} from '../pages/UI.css'
-import TextFiledCss from '../component/TextFiled.css'
 
-let {'text-filed': textFiled} = TextFiledCss;
 let {
   'Card--change': cardChange,
   hide,
@@ -133,7 +130,7 @@ class CollectionBox extends Component {
       return (
         <div className={Card + ' ' + cardChange} tabIndex={tabIndex}>
           <div className={Card_content}>
-            <div className={textFiled}>
+            <div className="text-filed">
               <input
                 type="text"
                 required
@@ -158,7 +155,7 @@ class CollectionBox extends Component {
           title="点击查看该句集"
           onClick={this.handleViewClick.bind(this)}>
           <div className={Card_content}>
-            <p className={ellipsis}>{name}</p>
+            <p className="ellipsis">{name}</p>
             <span>{count}条</span>
             <div
               className={menu + ' ' + Card_options + (name == '默认句集'
@@ -182,7 +179,7 @@ class CollectionBox extends Component {
       return (
         <div className={Card + ' ' + cardChange} tabIndex={tabIndex}>
           <div className={Card_content}>
-            <div className={textFiled}>
+            <div className="text-filed">
               <input
                 type="text"
                 required

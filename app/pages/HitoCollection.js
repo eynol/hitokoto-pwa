@@ -3,10 +3,6 @@ import PropTypes from 'prop-types'
 import {Link, withRouter} from 'react-router-dom'
 import QueueAnim from 'rc-queue-anim';
 import httpManager from '../API/httpManager';
-import {Card, Card_options, Card_content} from './HitoCollection.css'
-import {menu} from './Home.css'
-import {ellipsis} from './UI.css'
-
 import CollectionBox from '../component/CollectionBox'
 import HitoView from '../component/HitoView'
 
@@ -23,19 +19,8 @@ class HitoList extends Component {
     this.changeCollectionName = this.changeCollectionName.bind(this);
     this.deleteCollection = this.deleteCollection.bind(this);
   }
-  componentWillUpdate(e) {
-    console.log('CWU')
-  }
 
-  componentWillReceiveProps(props) {
-    console.log('CWRP')
-  }
-
-  componentDidUpdate(d) {
-    console.log('CDU', d)
-  }
   componentDidMount() {
-    console.log('CDM');
     this.fetchCollections()
   }
   fetchCollections() {

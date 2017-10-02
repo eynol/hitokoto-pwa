@@ -5,14 +5,12 @@ import QueueAnim from 'rc-queue-anim';
 import here$you$are from '../API/PublicEncrypt';
 
 import httpManager from '../API/httpManager'
-import style from './login.css';
 import FullPage from '../component/FullPage'
-import TextFiledCss from '../component/TextFiled.css'
 
 import {PANEL_OPEN} from '../actions'
 import {GLOBAL_ANIMATE_TYPE} from '../configs'
 
-let {'text-filed': textFiled} = TextFiledCss;
+import style from './login.css';
 
 let errorStyle = {
   display: 'inline-block',
@@ -229,35 +227,35 @@ class Regist extends Component {
               return false;
             }}>
               <h1>注册</h1>
-              <div className={textFiled}><input
+              <div className="text-filed"><input
                 type="text"
                 required
                 onChange={this.handleUsernameChange.bind(this)}
                 defaultValue={this.state.username}/>
                 <label data-content="用户名">用户名</label>
               </div>
-              <div className={textFiled}><input
+              <div className="text-filed"><input
                 type="password"
                 required
                 onChange={this.handlePasswordChange.bind(this)}
                 defaultValue={this.state.password}/>
                 <label data-content="密码(任意字符至少七位)">密码</label>
               </div>
-              <div className={textFiled}><input
+              <div className="text-filed"><input
                 type="password"
                 required
                 onChange={this.handlePassword2Change.bind(this)}
                 defaultValue={this.state.password2}/>
                 <label data-content="请再次确认您的密码">请再次确认您的密码</label>
               </div>
-              <div className={textFiled}><input
+              <div className="text-filed"><input
                 type="text"
                 required
                 onChange={this.handleEmailChange.bind(this)}
                 defaultValue={this.state.email}/>
                 <label data-content="验证邮箱(非常重要)">验证邮箱(非常重要)</label>
               </div>
-              <div className={textFiled}><input
+              <div className="text-filed"><input
                 type="text"
                 required
                 maxLength="20"
@@ -288,7 +286,7 @@ class Regist extends Component {
             <div className={style['login-box']}>
               <h1>请输入您收到的验证码</h1>
               <p>
-                <div className={textFiled}>
+                <div className="text-filed">
                   <input
                     type="text"
                     required

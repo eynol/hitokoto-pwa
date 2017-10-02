@@ -9,14 +9,14 @@ export const PATTERN_UPDATE_KEYS = ['name', 'interval', 'type'];
 export const PATTERNS = [
   {
     id: 100123,
-    name: '默认随机',
+    name: '随机',
     internval: 0,
     sources: SOURCES,
     type: 'random',
     default: true
   }, {
     id: 100124,
-    name: '默认定时刷新',
+    name: '定时刷新',
     internval: 6,
     sources: SOURCES,
     type: 'random',
@@ -79,17 +79,13 @@ export default class PatternManager extends SourceManager {
       //  用map缓存已有的本地的url
       let urlMap = {};
       let needUpdatePatterns = false;
-      this
-        .patterns
-        .forEach(function (pattern) {
-          urlMap[pattern.id] = true;
-        });
+      this.patterns.forEach(function (pattern) {
+        urlMap[pattern.id] = true;
+      });
       PATTERNS.forEach(function (src) {
         if (!urlMap[src.id]) {
           //  url不存在,添加至_sources
-          this
-            .patterns
-            .push(src);
+          this.patterns.push(src);
           needUpdatePatterns = true;
         }
       });
@@ -101,43 +97,35 @@ export default class PatternManager extends SourceManager {
   updateSource(id, source) {
     super.updateSource(id, source); // 让source去更新全部的sources
     //  更新所有pattern的来源
-    this
-      .patterns
-      .forEach((pattern) => {
-        pattern
-          .sources
-          .forEach((oldSource, index) => {
-            if (oldSource.id == id) {
-              SOURCE_UPDATE_KEYS.forEach((key) => {
-                oldSource[key] = source[key];
-              })
-            }
-          });
+    this.patterns.forEach((pattern) => {
+      pattern.sources.forEach((oldSource, index) => {
+        if (oldSource.id == id) {
+          SOURCE_UPDATE_KEYS.forEach((key) => {
+            oldSource[key] = source[key];
+          })
+        }
       });
+    });
     $setPatterns(this.patterns); //  保存修改到本地
   }
   deleteSource(id) {
     super.deleteSource(id);
     //  更新所有pattern的来源
-    this
-      .patterns
-      .forEach((pattern) => {
-        pattern
-          .sources
-          .forEach((oldSource, index) => {
-            if (oldSource.id == id) {
-              pattern
-                .sources
-                .splice(index, 1);
-            }
-          });
+    this.patterns.forEach((pattern) => {
+      pattern.sources.forEach((oldSource, index) => {
+        if (oldSource.id == id) {
+          pattern.sources.splice(index, 1);
+        }
       });
+    });
     $setPatterns(this.patterns); //  保存修改到本地
   }
   newPattern(pattern) {
-    this
-      .patterns
-      .push(pattern);
+    this.patterns.push(pattern);
+    //  还要更新default
+    if (pattern.default) {
+      this.setDefaultPattern(pattern.id);
+    }
     $setPatterns(this.patterns);
   }
 
@@ -154,13 +142,9 @@ export default class PatternManager extends SourceManager {
         // 除了更新常规键值，还要更新sources;
 
         oldPattern.sources.length = 0;
-        newPattern
-          .sources
-          .forEach((source) => {
-            oldPattern
-              .sources
-              .push(source)
-          })
+        newPattern.sources.forEach((source) => {
+          oldPattern.sources.push(source)
+        })
 
         //  还要更新default
         if (newPattern.default) {
@@ -174,9 +158,7 @@ export default class PatternManager extends SourceManager {
   deletePattern(id) {
     for (var i = 0, len = this.patterns.length; i < len; i++) {
       if (this.patterns[i].id == id) {
-        this
-          .patterns
-          .splice(i, 1);
+        this.patterns.splice(i, 1);
         i--;
         len--;
       }
@@ -184,15 +166,13 @@ export default class PatternManager extends SourceManager {
     $setPatterns(this.patterns);
   }
   setDefaultPattern(id) {
-    this
-      .patterns
-      .forEach((pattern) => {
-        if (pattern.id == id) {
-          pattern.default = true;
-        } else {
-          pattern.default = false;
-        }
-      });
+    this.patterns.forEach((pattern) => {
+      if (pattern.id == id) {
+        pattern.default = true;
+      } else {
+        pattern.default = false;
+      }
+    });
 
     $setPatterns(this.patterns);
   }
@@ -207,8 +187,6 @@ export default class PatternManager extends SourceManager {
     return this.patterns[0];
   }
   getPatternById(id) {
-    return this
-      .patterns
-      .find(pattern => (pattern.id == id))
+    return this.patterns.find(pattern => (pattern.id == id))
   }
 }

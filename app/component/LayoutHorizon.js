@@ -3,8 +3,12 @@ import PropTypes from 'prop-types'
 import QueueAnim from 'rc-queue-anim';
 import windowSize from '../API/windowSize'
 
-import Logo from './Logo'
+import Logo from './Logo';
+
 import {layout_horizon, Content, info, actions, overLoadHitokoto} from './HitokotoLayout.css'
+
+import {FONT_MAP, ANIMATE_CONFIG_HORIZON} from '../configs'
+import Nav from '../containers/Nav'
 
 let JUDESIZE = windowSize.width > 768
   ? 140
@@ -14,9 +18,6 @@ windowSize.subscriptb(() => {
     ? 140
     : 40;
 })
-
-import {FONT_MAP, ANIMATE_CONFIG_HORIZON} from '../configs'
-import Nav from '../containers/Nav'
 
 function LayoutHorizon(props) {
   let body,

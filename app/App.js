@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import style from './App.css';
 import {HashRouter as Router} from 'react-router-dom';
 import AppContainer from './Controller/AppContainer'
 

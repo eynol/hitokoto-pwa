@@ -13,13 +13,9 @@ if (process.env.NODE_ENV === 'production') {
   let loggerMiddleware = createLogger();
 
   middlewares = [thunkMiddleware, loggerMiddleware]
-  if (module.hot) {
-    // Enable Webpack hot module replacement for reducers
-    module.hot.accept('../reducers', () => {
-      const nextRootReducer = require('../reducers').default
-      store.replaceReducer(nextRootReducer)
-    })
-  }
+  // if (module.hot) {   module.hot.accept(["../reducers"], () => {     const
+  // nextRootReducer = require('../reducers').default
+  // store.replaceReducer(nextRootReducer)   }) }
 }
 
 const createStoreWithMiddleware = applyMiddleware(...middlewares)(createStore)

@@ -32,9 +32,6 @@ class Home extends Component {
     this.switchLayout = this.switchLayout.bind(this);
     this.removeHitokoto = this.removeHitokoto.bind(this);
   }
-  componentDidMount() {
-    console.log('[home]CDM')
-  }
 
   switchLayout() {
     this.setState(state => {
@@ -132,17 +129,6 @@ class Home extends Component {
       return result
     });
   }
-  componentWillUpdate(e) {
-    console.log('[home]CWU')
-  }
-
-  componentWillReceiveProps(props) {
-    console.log('[home]CWRP')
-  }
-
-  componentDidUpdate(d) {
-    console.log('[home]CDU', d)
-  }
 
   render() {
     let {location: {
@@ -174,8 +160,10 @@ class Home extends Component {
             <li>
               <Link to='/home'>所有句集</Link>
             </li>
-            <li>资料设置</li>
-            <li>修改密码</li>
+            <li>
+              <Link to='/profile'>账户设置</Link>
+            </li>
+
           </ul>
         </div>
         <QueueAnim
@@ -195,12 +183,12 @@ class Home extends Component {
           }
         ]}>
           {frameToShow}
-          <NewHitokoto publish={this.pubulishHitokoto} preview={this.previewHitokoto}/>
-          <UpdateHitokoto
-            hitokoto={this.state.previewHitokoto}
-            update={this.doUpdateHitokoto}
-            preview={this.previewHitokoto}/>
         </QueueAnim>
+        <UpdateHitokoto
+          hitokoto={this.state.previewHitokoto}
+          update={this.doUpdateHitokoto}
+          preview={this.previewHitokoto}/>
+        <NewHitokoto publish={this.pubulishHitokoto} preview={this.previewHitokoto}/>
         <HitokotoPreview
           layout={this.props.layout}
           switchLayout={this.switchLayout}

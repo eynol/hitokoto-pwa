@@ -6,7 +6,6 @@ import QueueAnim from 'rc-queue-anim';
 import FullPage from '../component/FullPage';
 import hitokotoDriver from '../API/hitokotoDriver'
 
-import {clearfix} from './UI.css';
 import {settingWrapper, left, right} from './LayoutSetting.css'
 import {PANEL_OPEN} from '../actions'
 import {GLOBAL_ANIMATE_TYPE} from '../configs'
@@ -78,7 +77,7 @@ class LayoutSetting extends Component {
             e.stopPropagation();
             return false;
           }}>
-            <div className={clearfix}>
+            <div className="clearfix">
               <dl>
                 <dt>字体</dt>
                 <dd>

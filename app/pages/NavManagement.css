@@ -1,0 +1,13 @@
+.navList {
+  list-style: none;
+}
+.navList li {
+  min-height: 40px;
+}
+.nav a{
+  text-decoration: none;
+ 
+}
+.nav button{
+  margin-left: -0.9em;
+}

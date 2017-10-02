@@ -1,0 +1,306 @@
+@media screen and (min-width:768px){
+
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-button {
+  display: none;
+}
+::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  background: #757575;
+}
+::-webkit-scrollbar-track {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-track-piece {
+  background: transparent;
+}
+
+}
+
+:global(.text-filed) {
+  display: inline-block;
+  height: 4em;
+  padding-top: 2em;
+}
+
+:global(.text-filed.blocked) {
+  width: 100%;
+}
+
+:global(.text-filed) input[type=text],
+:global(.text-filed) input[type=password] {
+  display: block;
+  font-family: Roboto, Arial, sans-serif;
+  font-size: 1em;
+  padding: 0.25em 0.1em;
+  width: 100%;
+  border: none;
+  text-align: left;
+  /* border-bottom: 1px solid black; */
+  outline: none;
+}
+
+:global(.text-filed) input[type=text]:invalid,
+:global(.text-filed) input[type=password]:invalid {
+  box-shadow: none;
+}
+
+:global(.text-filed) input[type=text]:focus,
+:global(.text-filed) input[type=password]:focus {
+  outline: none;
+}
+
+:global(.text-filed) input[type=text],
+:global(.text-filed) input[type=password] {
+  border-bottom: 1px dashed #9E9E9E;
+  color: #303030;
+}
+
+:global(.text-filed) input[type=text]:focus,
+:global(.text-filed) input[type=password]:focus {
+  border-bottom: 1px solid #758a99;
+}
+
+:global(.text-filed) label::after {
+  background: #758a99;
+}
+
+:global(.text-filed) label {
+  display: inline-block;
+  font-size: 16px;
+  color: transparent;
+  pointer-events: none;
+  position: relative;
+  text-transform: uppercase;
+  width: 100%;
+}
+
+:global(.text-filed) label::before {
+  content: attr(data-content);
+  color: black;
+  top: 0px;
+  position: absolute;
+  transition: all 0.2s ease;
+  will-change: font-size, top;
+}
+
+:global(.text-filed) label::after {
+  bottom: 0.9em;
+  content: '';
+  height: 2px;
+  left: 0%;
+  top: 0;
+  width: 100%;
+  position: absolute;
+  transform-origin: right top;
+  transform: scale(0, 1);
+  transition: transform .2s cubic-bezier(.47, 0, .745, .715);
+}
+
+:global(.text-filed) label::before,
+:global(.text-filed) input[required]:focus~label::before {
+  font-size: 0.75em;
+  top: -4em;
+}
+
+:global(.text-filed) input:focus~label::after {
+  transform-origin: left top;
+  transform: scale(1, 1);
+}
+
+:global(.text-filed) input:invalid~label::before {
+  font-size: 1em;
+  top: -1.5em;
+}
+
+:global(.text-filed).red input {
+  border-bottom: 0.1em solid #F44336;
+  color: #d2190b;
+}
+
+:global(.text-filed).red label::after {
+  background: #F44336;
+}
+
+:global(.text-filed).red label::before,
+:global(.text-filed).red input[required]:focus~label::before {
+  color: #f8877f;
+}
+
+:global(.text-filed).red input:invalid~label::before {
+  color: #F44336;
+}
+
+:global(.text-filed) input:focus {
+  /*background-color: #e2ecff;*/
+  border-color: #758a99;
+  outline: none;
+}
+
+:global(.color-red){
+  color:#f00056;
+}
+:global(.color-basic){
+  color: #a6a6a6;;
+}
+
+
+
+:global(.ellipsis){
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+
+
+:global(.form) input{
+  text-overflow: ellipsis;
+}
+:global(.form) input:focus{
+  border-bottom: 1px solid #6d92ff;
+}
+
+
+:global(.form) input[type=number]{
+  border: none;
+  width: 6em;
+  text-align: right;
+  outline: none;
+  padding: 3px 4px;
+  border: 1px solid gray;
+  border-radius: 3px;
+  margin-bottom: 2px;
+  text-overflow: ellipsis;
+}
+:global(.form) input[type=number]:focus{
+  border: 1px solid #6d92ff;
+}
+:global(.form) input[type='checkbox']+label {
+  position: relative;
+  display: inline-block;
+  padding: 9px;
+  width: 36px;
+  height: 16px;
+  margin-right: 5px;
+  margin-bottom: 3px;
+  border-radius: 50px;
+  background-color: #fafbfa;
+  vertical-align: middle;
+  -webkit-transition: all 0.1s ease-in;
+  transition: all 0.1s ease-in;
+}
+
+:global(.form) input[type='checkbox']+label:after {
+  content: ' ';
+  position: absolute;
+  top: 0;
+  -webkit-transition: box-shadow 0.1s ease-in;
+  transition: box-shadow 0.1s ease-in;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 100px;
+  box-shadow: inset 0 0 0 0 #eee, 0 0 1px rgba(0, 0, 0, 0.4);
+}
+
+:global(.form) input[type='checkbox']+label:before {
+  content: ' ';
+  position: absolute;
+  background: #fff;
+  top: 1px;
+  left: 1px;
+  z-index: 999999;
+  width: 16px;
+  -webkit-transition: all 0.1s ease-in;
+  transition: all 0.1s ease-in;
+  height: 16px;
+  border-radius: 100px;
+  box-shadow: 0 3px 1px rgba(0, 0, 0, 0.05), 0 0px 1px rgba(0, 0, 0, 0.3);
+}
+:global(.form) input[type='checkbox']:active+label:after {
+  box-shadow: inset 0 0 0 20px #eee, 0 0 1px #eee;
+}
+
+:global(.form) input[type='checkbox']:active+label:before {
+  width: 20px;
+}
+
+:global(.form) input[type='checkbox']:checked:active+label:before {
+  width: 20px;
+  left: 14px;
+}
+
+:global(.form) input[type='checkbox']+label:active {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0px 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+:global(.form) input[type='checkbox']:checked+label:before {
+  content: ' ';
+  position: absolute;
+  left: 20px;
+  border-radius: 100px;
+}
+
+:global(.form) input[type='checkbox']:checked+label:after {
+  content: ' ';
+  font-size: 1.5em;
+  position: absolute;
+  /* background: linear-gradient(-135deg, #37BC97 0%, #a0d468 100%); */
+  background-color: #37BC97;
+  box-shadow: 0 0 1px #40be93;
+}
+
+
+
+:global(.form) li {
+  list-style: none;
+  margin: 10px 0 20px;
+  padding-left: .5em;
+  border-left: 3px solid #1AD1A4;
+  transition: border .3s;
+}
+
+:global(.form) :global(li.disabled){
+  border-left-color:  #9B9F9E;
+}
+:global(.form) select {
+  padding: 3px 10px;
+  border: 1px solid gray;
+  border-radius: 3px;
+  margin-bottom: 2em;
+  margin-left: 10px;
+}
+:global(.form) textarea{
+  border: dashed 1px gray;
+  white-space: pre;
+  width: 100%;
+}
+:global(.form) textarea:focus{
+  border: 1px solid #6d92ff;
+}
+
+
+
+ul {
+  list-style: none;
+}
+
+ul li {
+  margin: .3em 0;
+}
+
+ul li:after {
+  content: '';
+  display: table;
+  clear: both;
+}
+:global(.clearfix:after){
+  content: '';
+  clear: both;
+  display: table;
+}

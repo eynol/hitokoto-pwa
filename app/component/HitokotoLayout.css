@@ -66,9 +66,11 @@
 .layout_horizon {
     height: 100%;
     width: 100%;
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
     padding: 140px 50px 50px;
-    will-change: opacity, translate;
+    will-change: position;
+    backface-visibility: hidden;
 }
 
 .layout_horizon .Header {
@@ -146,48 +148,19 @@ ul.actions {
 .layout_vertical ul.actions a,
 .layout_horizon ul.actions a {
     text-decoration: none;
+    font-size: 20px;
+}
+.layout_vertical ul.actions a i,
+.layout_horizon ul.actions a i{
+    font-size: inherit;
 }
 
-.layout_vertical ul.actions a:hover,
+/* .layout_vertical ul.actions a:hover,
 .layout_horizon ul.actions a:hover {
     text-decoration: underline;
-}
+} */
 
 
-.actions img {
-    width: 20px;
-    vertical-align: middle
-}
-
-.next {
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    background: url(../img/next.png) no-repeat center;
-    background-size: contain;
-}
-
-.love {
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    background: url(../img/love1.png) no-repeat center;
-    background-size: contain;
-    margin: 8px 12px;
-}
-
-.setting {
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    background: url(../img/icon-setting.png) no-repeat center;
-    background-size: contain;
-    margin: 8px 12px;
-}
-
-.love:hover {
-    background-image: url(../img/love-active.png);
-}
 
 .layout_vertical {
     height: 253px;
@@ -196,7 +169,8 @@ ul.actions {
     overflow: auto;
     /* height: 20em; */
     padding: 80px 30px 50px 20px;
-    will-change: transform;
+    will-change: contents;
+    backface-visibility: hidden;
     /* font-family: 'Noto Serif CJK SC', 'Source Han Serif SC', ‘Source Han Serif’, source-han-serif-sc, '宋体', serif;
     font-weight: 900; */
 }
@@ -285,6 +259,7 @@ ul.actions {
     }
     .layout_vertical .oprations{
         text-align: right;
+        margin-right: 29px;
     }
    
 }

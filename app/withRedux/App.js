@@ -4,7 +4,6 @@ import {Provider} from 'react-redux'
 
 import store from '../store'
 
-import style from '../App.css';
 import AppContainer from '../Controller/AppContainer'
 /**
  * var fullscreenElement = document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement;

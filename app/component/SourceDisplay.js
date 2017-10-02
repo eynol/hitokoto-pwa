@@ -1,11 +1,9 @@
 import React, {Component} from 'react';
 import FullPageCard from './FullPageCard'
 import QueueAnim from 'rc-queue-anim';
-import style from './SourceDisplay.css';
 import Textarea from 'react-textarea-autosize';
-import TextFiledCss from '../component/TextFiled.css'
 
-let {'text-filed': textFiled, blocked} = TextFiledCss;
+import style from './SourceDisplay.css';
 
 let showDemo = () => {
   setTimeout(function () {
@@ -94,33 +92,29 @@ export default class SourceDisplay extends Component {
 
     source = source || {};
     return (
-      <FullPageCard>
-        <div className={style.displaybox}>
-          <h1>{props.title}</h1>
-          <br/>
-          <div className={style.form}>
-            <div className={textFiled + ' ' + blocked}>
-              <input type="text" required ref="sourceName" defaultValue={source.name}/>
-              <label data-content="来源名字">来源名字</label>
-            </div>
-            <div className={textFiled + ' ' + blocked}><input type="text" required ref="sourceUrl" defaultValue={source.url}/>
-              <label data-content="URL(参数也写上)">URL</label>
-            </div>
-            <label htmlFor="">Adapter:</label><br/>
-            <p>
-              <i>tip:</i>Adapter是一个JavaScript
-              函数，接收一个json格式的参数，返回一个hitokoto，用于将其他网站返回的json数据转换成本地需要的hitokoto格式。<a href='javascript:' onClick={showDemo}>查看示例</a>
-              （非开发人员请跳过该设置，也不要粘贴来历不明的代码，不填写内容表示不使用Adapter。）</p>
-            <Textarea
-              ref="sourceAdapter"
-              minRows={3}
-              defaultValue={source.adapter == 0
-              ? ''
-              : source.adapter}
-              placeholder='PS:不要在此粘贴来历不明的代码！'/>
+      <FullPageCard cardname={props.title} close={props.hook.hide}>
+        <div className={style.form}>
+          <div className="text-filed blocked">
+            <input type="text" required ref="sourceName" defaultValue={source.name}/>
+            <label data-content="来源名字">来源名字</label>
           </div>
-          <br/> {oprations}
+          <div className="text-filed blocked"><input type="text" required ref="sourceUrl" defaultValue={source.url}/>
+            <label data-content="URL(参数也写上)">URL</label>
+          </div>
+          <label htmlFor="">Adapter:</label><br/>
+          <p>
+            <i>tip:</i>Adapter是一个JavaScript
+            函数，接收一个json格式的参数，返回一个hitokoto，用于将其他网站返回的json数据转换成本地需要的hitokoto格式。<a href='javascript:' onClick={showDemo}>查看示例</a>
+            （非开发人员请跳过该设置，也不要粘贴来历不明的代码，不填写内容表示不使用Adapter。）</p>
+          <Textarea
+            ref="sourceAdapter"
+            minRows={3}
+            defaultValue={source.adapter == 0
+            ? ''
+            : source.adapter}
+            placeholder='PS:不要在此粘贴来历不明的代码！'/>
         </div>
+        <br/> {oprations}
       </FullPageCard>
     );
   }

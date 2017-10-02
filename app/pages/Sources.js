@@ -7,19 +7,6 @@ import {GLOBAL_ANIMATE_TYPE} from '../configs'
 import hitokotoDriver from '../API/hitokotoDriver'
 import FullPageCard from '../component/FullPageCard'
 import SourceDisplay from '../component/SourceDisplay'
-import style from './UI.css';
-
-let {
-  manageBox,
-  clearfix,
-  'close-button': closeButton,
-  icon,
-  close,
-  sourcesList,
-  back,
-  backButton,
-  ellipsis
-} = style;
 
 class Sources extends Component {
   constructor(props) {
@@ -88,14 +75,12 @@ class Sources extends Component {
   hideUpdate() {
     this.setState({update: undefined});
   }
-  goBack() {
-    this.props.history.go(-1);
-  }
+
   render() {
     let lists = this.state.sources.map((source) => {
       return (
         <li key={source.id}>
-          <p className={ellipsis}>
+          <p className="ellipsis">
             <button onClick={this.showUpdate.bind(this, source.id)}>修改</button>&nbsp; {source.name}
             - {source.url}</p>
         </li>
@@ -132,39 +117,28 @@ class Sources extends Component {
     }
 
     return (
-      <FullPageCard>
-        <div className={manageBox}>
-          <h1 className={clearfix}>来源管理
-            <a href="javascript:" onClick={this.goBack.bind(this)} className={closeButton}>
-              <i className={icon + ' ' + close}></i>
-            </a>
-            <a href="javascript:" onClick={this.goBack.bind(this)} className={backButton}>
-              <i className={icon + ' ' + back}></i>
-            </a>
-          </h1>
-          <br/>
-          <p>
-            <i>Tips:</i>
-            在这里添加其他域名下的hitokoto一言接口，然后在<Link to='/patterns'>模式管理</Link>中使用哦~</p>
-          <div>
-            <QueueAnim
-              component="ul"
-              type={GLOBAL_ANIMATE_TYPE}
-              ease={['easeOutQuart', 'easeInOutQuart']}
-              className={sourcesList}>
-              {lists}
-              <li key="new">
-                <button
-                  onClick={this.showNewSource.bind(this)}
-                  style={{
-                  float: 'right'
-                }}>添加</button>
-              </li>
-            </QueueAnim>
-          </div>
-          <QueueAnim type={['right', 'left']} ease={['easeOutQuart', 'easeInOutQuart']}>
-            {sourceDisplayC}</QueueAnim>
+      <FullPageCard cardname="来源管理">
+        <p>
+          <i>Tips:</i>
+          在这里添加其他域名下的hitokoto一言接口，然后在<Link to='/patterns'>模式管理</Link>中使用哦~</p>
+        <div>
+          <QueueAnim
+            component="ul"
+            type={GLOBAL_ANIMATE_TYPE}
+            ease={['easeOutQuart', 'easeInOutQuart']}>
+            {lists}
+            <li key="new">
+              <button
+                onClick={this.showNewSource.bind(this)}
+                style={{
+                float: 'right'
+              }}>添加</button>
+            </li>
+          </QueueAnim>
         </div>
+        <QueueAnim type={['right', 'left']} ease={['easeOutQuart', 'easeInOutQuart']}>
+          {sourceDisplayC}</QueueAnim>
+
       </FullPageCard>
 
     );

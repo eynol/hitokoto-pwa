@@ -4,51 +4,44 @@ import {Link, withRouter} from 'react-router-dom';
 import FullPageCard from '../component/FullPageCard'
 import style from './UI.css';
 
-let {
-  manageBox,
-  clearfix,
-  'close-button': closeButton,
-  icon,
-  close,
-  sourcesList,
-  back,
-  backButton,
-  ellipsis,
-  article
-} = style;
+import {navList, nav} from './NavManagement.css';
 
 class NavManagement extends Component {
-  goBack() {
-    this.props.history.go(-1);
-  }
 
   render() {
     let {path, location} = this.props;
     return (
-      <FullPageCard key={path}>
-        <div className={manageBox}>
-          <h1 className={clearfix}>管理
-            <a href="javascript:" onClick={() => this.goBack()} className={closeButton}>
-              <i className={icon + ' ' + close}></i>
-            </a>
-            <a href="javascript:" onClick={() => this.goBack()} className={backButton}>
-              <i className={icon + ' ' + back}></i>
-            </a>
-          </h1>
-          <ul>
-            <li>
-              <div>
+      <FullPageCard cardname="管理">
+        <ul className={navList}>
+          <li>
+            <div className={nav}>
+              <button>
                 <Link to='/sources'>来源管理</Link>
-              </div>
-            </li>
-            <li>
-              <div>
+              </button>
+            </div>
+          </li>
+          <li>
+            <div className={nav}>
+              <button>
                 <Link to='/patterns'>模式管理</Link>
-              </div>
-            </li>
-          </ul>
-
-        </div>
+              </button>
+            </div>
+          </li>
+          <li><hr/>
+            <div className={`${nav} form`}>
+              在首页中使用思源宋体&nbsp;&nbsp;
+              <input
+                hidden
+                type="checkbox"
+                id={'userfont'}
+                defaultChecked={false}
+                onChange={(e) => {
+                console.log(e.target)
+              }}/>
+              <label htmlFor={'userfont'}></label>
+            </div>
+          </li>
+        </ul>
       </FullPageCard>
     )
   }
