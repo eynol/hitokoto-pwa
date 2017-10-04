@@ -1,5 +1,10 @@
-export const FUNC_REGEXP = /function\s*(?:\w*)(?:\s*)\(([^\)]*)\)(?:\s*)\{([\s\S]*)\}/gim;
-export const ADAPTER_ORGIN = json => json;
+export const FUNC_REGEXP = /function\s*(?:\w*)(?:\s*)\(([^\)]*)\)(?:\s*)\{([\s\S]*)\}/im;
+export const ADAPTER_ORGIN = json => {
+  if (!json.source) {
+    json.source = json.from
+  }
+  return json
+};
 
 /**
  * 转换一个adapter适配器,传入函数字符串，返回函数

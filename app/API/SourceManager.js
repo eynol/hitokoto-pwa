@@ -8,33 +8,62 @@ export const SOURCES = [
     id: 1001,
     name: 'hitokoto.cn',
     url: 'http://api.hitokoto.cn/',
-    adapter: 0,
+    adapter: `function(resp){
+      let source = resp.from;
+      delete resp.from;
+      resp.source = source;
+      return resp;
+    }`,
     online: true,
     local: true
   }, {
     id: 1002,
     name: 'hitoapi.cc',
     url: 'https://hitoapi.cc/s/',
-    adapter: 'function(resp){\n  var id = String(resp.id).slice(0,6);\nreturn { type:resp.catn' +
-        'ame,creator:resp.author,created_at:resp.date,id:id,hitokoto:resp.text,from:resp.' +
-        'source}}',
+    adapter: `function(resp){
+        var id = String(resp.id).slice(0,9);
+        return { 
+          type:resp.catname,
+          creator:resp.author,
+          created_at:resp.date,
+          id:id,
+          hitokoto:resp.text,
+          source:resp.source
+        }
+      }`,
     online: true,
     local: true
   }, {
     id: 1005,
     name: 'hitoapi.cc',
     url: 'https://hitoapi.cc/sp/',
-    adapter: 'function(resp){return { type:resp.catname,creator:resp.author,created_at:resp.da' +
-        'te,id:resp.id,hitokoto:resp.text,from:resp.source}}',
+    adapter: `function(resp){
+      return {
+       type:resp.catname,
+       creator:
+       resp.author,
+       created_at:resp.date,
+       id:resp.id,
+       hitokoto:resp.text,
+       source:resp.source}
+    }`,
     online: true,
     local: true
   }, {
     id: 1006,
     name: 'https://api.satori.moe/hitokoto.php',
     url: 'https://api.satori.moe/hitokoto.php',
-    adapter: 'function (resp){ \n  var id = String(resp.id).slice(0,6);\nreturn {\n  hitokoto:' +
-        'resp.hitokoto,\n  type: resp.cat,\n  id: id,\n  from:resp.source?resp.source:"无来' +
-        '源",\n  creator:"佚名",\n  created_at:resp.addtime\n  }\n}',
+    adapter: `function (resp){ 
+     var id = String(resp.id).slice(0,6);
+    return {
+      hitokoto:resp.hitokoto,
+      type: resp.cat,
+      id: id,
+      source: resp.source,
+      creator:"",
+      created_at:resp.addtime
+      }
+    }`,
     online: true,
     local: true
   }

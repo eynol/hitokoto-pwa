@@ -10,7 +10,7 @@ const HITOKOTO_KEYS = [
   'hitokoto',
   'creator',
   'type',
-  'from',
+  'source',
   'created_at'
 ];
 
