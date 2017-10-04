@@ -1,29 +1,24 @@
 var webpack = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
-
+var path = require('path');
 module.exports = {
   devtool: 'cheap-module-source-map',
 
-  entry: {
-    vendor: [
-      "react",
-      "react-dom",
-      'react-router',
-      'react-router-dom',
-      'react-redux',
-      'redux',
-      'rc-queue-anim',
-      'dexie',
-      'crypto-js/sha1',
-      'react-textarea-autosize',
-      'whatwg-fetch'
-    ],
-    bundle: __dirname + "/app/main.js"
-  },
+  entry: [
+    'webpack-dev-server/client?http://localhost:8080',
+    //
+    'react-hot-loader/patch',
+    //
+    'webpack/hot/only-dev-server',
+    // activate HMR for React
+
+    path.resolve(__dirname, "./app/main.dev.js")
+  ],
   output: {
-    path: __dirname + "/build",
-    filename: "[name].js"
+    path: path.resolve(__dirname, "/build"),
+    filename: "[name].js",
+    publicPath: '/'
   },
 
   module: {
@@ -37,20 +32,17 @@ module.exports = {
         loader: 'babel-loader'
       }, {
         test: /\.css$/,
-        loader: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: [
-            {
-              loader: 'css-loader',
-              options: {
-                importLoaders: 1,
-                modules: true,
-                sourceMap: true
-              }
-            },
-            'postcss-loader'
-          ]
-        })
+        use: [
+          'style-loader', {
+            loader: 'css-loader',
+            options: {
+              importLoaders: 1,
+              modules: true,
+              sourceMap: true
+            }
+          },
+          'postcss-loader'
+        ]
       }, {
         test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
         exclude: /node_modules/,
@@ -85,13 +77,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: __dirname + "/app/index.tmpl.html"
     }),
-    new webpack.optimize.CommonsChunkPlugin({
-      name: [
-        'vendor', 'manifest'
-      ],
-      minChunks: Infinity
-    }),
-    new ExtractTextPlugin("[name]-[chunkhash].css"),
+    // new ExtractTextPlugin("[name]-[chunkhash].css"),
 
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NamedModulesPlugin()

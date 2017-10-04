@@ -13,9 +13,6 @@ if (process.env.NODE_ENV === 'production') {
   let loggerMiddleware = createLogger();
 
   middlewares = [thunkMiddleware, loggerMiddleware]
-  // if (module.hot) {   module.hot.accept(["../reducers"], () => {     const
-  // nextRootReducer = require('../reducers').default
-  // store.replaceReducer(nextRootReducer)   }) }
 }
 
 const createStoreWithMiddleware = applyMiddleware(...middlewares)(createStore)
