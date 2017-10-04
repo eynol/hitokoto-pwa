@@ -36,8 +36,7 @@ class UpdateHitokoto extends Component {
     }
   }
   goBack() {
-    console.log(this.props.history);
-    this.props.history.go(-1);
+    this.props.history.goBack();
   }
   handlePreviewClick() {
     let hitokoto = this.getHitokoto();
@@ -53,16 +52,19 @@ class UpdateHitokoto extends Component {
         },
         type: {
           value: category
+        },
+        author: {
+          value: author
         }
       } = this.refs,
-      content = this.textarea.value;
-    if (content.length == 0) {
+      hitokoto = this.textarea.value;
+    if (hitokoto.length == 0) {
       return alert('hitokoto内容不能为空！')
     }
     if (source.length == 0) {
       return alert('hitokoto来源不能为空！')
     }
-    return {hitokoto: content, from: source, category}
+    return {hitokoto, author, source, category}
   }
   update() {
     let hitokoto = this.getHitokoto();
@@ -100,7 +102,13 @@ class UpdateHitokoto extends Component {
               <div>
                 <input
                   type="text"
-                  defaultValue={hitokoto.from}
+                  ref='author'
+                  placeholder="...在这里写原作者(可选)"
+                  className={hitokotoSouceInput}
+                  defaultValue={hitokoto.author}/>
+                <input
+                  type="text"
+                  defaultValue={hitokoto.source}
                   ref='source'
                   placeholder="...在这里写来源出处"
                   className={hitokotoSouceInput}/>

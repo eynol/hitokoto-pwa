@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import {Link, withRouter} from 'react-router-dom';
 
-import FullPageCard from '../component/FullPageCard'
-
+import FullPageCard from '../component/FullPageCard';
+import idbm from '../API/IndexedDBManager';
 class Tools extends Component {
   goBack() {
     this.props.history.go(-1);
@@ -11,6 +11,12 @@ class Tools extends Component {
     window.localStorage.clear();
     alert('已清除！');
     location.href = '#';
+    location.reload();
+  }
+  clearIDB() {
+    idbm.DEBUG_CLEAR_ALL();
+    location.href = '#';
+    location.reload();
   }
   render() {
     let {path, location} = this.props;
@@ -22,6 +28,12 @@ class Tools extends Component {
             <a href="javascript:" onClick={() => this.clearLS()}>清除Localstorage缓存</a>
           </dt>
           <dd>将会清除 模式，来源，还有页面设置</dd>
+        </dl>
+        <dl>
+          <dt>
+            <a href="javascript:" onClick={() => this.clearIDB()}>清除本地离线数据</a>
+          </dt>
+          <dd>将会已经缓存的所有数据</dd>
         </dl>
       </FullPageCard>
     )

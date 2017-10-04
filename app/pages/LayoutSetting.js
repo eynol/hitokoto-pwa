@@ -32,7 +32,8 @@ class LayoutSetting extends Component {
         font,
         fontWeight,
         layoutHorizon,
-        backgroundColor
+        backgroundColor,
+        revert2white
       },
       hide,
       patternChange,
@@ -136,6 +137,34 @@ class LayoutSetting extends Component {
                     changeLayout('backgroundColor', event.target.value)
                   }}
                     defaultValue={backgroundColor}/>
+                </dd>
+              </dl>
+              <dl key="s-r2w">
+                <dt>使用白色UI</dt>
+                <dd className="form">
+                  <input
+                    type="checkbox"
+                    hidden
+                    onChange={(event) => {
+                    changeLayout('revert2white', event.target.checked)
+                  }}
+                    id="id-r2w"
+                    defaultChecked={revert2white}/>
+                  <label htmlFor="id-r2w"></label>
+                </dd>
+              </dl>
+              <dl key="s-sh">
+                <dt>加载思源宋体</dt>
+                <dd className="form">
+                  <input
+                    type="checkbox"
+                    hidden
+                    onChange={(event) => {
+                    changeLayout('sourcehan', event.target.checked)
+                  }}
+                    id="id-sourcehan"
+                    defaultChecked={revert2white}/>
+                  <label htmlFor="id-sourcehan"></label>
                 </dd>
               </dl>
               {patternOptions}

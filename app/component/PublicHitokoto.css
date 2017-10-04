@@ -1,0 +1,26 @@
+.item{
+  margin-bottom: 20px;
+}
+.idspan:before
+{
+  content: '# ';
+  display: inline-block;
+  padding-bottom: 4px;
+  border-bottom: 2px solid black;
+} 
+.tag{
+  border-radius: 8px;
+  padding: 3px 6px;
+  margin-right:3px;
+  display: inline-block;
+  font-size: 0.7em;
+  line-height: 1;
+  border:1px solid currentColor;
+  /* background-color: #e6e6e6; */
+}
+.userName{
+  color: black;
+}
+.userHitokoto{
+  letter-spacing: .07em;
+}

@@ -4,7 +4,8 @@ const DEFAULT_LAYOUT = {
   font: 'simsun',
   fontWeight: '600',
   layoutHorizon: false,
-  backgroundColor: '#ffffff'
+  backgroundColor: '#ffffff',
+  revert2white: false
 }
 
 const INSTANT_LAYOUT_NAME = 'instant_layout';

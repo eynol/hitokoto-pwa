@@ -119,7 +119,7 @@ class Sources extends Component {
     return (
       <FullPageCard cardname="来源管理">
         <p>
-          <i>Tips:</i>
+          <i className="iconfont icon-tishi"></i>
           在这里添加其他域名下的hitokoto一言接口，然后在<Link to='/patterns'>模式管理</Link>中使用哦~</p>
         <div>
           <QueueAnim

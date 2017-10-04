@@ -45,7 +45,9 @@ class HitokotoContainer extends Component {
     hitokotoDriver.start()
   }
   componentWillUnmount() {
-    hitokotoDriver.stop()
+
+    hitokotoDriver.registNextHitokotoHandler(Function.prototype).registLastHitokotoHandler(Function.prototype).registUIProcessingHandler(Function.prototype).stop();
+
   }
 
   processingHandler(processing) {

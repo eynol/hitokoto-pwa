@@ -8,6 +8,7 @@ import hitokotoDriver from '../API/hitokotoDriver';
 import {hitokoto, time, actions} from './HitoView.css'
 
 let httpManager = hitokotoDriver.httpManager;
+import tranformDate from '../API/social-time-transform'
 
 class HitoView extends Component {
   constructor(props) {
@@ -36,15 +37,15 @@ class HitoView extends Component {
       )
     } else {
       let hitokotoText = data.hitokoto,
-        source = data.from,
-        date = new Date(data.created_at);
+        source = data.source;
       return (
         <div className={hitokoto}>
-          <span>
-            <p className={time}>{date.toLocaleString()}</p>
-          </span>
+
           <p>{hitokotoText}</p>
           <span>—— {source}</span>
+          <span>
+            <p className={time}>{tranformDate(new Date(data.created_at))}</p>
+          </span>
           <div className={actions}>
             <button onClick={() => {
               preview(data);
@@ -52,9 +53,11 @@ class HitoView extends Component {
             <button onClick={() => {
               update(data);
             }}>修改</button>
-            <button onClick={() => {
+            <button
+              onClick={() => {
               remove(data)
-            }}>删除</button>
+            }}
+              className="color-red">删除</button>
           </div>
         </div>
       )

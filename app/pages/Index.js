@@ -28,7 +28,6 @@ class Index extends Component {
       path: '/',
       currentPatternID: hitokotoDriver.pattern.id
     }
-
   }
 
   updateNameAndToken({nickname, token}) {
@@ -39,7 +38,8 @@ class Index extends Component {
 
   render() {
     let {user, layout, panel} = this.props,
-      backgroundColor = layout.backgroundColor;
+      backgroundColor = layout.backgroundColor,
+      revert2white = layout.revert2white;
 
     let wrapperConfig = {
       height: "100%",
@@ -48,7 +48,12 @@ class Index extends Component {
     };
 
     return (
-      <div key="firstFrame" style={wrapperConfig}>
+      <div
+        key="firstFrame"
+        style={wrapperConfig}
+        className={revert2white
+        ? 'revert2white'
+        : ''}>
         <HitokotoContainer/>
         <Regist/>
         <LayoutSetting/>

@@ -17,7 +17,7 @@ export default class SourceDisplay extends Component {
   handleUpdate() {
     let name = this.refs.sourceName.value;
     let url = this.refs.sourceUrl.value;
-    let adapter = this.refs.sourceAdapter.value.trim();
+    let adapter = this.sourceAdapter.value.trim();
 
     adapter = adapter
       ? adapter
@@ -40,7 +40,7 @@ export default class SourceDisplay extends Component {
     let {hook, sid, source} = this.props;
     let name = this.refs.sourceName.value;
     let url = this.refs.sourceUrl.value;
-    let adapter = this.refs.sourceAdapter.value.trim();
+    let adapter = this.sourceAdapter.value.trim();
 
     if (adapter.length == 0) {
       adapter == 0;
@@ -93,7 +93,7 @@ export default class SourceDisplay extends Component {
     source = source || {};
     return (
       <FullPageCard cardname={props.title} close={props.hook.hide}>
-        <div className={style.form}>
+        <div className="form">
           <div className="text-filed blocked">
             <input type="text" required ref="sourceName" defaultValue={source.name}/>
             <label data-content="来源名字">来源名字</label>
@@ -103,11 +103,11 @@ export default class SourceDisplay extends Component {
           </div>
           <label htmlFor="">Adapter:</label><br/>
           <p>
-            <i>tip:</i>Adapter是一个JavaScript
+            <i className="iconfont icon-tishi"></i>Adapter是一个JavaScript
             函数，接收一个json格式的参数，返回一个hitokoto，用于将其他网站返回的json数据转换成本地需要的hitokoto格式。<a href='javascript:' onClick={showDemo}>查看示例</a>
             （非开发人员请跳过该设置，也不要粘贴来历不明的代码，不填写内容表示不使用Adapter。）</p>
           <Textarea
-            ref="sourceAdapter"
+            inputRef={textarea => this.sourceAdapter = textarea}
             minRows={3}
             defaultValue={source.adapter == 0
             ? ''

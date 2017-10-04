@@ -23,6 +23,7 @@
 
 :global(.text-filed) {
   display: inline-block;
+  vertical-align: top;
   height: 4em;
   padding-top: 2em;
 }
@@ -183,6 +184,8 @@
 :global(.form) input[type='checkbox']+label {
   position: relative;
   display: inline-block;
+  cursor: pointer;
+  user-select: none;
   padding: 9px;
   width: 36px;
   height: 16px;
@@ -265,7 +268,7 @@
   transition: border .3s;
 }
 
-:global(.form) :global(li.disabled){
+:global(.form) :global(li.inactive){
   border-left-color:  #9B9F9E;
 }
 :global(.form) select {
@@ -299,8 +302,19 @@ ul li:after {
   display: table;
   clear: both;
 }
+
 :global(.clearfix:after){
   content: '';
   clear: both;
   display: table;
+}
+
+:global(.hide){
+  display: none!important;
+}
+
+:global(.disabled){
+  pointer-events: none;
+  cursor: wait;
+  color:gray;
 }

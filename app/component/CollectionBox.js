@@ -170,6 +170,7 @@ class CollectionBox extends Component {
                 tabIndex={tabIndex}
                 href="javascript:"
                 title="点击删除该句集"
+                className="color-red"
                 onClick={this.doDelete.bind(this)}>删除</a>
             </div>
           </div>

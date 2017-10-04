@@ -68,13 +68,10 @@ class Home extends Component {
     let reg = /^\/home\/([^\/]*)\/new$/,
       matchs = reg.exec(this.props.location.pathname);
     let collectionName = matchs[1];
-    let form = new FormData();
 
-    form.append('hitokoto', hitokoto.hitokoto);
-    form.append('from', hitokoto.from);
-    form.append('creator', this.props.user.nickname);
-    form.append('category', hitokoto.category);
-    return httpManager.API_newHitokoto(collectionName, form).then(result => {
+    hitokoto['creator'] = this.props.user.nickname;
+
+    return httpManager.API_newHitokoto(collectionName, hitokoto).then(result => {
       console.log(result);
       if (result.err) {
         alert(result.err)
@@ -89,13 +86,15 @@ class Home extends Component {
     let reg = /^\/home\/([^\/]*)\/update$/,
       matchs = reg.exec(this.props.location.pathname);
     let collectionName = matchs[1];
-    let form = new FormData();
-    form.append('id', hitokoto._id)
-    form.append('from', hitokoto.from);
-    form.append('hitokoto', hitokoto.hitokoto);
-    form.append('creator', this.props.user.nickname);
-    form.append('category', hitokoto.category);
-    return httpManager.API_updateHitokoto(collectionName, form).then(result => {
+
+    return httpManager.API_updateHitokoto(collectionName, {
+      id: hitokoto._id,
+      source: hitokoto.source,
+      author: hitokoto.author,
+      hitokoto: hitokoto.hitokoto,
+      creator: this.props.user.nickname,
+      category: hitokoto.category
+    }).then(result => {
       console.log(result);
       if (result.err) {
         alert(result.err)
@@ -114,11 +113,10 @@ class Home extends Component {
     }
 
     let reg = /^\/home\/([^\/]*)$/,
-      matchs = reg.exec(this.props.location.pathname);
-    let collectionName = matchs[1];
-    let form = new FormData();
-    form.append('id', hitokotoToRemove._id)
-    return httpManager.API_deleteHitokoto(collectionName, form).then(result => {
+      matchs = reg.exec(this.props.location.pathname),
+      collectionName = matchs[1];
+
+    return httpManager.API_deleteHitokoto(collectionName, {id: hitokotoToRemove._id}).then(result => {
       console.log(result);
 
       if (result.err) {

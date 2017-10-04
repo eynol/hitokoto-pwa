@@ -53,3 +53,10 @@
   margin-left: 7em;
   min-width: 50px;
 }
+
+.settingWrapper :global(dd.form) {
+  height: 30px;
+}
+.settingWrapper :global(dd.form) label{
+  margin:0;
+}

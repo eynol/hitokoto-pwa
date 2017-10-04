@@ -232,7 +232,7 @@ class Regist extends Component {
                 required
                 onChange={this.handleUsernameChange.bind(this)}
                 defaultValue={this.state.username}/>
-                <label data-content="用户名">用户名</label>
+                <label data-content="用户名(仅登录时使用)">用户名(仅登录时使用)</label>
               </div>
               <div className="text-filed"><input
                 type="password"
@@ -261,7 +261,7 @@ class Regist extends Component {
                 maxLength="20"
                 onChange={this.handleNicknameChange.bind(this)}
                 defaultValue={this.state.nickname}/>
-                <label data-content="显示的昵称">显示的昵称(不可修改)</label>
+                <label data-content="显示的昵称(不可修改)">显示的昵称(不可修改)</label>
               </div>
               {errinfo}
               <p>

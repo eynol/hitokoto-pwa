@@ -5,17 +5,15 @@
 }
 
 .mu-category nav::-webkit-scrollbar {
-    width:10px;
+    width: 10px;
     background: inherit;
-  }
-  
-  .mu-category nav::-webkit-scrollbar-thumb {
+}
+
+.mu-category nav::-webkit-scrollbar-thumb {
     width: 10px;
     height: 20px;
-    background: rgb(166,151,148);
-  }
-  
-  
+    background: rgb(166, 151, 148);
+}
 
 @media screen and (max-width: 768px) {
     .info {
@@ -34,6 +32,10 @@
     text-overflow: ellipsis;
 }
 
+:global(.revert2white) .layout_vertical .info {
+    color: white;
+}
+
 .info:after {
     content: attr(data-id);
     color: #e7e7e7;
@@ -48,6 +50,10 @@
     /* （70*0.68）-16/2 */
     z-index: 1;
     position: absolute;
+}
+
+:global(.revert2white) .layout_vertical .info:after {
+    color: #423737;
 }
 
 .info b {
@@ -95,7 +101,8 @@
     line-height: 1.9;
     white-space: pre-line;
 }
-.layout_horizon .Content.overLoadHitokoto>h1{
+
+.layout_horizon .Content.overLoadHitokoto>h1 {
     font-size: 1em;
 }
 
@@ -113,7 +120,7 @@
     .layout_horizon .Content>h1 {
         font-size: 1.5em;
     }
-    .layout_horizon .Content.overLoadHitokoto>h1{
+    .layout_horizon .Content.overLoadHitokoto>h1 {
         font-size: 1em;
     }
 }
@@ -143,24 +150,29 @@ ul.actions {
     margin: 25px 0;
 }
 
-
-
 .layout_vertical ul.actions a,
 .layout_horizon ul.actions a {
     text-decoration: none;
     font-size: 20px;
 }
+
+
+/* :global(.revert2white) .layout_horizon ul.actions a */
+
+:global(.revert2white) .layout_vertical ul.actions a {
+    color: white;
+}
+
 .layout_vertical ul.actions a i,
-.layout_horizon ul.actions a i{
+.layout_horizon ul.actions a i {
     font-size: inherit;
 }
+
 
 /* .layout_vertical ul.actions a:hover,
 .layout_horizon ul.actions a:hover {
     text-decoration: underline;
 } */
-
-
 
 .layout_vertical {
     height: 253px;
@@ -231,9 +243,11 @@ ul.actions {
     text-align: right;
     padding-bottom: 20px;
 }
-.layout_vertical .Content.overLoadHitokoto>h1{
+
+.layout_vertical .Content.overLoadHitokoto>h1 {
     font-size: 1em;
 }
+
 @media screen and (max-width: 768px) {
     .layout_vertical {
         padding: 70px 0 25px 0;
@@ -244,7 +258,7 @@ ul.actions {
     .layout_vertical .Content>h1 {
         font-size: 1.5em;
     }
-    .layout_vertical .Content.overLoadHitokoto>h1{
+    .layout_vertical .Content.overLoadHitokoto>h1 {
         font-size: 1em;
     }
     .layout_vertical .info {
@@ -257,9 +271,8 @@ ul.actions {
         padding-top: 60px;
         /*edge make this block  */
     }
-    .layout_vertical .oprations{
+    .layout_vertical .oprations {
         text-align: right;
         margin-right: 29px;
     }
-   
 }

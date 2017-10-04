@@ -29,7 +29,8 @@ export default function LayoutVertical(props) {
   let {
     hitokoto: {
       id,
-      'from': fromwhere,
+      source,
+      author,
       hitokoto,
       creator,
       created_at,
@@ -44,7 +45,7 @@ export default function LayoutVertical(props) {
   let OptionsChildren = null,
     overLoad = false;
 
-  if (hitokoto.length > JUDESIZE) {
+  if (hitokoto && hitokoto.length > JUDESIZE) {
     overLoad = true;
   };
 
@@ -71,8 +72,15 @@ export default function LayoutVertical(props) {
     }}
       key={id}>
       <h1>{hitokoto}</h1>
-      <p>
-        <i>——</i>&nbsp;&nbsp;&nbsp;{fromwhere}</p>
+      {author || source
+        ? <p>
+            <i>——</i>&nbsp;&nbsp;{author
+              ? author
+              : ''}{author
+              ? ' '
+              : ''}{source}</p>
+        : ''}
+
     </div>
   )
 

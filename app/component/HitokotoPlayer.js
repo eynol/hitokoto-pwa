@@ -36,21 +36,19 @@ class HitokotoPlayer extends Component {
       layoutHorizon = layout.layoutHorizon;
 
     let ActionsHorizon = (
-      <ul data-role="actions">
+      <ul data-role="actions" title="操作区域">
         <li>
-          <a href="javascript:">
-            <i className="iconfont icon-favor"></i>
-          </a>&nbsp;
-          <a href="javascript:" onClick={showLayoutSetting}>
-            <i className="iconfont icon-setup"></i>
+          <a href="javascript:" title="收藏">
+            <i className="iconfont icon-favor"></i>&nbsp;
           </a>
-
-          {lastCount > 1
-            ? <a href='javascript:' onClick={handleLast}>
-                <i className="iconfont icon-pull-left"></i>
+          <a href="javascript:" onClick={showLayoutSetting} title="页面设置">
+            <i className="iconfont icon-shezhi"></i>&nbsp;
+          </a>{lastCount > 1
+            ? <a href='javascript:' onClick={handleLast} title="上一条">
+                <i className="iconfont icon-pull-left"></i>&nbsp;
               </a>
-            : null}&nbsp;
-          <a href='javascript:' onClick={handleNext}>{processing
+            : null}
+          <a href='javascript:' onClick={handleNext} title="下一条">{processing
               ? <i className="iconfont icon-loading-anim"></i>
               : <i className="iconfont icon-pull-right"></i>}</a>
 
@@ -61,24 +59,24 @@ class HitokotoPlayer extends Component {
     let ActionsVertical = (
       <ul data-role="actions">
         <li key={id + 'love'}>
-          <a href="javascript:">
+          <a href="javascript:" title="收藏">
             <i className="iconfont icon-favor"></i>
           </a>
         </li>
-        <li key={id + 'setting'}>
+        <li key={id + 'setting'} title="页面设置">
           <a href="javascript:" onClick={showLayoutSetting}>
-            <i className="iconfont icon-setup"></i>
+            <i className="iconfont icon-shezhi"></i>
           </a>
         </li>
         {lastCount > 1
           ? <li key={id + 'last'}>
-              <a href='javascript:' onClick={handleLast}>
+              <a href='javascript:' onClick={handleLast} title="上一条">
                 <i className="iconfont icon-pull-left"></i>
               </a>
             </li>
           : null}
         <li key={id + 'next'}>
-          <a href="javascript:" onClick={handleNext}>{processing
+          <a href="javascript:" onClick={handleNext} title="下一条">{processing
               ? <i className="iconfont icon-loading-anim"></i>
               : <i className="iconfont icon-pull-right"></i>}</a>
         </li>

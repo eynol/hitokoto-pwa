@@ -186,7 +186,7 @@ export default class PatternDisplay extends Component {
           key={src.id}
           className={(src.local || src.online)
           ? ''
-          : "disabled"}>
+          : "inactive"}>
           <p className="ellipsis">{src.name}({src.url})</p>
           <div>
             <input
@@ -231,7 +231,7 @@ export default class PatternDisplay extends Component {
             hidden/>
           <label htmlFor={pattern.id + 'default'}></label>
           <p>
-            <i>tips:</i>默认模式将在应用重新载入时被使用</p><br/>
+            <i className="iconfont icon-tishi"></i>默认模式将在应用重新载入时被使用</p><br/>
           <div className={timerbox}>
             <label htmlFor="">定时刷新：</label>
             <i className="iconfont icon-jian" onClick={this.decrease}></i>&nbsp;<input
@@ -243,7 +243,7 @@ export default class PatternDisplay extends Component {
               placeholder='秒数'/>&nbsp;
             <i className="iconfont icon-jia" onClick={this.increase}></i>&nbsp;
             <p>
-              <i>tips:</i>单位为秒，每隔指定秒数后自动刷新hitokoto。设置为0表示不使用定时刷新。秒数必须大于等于5秒。</p>
+              <i className="iconfont icon-tishi"></i>单位为秒，每隔指定秒数后自动刷新hitokoto。设置为0表示不使用定时刷新。秒数必须大于等于5秒。</p>
           </div>
           <br/>
 
@@ -259,7 +259,7 @@ export default class PatternDisplay extends Component {
           <br/>
           <label htmlFor="">来源:</label><br/>
           <p>
-            <i>tips:</i>每个来源请求的hitokoto都会缓存一份到浏览器数据库中，在离线时或仅使用本地数据时使用。可以在个人中心缓存某个来源的全部数据到本地的浏览器数据库。</p>
+            <i className="iconfont icon-tishi"></i>每个来源请求的hitokoto都会缓存一份到浏览器数据库中，在离线时或仅使用本地数据时使用。可以在个人中心缓存某个来源的全部数据到本地的浏览器数据库。</p>
           <ul>
             {sourcesList}
           </ul>

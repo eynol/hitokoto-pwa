@@ -8,10 +8,12 @@ import Sources from '../pages/Sources'
 import About from '../pages/About'
 import Tools from '../pages/Tools'
 import NavManagement from '../pages/NavManagement'
-import Profile from '../pages/Profile'
+import Explore from '../pages/Explore'
 
 import Home from '../containers/Home'
 import Index from '../containers/Index'
+import Profile from '../containers/Profile'
+
 import {ANIMATE_CONFIG_NEXT, GLOBAL_ANIMATE_TYPE} from '../configs'
 const ROUTES = [
   {
@@ -39,8 +41,8 @@ const ROUTES = [
     component: Profile,
     name: '账户设置'
   }, {
-    to: /^\/explore$/,
-    component: Home,
+    to: /^\/explore/,
+    component: Explore,
     name: '广场页面'
   }, {
     to: /^\/about/,

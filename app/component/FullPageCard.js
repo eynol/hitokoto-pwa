@@ -25,7 +25,6 @@ function FullPageCard(props) {
             </a> */}
 
           </h1>
-          <br/>
           <div>
             {props.children}
           </div>

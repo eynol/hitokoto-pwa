@@ -9,6 +9,9 @@
   text-transform: uppercase;
   letter-spacing: 0.2em;
 }
+:global(.revert2white) .logo h1{
+  color: white;
+}
 @media screen and (max-width:768px){
 
   .logo{

@@ -29,14 +29,17 @@
     padding: 4px 0;
     /* Space between bar lines */
     /* Trigram sandwich */
-    border-top: 4px solid black !important;
+    border-top: 4px solid black ;
     line-height: 4px;
-    border-bottom: 4px solid black !important;
+    border-bottom: 4px solid black ;
     background-clip: content-box;
     /* Creates line-height tall colored bar in middle */
     background-color: black;
 }
-
+:global(.revert2white) .hamburger>span {
+    border-color:white;
+    background-color: white;
+}
 .hamburger:hover,.hamburger:active {
     background-color: rgba(0, 0, 0, .26)
 }
@@ -49,7 +52,9 @@
     padding: 20px;
     z-index: 302;
 }
-
+:global(.revert2white) .nav  {
+    border-color:white;
+}
 .nav ul {
     /* margin-top: 15px; */
     list-style: none;
@@ -72,7 +77,9 @@
     text-decoration: none;
     color: #111;
 }
-
+:global(.revert2white) .nav ul li a {
+    color:white;
+}
 .nav ul li a:after {
     content: '';
     position: absolute;
@@ -89,7 +96,9 @@
     transform: translateX(3px);
     transform-origin: right middle;
 }
-
+:global(.revert2white) .nav ul li a:after {
+    border-right: 4px solid white;
+}
 .nav ul li a:hover:after {
     opacity: 1;
     transform: translateX(0px);

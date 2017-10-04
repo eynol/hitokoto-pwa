@@ -21,21 +21,9 @@ class NewHitokoto extends Component {
     this.handlePreviewClick = this.handlePreviewClick.bind(this);
     this.publish = this.publish.bind(this);
   }
-  componentWillMount() {
-    let pathname = this.props.location.pathname;
 
-    let match = matchPath(pathname, {path: '/home/:name/new'})
-
-    if (match) {
-      let {params: {
-          name
-        }} = match;
-
-    }
-  }
   goBack() {
-    console.log(this.props.history);
-    this.props.history.go(-1);
+    this.props.history.goBack();
   }
   handlePreviewClick() {
     let hitokoto = this.getHitokoto();
@@ -50,17 +38,21 @@ class NewHitokoto extends Component {
           value: source
         },
         type: {
-          value: type
+          value: category
+        },
+        author: {
+          value: author
         }
       } = this.refs,
-      content = this.textarea.value;
-    if (content.length == 0) {
+      hitokoto = this.textarea.value;
+
+    if (hitokoto.length == 0) {
       return alert('hitokoto内容不能为空！')
     }
     if (source.length == 0) {
       return alert('hitokoto来源不能为空！')
     }
-    return {hitokoto: content, from: source, category: type}
+    return {hitokoto, author, source, category}
   }
   publish() {
     let hitokoto = this.getHitokoto();
@@ -98,10 +90,16 @@ class NewHitokoto extends Component {
               <div>
                 <input
                   type="text"
-                  ref='source'
-                  placeholder="...在这里写来源出处"
+                  ref='author'
+                  placeholder="...在这里写原作者(可选)"
                   className={hitokotoSouceInput}
-                  defaultValue={hitokoto.from}/>
+                  defaultValue={hitokoto.author}/>
+                <input
+                  type="text"
+                  ref='source'
+                  placeholder="...在这里写来源出处(必填)"
+                  className={hitokotoSouceInput}
+                  defaultValue={hitokoto.source}/>
               </div>
               <div className={hitokotoSouceTypeBlock}>
                 <p>先选择来源类别：

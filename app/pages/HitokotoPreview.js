@@ -28,7 +28,8 @@ class HitokotoPreview extends Component {
     }
     if (typeof hitokoto == 'string') {
       return <FullPageCard>
-        <h1>hitokoto已被清空</h1>
+        <h1>
+          <i className="iconfont icon-prompt_fill color-red"></i>hitokoto已被清空</h1>
         <button onClick={this.goBack}>返回</button>
       </FullPageCard>
     }
@@ -51,19 +52,12 @@ class HitokotoPreview extends Component {
           <QueueAnim
             animConfig={[
             {
-              opacity: [
-                1, 0
-              ],
-              translateZ: [
-                0, 20
-              ],
-              translateY: [0, -100]
+              opacity: [1, 0]
             }, {
               opacity: [
                 1, 0
               ],
-              position: 'absolute',
-              translateY: [0, 100]
+              position: 'absolute'
             }
           ]}
             ease={['easeOutQuart', 'easeInOutQuart']}

@@ -26,7 +26,8 @@ function LayoutHorizon(props) {
   let {
     hitokoto: {
       id,
-      'from': fromwhere,
+      source,
+      author,
       hitokoto,
       creator,
       created_at,
@@ -42,7 +43,7 @@ function LayoutHorizon(props) {
   let OptionsChildren = null,
     overLoad = false;
 
-  if (hitokoto.length > JUDESIZE) {
+  if (hitokoto && hitokoto.length > JUDESIZE) {
     overLoad = true;
   }
   if (props.children.length) {
@@ -82,8 +83,13 @@ function LayoutHorizon(props) {
           fontWeight: fontWeight
         }}
           key={id + 'hito'}>{hitokoto}</h1>
-
-        <p key={id + 'from'}>——&nbsp;&nbsp;&nbsp;{fromwhere}</p>
+        {author || source
+          ? <p key={id + 'from'}>——&nbsp;&nbsp;{author
+                ? author
+                : ''}{author
+                ? ' '
+                : ''}{source}</p>
+          : null}
         <div className='oprations' key={id + 'oprations'}>
           <ul className={actions}>
             {OptionsChildren}

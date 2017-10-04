@@ -1,9 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import style from './Nav.css';
 import QueueAnim from 'rc-queue-anim';
 import {withRouter, HashRouter as Router, Route, Link} from 'react-router-dom'
+
+import hitokotoDriver from '../API/hitokotoDriver';
+
 import {PANEL_OPEN} from '../actions'
+
+import style from './Nav.css';
 let {navWrapper, nav, navPhone, hamburger} = style;
 
 let beforeLogin = (props) => (
@@ -61,7 +65,11 @@ function Nav(props) {
 
     PhoneChild = <div key="nav" className={navPhone}>
       {Child(props)}
-      <button onClick={props.hideNav}>关闭</button>
+      <button
+        onClick={() => {
+        hitokotoDriver.start();
+        props.hideNav();
+      }}>关闭</button>
     </div>
   };
 
@@ -82,7 +90,12 @@ function Nav(props) {
       {/**
       * <a className={hamburger} onClick={props.showNav}>&#9776;</a>
       */}
-      <a className={hamburger} onClick={props.showNav}>
+      <a
+        className={hamburger}
+        onClick={() => {
+        hitokotoDriver.stop();
+        props.showNav();
+      }}>
         <span></span>
       </a>
 

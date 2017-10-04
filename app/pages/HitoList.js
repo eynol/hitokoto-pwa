@@ -108,7 +108,11 @@ class HitoList extends Component {
     this.props.history.push(this.props.location.pathname + '/update');
   }
   newHitokoto() {
-    this.props.history.push(this.props.location.pathname + '/new');
+    let pathname = this.props.location.pathname;
+    if (!(/\/new$/.test(pathname))) {
+      pathname += '/new';
+    }
+    this.props.history.push(pathname);
   }
   render() {
     let {status} = this.state;

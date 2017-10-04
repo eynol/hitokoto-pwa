@@ -13,7 +13,7 @@ import {GLOBAL_ANIMATE_TYPE} from '../configs'
 
 import style from './login.css';
 
-let errorStyle = {
+let ERROR_STYLE = {
   display: 'inline-block',
   margin: '5px',
   padding: '14px 15px',
@@ -23,9 +23,7 @@ let errorStyle = {
   width: '200px',
   whiteSpace: 'pre-line'
 }
-let ErrorInfo = reason => (
-  <span style={errorStyle}>{reason}</span>
-);
+
 class Login extends Component {
   constructor(props) {
     super(props);
@@ -73,7 +71,7 @@ class Login extends Component {
       return;
     }
 
-    this.setState({errinfo: undefined});
+    this.setState({errinfo: ''});
 
     let $username = here$you$are(username);
     let $password = here$you$are(password);
@@ -100,12 +98,6 @@ class Login extends Component {
   }
 
   render() {
-    let errinfo = '';
-    if (this.state.errinfo) {
-      errinfo = (
-        <p>{ErrorInfo(this.state.errinfo)}</p>
-      )
-    }
     let {hideLogin, showRegist, panel} = this.props;
     let Child;
     if (panel === PANEL_OPEN + 'login') {
@@ -113,7 +105,6 @@ class Login extends Component {
         style={{
         backgroundColor: 'transparent'
       }}
-        key='login'
         onClick={hideLogin}>
         <div
           className={style['login-box']}
@@ -132,7 +123,11 @@ class Login extends Component {
             onKeyPress={this.handleKeyPress.bind(this)}/>
             <label data-content="密码">密码</label>
           </div>
-          {errinfo}
+          {this.state.errinfo
+            ? <p>
+                <span style={ERROR_STYLE}>{this.state.errinfo}</span>
+              </p>
+            : null}
           <br/>
           <p>
             <button onClick={this.handleSigninClick.bind(this)}>立即登录</button>
@@ -145,13 +140,12 @@ class Login extends Component {
       </FullPage>
 
     } else {
-      Child = <div key='none'></div>;
+      Child = <div></div>;
     }
     return (
       <QueueAnim type={GLOBAL_ANIMATE_TYPE} ease={['easeOutQuart', 'easeInOutQuart']}>
         {Child}
       </QueueAnim>
-
     )
   }
 }
