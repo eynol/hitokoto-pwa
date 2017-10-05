@@ -149,7 +149,15 @@ ul.actions {
     list-style: none;
     margin: 25px 0;
 }
-
+.layout_horizon ul.actions:after{
+    content: '';
+    display: table;
+    clear: both;
+}
+.layout_horizon ul.actions li{
+    float: left;
+    margin-right: 10px;
+}
 .layout_vertical ul.actions a,
 .layout_horizon ul.actions a {
     text-decoration: none;

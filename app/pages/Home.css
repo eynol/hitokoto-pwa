@@ -4,6 +4,7 @@
     position: relative;
     height: 100%;
     overflow: hidden;
+    box-sizing: border-box;
 }
 
 .username {
@@ -29,7 +30,8 @@
 }
 
 .menu a:focus,
-.menu a:hover {
+.menu a:hover,
+.menu a.active {
     outline: none;
     border-bottom: 1px solid currentColor;
 }
@@ -49,12 +51,60 @@
     overflow: auto;
     height: 100%;
 }
-@media screen and (max-width:768px){
-    .left{
-        width: 120px;
-        padding: 100px 20px;
+
+@media screen and (max-width:768px) {
+    .left {
+        display: block;
+        position: absolute;
+        z-index: 1;
+        top: 0;
+        left: 0;
+        width: 100%;
+        padding-top: 20px;
+        background-color: white;
+        float: none;
+        height: auto;
+        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.16);
     }
-    .right{
-        margin-left: 120px;
+    .right {
+        box-sizing: border-box;
+        margin-left: 0px;
+        padding-top: 60px;
+    }
+    .username {
+        position: absolute;
+        color: #DDDDDD;
+        top: 0;
+        left: 0;
+        line-height: 1;
+        margin: 0;
+        text-shadow: 2px 0 #E0BEBE, 2px 0 #B4C6EC;
+    }
+    .left:after,
+    .menu:after {
+        content: '';
+        clear: both;
+        display: table;
+    }
+    .menu {
+        margin: 0;
+        padding: 0;
+        text-align: center;
+        -webkit-padding-start: 0px;
+        -webkit-margin-before: 0;
+        -webkit-margin-after: 0;
+    }
+    .menu li {
+        display: inline-block;
+        font-size: 12px;
+        margin: 0 10px;
+    }
+    .menu a {
+        padding-bottom: 6px;
+    }
+    .menu a:focus,
+    .menu a:hover,
+    .menu a.active {
+        border-bottom: 4px solid currentColor;
     }
 }

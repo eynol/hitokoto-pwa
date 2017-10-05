@@ -106,23 +106,3 @@
   
 }
 
-blockquote {
-  position: relative;
-  margin: 0;
-  padding: 1em 20px;
-  margin-left: 3px;
-  margin-bottom: 1em;
-  border-left: 5px solid #9a9a9a
-}
-
-p {
-  line-height: 1.6;
-}
-h2 {
-  margin:.5em 0;
-}
-
-.article p{
-  margin-bottom: 1em;
-}
-.article h2 {margin: 1.4em 0 1em;}

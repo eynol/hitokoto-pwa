@@ -1,3 +1,36 @@
+
+ul {
+  list-style: none;
+}
+
+ul li {
+  margin: .3em 0;
+}
+
+ul li:after {
+  content: '';
+  display: table;
+  clear: both;
+}
+
+blockquote {
+  position: relative;
+  margin: 0;
+  padding: 1em 20px;
+  margin-left: 3px;
+  margin-bottom: 1em;
+  border-left: 5px solid #9a9a9a
+}
+
+p {
+  line-height: 1.7;
+}
+h2 {
+  margin:.5em 0;
+}
+
+
+
 @media screen and (min-width:768px){
 
   ::-webkit-scrollbar {
@@ -289,30 +322,23 @@
 
 
 
-ul {
-  list-style: none;
-}
-
-ul li {
-  margin: .3em 0;
-}
-
-ul li:after {
-  content: '';
-  display: table;
-  clear: both;
-}
 
 :global(.clearfix:after){
   content: '';
   clear: both;
   display: table;
 }
+:global(.pull-right){
+  float: right;
+}
 
 :global(.hide){
   display: none!important;
 }
 
+:global(.align-center){
+  text-align: center;
+}
 :global(.disabled){
   pointer-events: none;
   cursor: wait;

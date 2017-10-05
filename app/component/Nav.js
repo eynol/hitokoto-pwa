@@ -8,7 +8,7 @@ import hitokotoDriver from '../API/hitokotoDriver';
 import {PANEL_OPEN} from '../actions'
 
 import style from './Nav.css';
-let {navWrapper, nav, navPhone, hamburger} = style;
+let {navWrapper, nav, navPhone, navPhoneDimmer, hamburger} = style;
 
 let beforeLogin = (props) => (
   <ul>
@@ -52,7 +52,8 @@ let online = (props) => (
 
 function Nav(props) {
   let Child,
-    PhoneChild = null;
+    PhoneChild = null,
+    PhoneChildDimmer = null;
   if (props.user.nickname) {
     Child = online;
   } else {
@@ -62,15 +63,23 @@ function Nav(props) {
 
   let panel = props.panel;
   if (panel === PANEL_OPEN + 'nav') {
-
-    PhoneChild = <div key="nav" className={navPhone}>
-      {Child(props)}
-      <button
+    PhoneChildDimmer = (
+      <div
+        key="nav-dimmer"
         onClick={() => {
         hitokotoDriver.start();
         props.hideNav();
-      }}>关闭</button>
-    </div>
+      }}
+        className={navPhoneDimmer}>
+        <i className="iconfont icon-close"></i>
+      </div>
+    );
+    PhoneChild = (
+      <div key="nav" className={navPhone}>
+        {Child(props)}
+      </div>
+    )
+
   };
 
   if (/preview$/.test(pathname)) {
@@ -102,6 +111,17 @@ function Nav(props) {
       <div className={nav}>
         {Child(props)}
       </div>
+      <QueueAnim
+        animConfig={[
+        {
+          opacity: [1, 0]
+        }, {
+          opacity: [1, 0]
+        }
+      ]}
+        ease={['easeOutQuart', 'easeInOutQuart']}>
+        {PhoneChildDimmer}
+      </QueueAnim>
       <QueueAnim
         animConfig={[
         {
