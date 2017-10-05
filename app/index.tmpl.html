@@ -72,7 +72,8 @@
       padding: .6em .9em;
       position: relative;
     }
-    button:after{
+
+    button:after {
       content: '';
       position: absolute;
       width: 50%;
@@ -84,12 +85,15 @@
       display: block;
       transform-origin: right bottom;
       transition: transform .3s;
-      transform: scale(0,1);
+      transform: scale(0, 1);
     }
-    button:hover:after,button:focus:after{
+
+    button:hover:after,
+    button:focus:after {
       transform-origin: top left;
-      transform: scale(1,1);
+      transform: scale(1, 1);
     }
+
     #root {
       position: relative;
       width: 100%;
@@ -231,34 +235,34 @@
       }
     }
 
-    #pacman {
+    .pacman {
       position: relative;
       display: inline-block;
       width: 120px;
       margin-bottom: 1em;
     }
 
-    #pacman>div:nth-child(2) {
+    .pacman>div:nth-child(2) {
       -webkit-animation: pacman-balls 1s 0s infinite linear;
       animation: pacman-balls 1s 0s infinite linear;
     }
 
-    #pacman>div:nth-child(3) {
+    .pacman>div:nth-child(3) {
       -webkit-animation: pacman-balls 1s 0.33s infinite linear;
       animation: pacman-balls 1s 0.33s infinite linear;
     }
 
-    #pacman>div:nth-child(4) {
+    .pacman>div:nth-child(4) {
       -webkit-animation: pacman-balls 1s 0.66s infinite linear;
       animation: pacman-balls 1s 0.66s infinite linear;
     }
 
-    #pacman>div:nth-child(5) {
+    .pacman>div:nth-child(5) {
       -webkit-animation: pacman-balls 1s 0.99s infinite linear;
       animation: pacman-balls 1s 0.99s infinite linear;
     }
 
-    #pacman>div:first-of-type {
+    .pacman>div:first-of-type {
       width: 0px;
       height: 0px;
       border-right: 25px solid transparent;
@@ -270,7 +274,7 @@
       animation: rotate_pacman_half_up 0.5s 0s infinite;
     }
 
-    #pacman>div:nth-child(2) {
+    .pacman>div:nth-child(2) {
       width: 0px;
       height: 0px;
       border-right: 25px solid transparent;
@@ -283,10 +287,10 @@
       margin-top: -50px;
     }
 
-    #pacman>div:nth-child(3),
-    #pacman>div:nth-child(4),
-    #pacman>div:nth-child(5),
-    #pacman>div:nth-child(6) {
+    .pacman>div:nth-child(3),
+    .pacman>div:nth-child(4),
+    .pacman>div:nth-child(5),
+    .pacman>div:nth-child(6) {
       background-color: #fff500;
       width: 15px;
       height: 15px;
@@ -303,33 +307,34 @@
     }
   </style>
   <script>
-  if (typeof Object.assign != 'function') {
-  Object.assign = function (target) {
-    'use strict';
-    if (target == null) {
-      throw new TypeError('Cannot convert undefined or null to object');
-    }
+    if (typeof Object.assign != 'function') {
+      Object.assign = function (target) {
+        'use strict';
+        if (target == null) {
+          throw new TypeError('Cannot convert undefined or null to object');
+        }
 
-    target = Object(target);
-    for (var index = 1; index < arguments.length; index++) {
-      var source = arguments[index];
-      if (source != null) {
-        for (var key in source) {
-          if (Object.prototype.hasOwnProperty.call(source, key)) {
-            target[key] = source[key];
+        target = Object(target);
+        for (var index = 1; index < arguments.length; index++) {
+          var source = arguments[index];
+          if (source != null) {
+            for (var key in source) {
+              if (Object.prototype.hasOwnProperty.call(source, key)) {
+                target[key] = source[key];
+              }
+            }
           }
         }
-      }
+        return target;
+      };
     }
-    return target;
-  };
-}</script>
+  </script>
 </head>
 
 <body>
   <div id="preshow">
     <div class="content">
-      <div id="pacman">
+      <div class="pacman">
         <div></div>
         <div></div>
         <div></div>

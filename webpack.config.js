@@ -63,7 +63,8 @@ module.exports = {
     inline: true,
     hot: true,
     proxy: {
-      "/api/**": "http://127.0.0.1:9999/"
+      "/api/**": "http://127.0.0.1:9999/",
+      "/cors/**": "http://127.0.0.1:9999/"
     }
   },
   plugins: [

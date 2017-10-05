@@ -1,8 +1,7 @@
 import React, {Component} from 'react'
 import {Link, withRouter} from 'react-router-dom';
 
-import style from '../pages/HitoCollection.css'
-import {menu} from '../pages/Home.css'
+import style from './CollectionBox.css'
 
 let {
   'Card--change': cardChange,
@@ -10,8 +9,7 @@ let {
   newone,
   Card,
   Card_options,
-  Card_content,
-  menuIcon
+  Card_content
 } = style;
 
 /****
@@ -22,7 +20,15 @@ class CollectionBox extends Component {
     super(props);
     this.state = {
       status: 'normal'
-    }
+    };
+    this.handleViewClick = this.handleViewClick.bind(this);
+    this.handleChangeClick = this.handleChangeClick.bind(this);
+    this.doChange = this.doChange.bind(this);
+    this.doDelete = this.doDelete.bind(this);
+    this.handleChangeKeyPress = this.handleKeyPress.bind(this);
+    this.handleNewOneClick = this.handleNewOneClick.bind(this);
+    this.newOne = this.newOne.bind(this);
+    this.returnToNormal = this.returnToNormal.bind(this);
   }
   handleViewClick() {
     this.props.view(this.props.data.name);
@@ -34,16 +40,12 @@ class CollectionBox extends Component {
       }, 4)
       return;
     }
-
     this.setState({status: 'change'});
     e.stopPropagation()
-
   }
   handleNewOneClick(e) {
-
     this.setState({status: 'newone'})
     e.stopPropagation()
-
   }
   newOne() {
     let name = this.refs.name.value.trim();
@@ -106,12 +108,30 @@ class CollectionBox extends Component {
         view,
         data: {
           name,
-          count,
-          'default': defaultcol
+          count
         },
-        'newone': pnewone
+        'newone': pnewone,
+        viewonly
       } = this.props,
       currentState = this.state.status;
+
+    if (viewonly) {
+      return (
+        <div
+          tabIndex={tabIndex}
+          className={Card}
+          title="点击查看该句集"
+          onClick={this.handleViewClick}>
+          <div className={Card_content}>
+            <p className="ellipsis">{name}</p>
+            <span>{count}条</span>
+            <div className={Card_options}>
+              {this.props.children}
+            </div>
+          </div>
+        </div>
+      )
+    }
 
     if (pnewone && currentState == 'normal') {
       return (
@@ -119,9 +139,11 @@ class CollectionBox extends Component {
           tabIndex={tabIndex}
           className={Card}
           title="点击新增句集"
-          onClick={this.handleNewOneClick.bind(this)}>
+          onClick={this.handleNewOneClick}>
           <div className={Card_content}>
-            <span className={newone}>+</span>
+            <span className={newone}>
+              <i className="iconfont icon-add"></i>
+            </span>
           </div>
         </div>
       )
@@ -135,13 +157,13 @@ class CollectionBox extends Component {
                 type="text"
                 required
                 ref='name'
-                onKeyPress={this.handleKeyPress.bind(this)}
+                onKeyPress={this.handleKeyPress}
                 tabIndex={tabIndex}/>
               <label data-content="句集的名称">句集的名称</label>
             </div>
-            <div className={menu + ' ' + Card_options}>
-              <a href="javascript:" onClick={this.newOne.bind(this)} tabIndex={0}>确认添加</a>&nbsp;
-              <a href="javascript:" onClick={this.returnToNormal.bind(this)} tabIndex={0}>取消</a>
+            <div className={Card_options}>
+              <a href="javascript:" onClick={this.newOne} tabIndex={0}>确认添加</a>&nbsp;
+              <a href="javascript:" onClick={this.returnToNormal} tabIndex={0}>取消</a>
             </div>
           </div>
         </div>
@@ -153,25 +175,25 @@ class CollectionBox extends Component {
           tabIndex={tabIndex}
           className={Card}
           title="点击查看该句集"
-          onClick={this.handleViewClick.bind(this)}>
+          onClick={this.handleViewClick}>
           <div className={Card_content}>
             <p className="ellipsis">{name}</p>
             <span>{count}条</span>
             <div
-              className={menu + ' ' + Card_options + (name == '默认句集'
+              className={Card_options + (name == '默认句集'
               ? ' ' + hide
               : '')}>
               <a
                 tabIndex={tabIndex}
                 href="javascript:"
                 title="点击修改该句集名称"
-                onClick={this.handleChangeClick.bind(this)}>修改</a>&nbsp;
+                onClick={this.handleChangeClick}>重命名</a>&nbsp;
               <a
                 tabIndex={tabIndex}
                 href="javascript:"
                 title="点击删除该句集"
                 className="color-red"
-                onClick={this.doDelete.bind(this)}>删除</a>
+                onClick={this.doDelete}>删除</a>
             </div>
           </div>
         </div>
@@ -186,12 +208,12 @@ class CollectionBox extends Component {
                 required
                 ref='name'
                 defaultValue={name}
-                onKeyPress={this.handleChangeKeyPress.bind(this)}/>
+                onKeyPress={this.handleChangeKeyPress}/>
               <label data-content="句集的名称">句集的名称</label>
             </div>
-            <div className={menu + ' ' + Card_options}>
-              <a href="javascript:" onClick={this.doChange.bind(this)} tabIndex={0}>确认修改</a>&nbsp;
-              <a href="javascript:" onClick={this.returnToNormal.bind(this)} tabIndex={0}>取消</a>
+            <div className={Card_options}>
+              <a href="javascript:" onClick={this.doChange} tabIndex={0}>确认修改</a>&nbsp;
+              <a href="javascript:" onClick={this.returnToNormal} tabIndex={0}>取消</a>
             </div>
           </div>
         </div>

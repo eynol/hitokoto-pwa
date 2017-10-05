@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux'
-import HitoList from '../pages/HitoList'
+import HitoCollectionList from '../pages/HitoCollectionList'
 
 import {fetchHitokotosSuccess, leaveCollection, requestCollectionHitokotos} from '../actions'
 const mapStoreToProps = (state) => {
@@ -12,4 +12,4 @@ const mapActionToProps = (dispatch) => ({
   fetchHitokotosSuccess: (hitokotos) => dispatch(fetchHitokotosSuccess(hitokotos)),
   leaveCollection: () => dispatch(leaveCollection())
 })
-export default connect(mapStoreToProps, mapActionToProps)(HitoList)
+export default connect(mapStoreToProps, mapActionToProps)(HitoCollectionList)

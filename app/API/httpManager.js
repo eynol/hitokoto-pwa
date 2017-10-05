@@ -318,6 +318,12 @@ class HTTPManager {
   API_getAllPublicHitokotos(page = 1, perpage = 20) {
     return this.fetchJSON('get', '/api/explore', {page, perpage})
   }
+  API_getPublicUserDetail(uid) {
+    return this.fetchJSON('get', '/api/explore/users/' + uid)
+  }
+  API_getPublicUserHitokotos(uid, collection) {
+    return this.fetchJSON('get', '/api/explore/users/' + uid + '/' + collection)
+  }
 
   //  Need Auth Token
   API_updatePassword(oldpass, newpass) {

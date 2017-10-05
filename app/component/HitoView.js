@@ -5,7 +5,7 @@ import {Link} from 'react-router-dom'
 import QueueAnim from 'rc-queue-anim';
 import hitokotoDriver from '../API/hitokotoDriver';
 
-import {hitokoto, time, actions} from './HitoView.css'
+import {hitokoto, time, actions, hitoSource} from './HitoView.css'
 
 let httpManager = hitokotoDriver.httpManager;
 import tranformDate from '../API/social-time-transform'
@@ -26,7 +26,8 @@ class HitoView extends Component {
       data,
       update,
       remove,
-      preview
+      preview,
+      viewonly
     } = this.props;
     if (newone) {
       return (
@@ -35,17 +36,42 @@ class HitoView extends Component {
           {this.props.children}
         </div>
       )
-    } else {
+    } else if (viewonly) {
       let hitokotoText = data.hitokoto,
+        author = data.author,
         source = data.source;
       return (
         <div className={hitokoto}>
-
+          <p className={time}>发布于&nbsp;&nbsp;{tranformDate(new Date(data.created_at))}</p>
           <p>{hitokotoText}</p>
-          <span>—— {source}</span>
-          <span>
-            <p className={time}>{tranformDate(new Date(data.created_at))}</p>
-          </span>
+          <span className={hitoSource}>—— {author
+              ? author + ' '
+              : ''}{source}</span>
+          <div className={actions}>
+            <button onClick={() => {
+              preview(data);
+            }}>预览</button>
+            <button onClick={() => {
+              update(data);
+            }}>喜欢</button>
+            <button onClick={() => {
+              update(data);
+            }}>收藏</button>
+
+          </div>
+        </div>
+      )
+    } else {
+      let hitokotoText = data.hitokoto,
+        author = data.author,
+        source = data.source;
+      return (
+        <div className={hitokoto}>
+          <p className={time}>发布于&nbsp;&nbsp;{tranformDate(new Date(data.created_at))}</p>
+          <p>{hitokotoText}</p>
+          <span className={hitoSource}>—— {author
+              ? author + ' '
+              : ''}{source}</span>
           <div className={actions}>
             <button onClick={() => {
               preview(data);

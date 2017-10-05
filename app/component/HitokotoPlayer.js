@@ -35,28 +35,7 @@ class HitokotoPlayer extends Component {
       id = hitokoto.id,
       layoutHorizon = layout.layoutHorizon;
 
-    let ActionsHorizon = (
-      <ul data-role="actions" title="操作区域">
-        <li>
-          <a href="javascript:" title="收藏">
-            <i className="iconfont icon-favor"></i>&nbsp;
-          </a>
-          <a href="javascript:" onClick={showLayoutSetting} title="页面设置">
-            <i className="iconfont icon-shezhi"></i>&nbsp;
-          </a>{lastCount > 1
-            ? <a href='javascript:' onClick={handleLast} title="上一条">
-                <i className="iconfont icon-pull-left"></i>&nbsp;
-              </a>
-            : null}
-          <a href='javascript:' onClick={handleNext} title="下一条">{processing
-              ? <i className="iconfont icon-loading-anim"></i>
-              : <i className="iconfont icon-pull-right"></i>}</a>
-
-        </li>
-
-      </ul>
-    );
-    let ActionsVertical = (
+    let Actions = (
       <ul data-role="actions">
         <li key={id + 'love'}>
           <a href="javascript:" title="收藏">
@@ -71,14 +50,14 @@ class HitokotoPlayer extends Component {
         {lastCount > 1
           ? <li key={id + 'last'}>
               <a href='javascript:' onClick={handleLast} title="上一条">
-                <i className="iconfont icon-pull-left"></i>
+                <i className="iconfont icon-next1"></i>
               </a>
             </li>
           : null}
         <li key={id + 'next'}>
           <a href="javascript:" onClick={handleNext} title="下一条">{processing
               ? <i className="iconfont icon-loading-anim"></i>
-              : <i className="iconfont icon-pull-right"></i>}</a>
+              : <i className="iconfont icon-next"></i>}</a>
         </li>
       </ul>
     )
@@ -103,14 +82,14 @@ class HitokotoPlayer extends Component {
             key={id}
             hitokoto={hitokoto}
             layout={layout}>
-            {ActionsHorizon}
+            {Actions}
           </LayoutHorizon>
         </QueueAnim>
       )
     } else {
       return (
         <LayoutVertical key={id} hitokoto={hitokoto} layout={layout}>
-          {ActionsVertical}</LayoutVertical>
+          {Actions}</LayoutVertical>
       )
     }
   }

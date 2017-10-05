@@ -1,26 +1,80 @@
-.item{
-  margin-bottom: 20px;
+.item {
+    margin-bottom: 30px;
 }
-.idspan:before
-{
-  content: '# ';
-  display: inline-block;
-  padding-bottom: 4px;
-  border-bottom: 2px solid black;
-} 
-.tag{
-  border-radius: 8px;
-  padding: 3px 6px;
-  margin-right:3px;
-  display: inline-block;
-  font-size: 0.7em;
-  line-height: 1;
-  border:1px solid currentColor;
-  /* background-color: #e6e6e6; */
+
+.item:after {
+    content: '、，；。';
+    display: block;
+    text-align: center;
+    margin: 15px 0;
+    height: 1px;
+    width: 100%;
 }
-.userName{
-  color: black;
+
+.idspan:before {
+    content: '# ';
+    display: inline-block;
+    padding-bottom: 4px;
+    border-bottom: 2px solid black;
 }
-.userHitokoto{
-  letter-spacing: .07em;
+
+.tag {
+    border-radius: 8px;
+    padding: 3px 6px;
+    margin-right: 3px;
+    display: inline-block;
+    font-size: 0.7em;
+    line-height: 1;
+    border: 1px solid currentColor;
+    /* background-color: #e6e6e6; */
+}
+
+.userName {
+    color: black;
+    margin-right: 10px;
+    text-decoration: none;
+}
+
+.userName:hover {
+    color: #333;
+    text-decoration: underline;
+}
+
+.userHitokotoFlex {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    padding: 16px 20px;
+}
+
+.userHitokotoFlexChild {
+    text-align: justify;
+}
+
+.userHitokoto {
+    white-space: pre-line;
+    letter-spacing: .07em;
+}
+
+@media screen and (max-width:768px) {
+    .userHitokotoFlex {
+        padding: 20px 0;
+    }
+    .userHitokoto {
+        font-size: 14px;
+    }
+}
+
+.userHitokotoSource {
+    margin-top: 8px;
+    float: right;
+    font-size: 12px;
+}
+
+.userHitokotoAction {
+    text-decoration: none;
+    font-size: 14px;
+}
+.userHitokotoAction:hover{
+  color: pink;
 }

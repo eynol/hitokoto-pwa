@@ -143,6 +143,38 @@ export default class SourceManager {
     this.sources.push(source);
     $setSources(this.sources);
   }
+  newSourceWithUsernameAndCol(username, collection) {
+    this.sources.push({
+      id: Date.now(),
+      url: this.getCORSUrlOfUserCol(username, collection),
+      name: '' + username + collection,
+      adapter: 0,
+      online: true,
+      local: true
+    });
+    $setSources(this.sources);
+  }
+  getCORSUrlOfUserCol(username, collection) {
+    return location.protocol + '//' + location.host + '/cors/' + username + '/' + collection
+  }
+  isSourceExsit(url) {
+    if (!url) {
+      return false
+    }
+    let reg = new RegExp('^' + url);
+    let index = this.sources.findIndex((source => {
+      console.log(reg, source.url, reg.test(source.url))
+      if (reg.test(source.url)) {
+        return true;
+      } else {
+        return false;
+      }
+    }));
+    if (~ index) {
+      return true;
+    }
+
+  }
   updateSource(id, source) {
     for (var i = 0, len = this.sources.length; i < len; i++) {
       if (this.sources[i].id == id) {

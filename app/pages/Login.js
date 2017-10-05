@@ -102,6 +102,7 @@ class Login extends Component {
     let Child;
     if (panel === PANEL_OPEN + 'login') {
       Child = <FullPage
+        key="login0panel"
         style={{
         backgroundColor: 'transparent'
       }}

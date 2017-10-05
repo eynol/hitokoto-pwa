@@ -95,25 +95,25 @@ class Patterns extends Component {
       }}/>)
     }
     let {location, path} = this.props;
-    return (
-      <FullPageCard cardname="模式管理">
-        <QueueAnim
-          component="ul"
-          type={GLOBAL_ANIMATE_TYPE}
-          ease={['easeOutQuart', 'easeInOutQuart']}>
-          {lists}
-          <li key="new">
-            <button
-              onClick={this.showNewPattern.bind(this)}
-              style={{
-              float: 'right'
-            }}>添加</button>
-          </li>
-        </QueueAnim>
+    return [(
+        <FullPageCard cardname="模式管理">
+          <QueueAnim
+            component="ul"
+            type={GLOBAL_ANIMATE_TYPE}
+            ease={['easeOutQuart', 'easeInOutQuart']}>
+            {lists}
+            <li key="new">
+              <button
+                onClick={this.showNewPattern.bind(this)}
+                style={{
+                float: 'right'
+              }}>添加</button>
+            </li>
+          </QueueAnim>
+        </FullPageCard>
+      ), (
         <QueueAnim type={GLOBAL_ANIMATE_TYPE} ease={['easeOutQuart', 'easeInOutQuart']}>{patternDisplay}</QueueAnim>
-
-      </FullPageCard>
-    )
+      )]
 
   }
 }

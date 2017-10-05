@@ -1,22 +1,35 @@
 .hitokoto{
-  padding-left: 1em ;
+  padding-left: 1em;
   margin:1em 0;
   /* border-radius: 1em 0em 0em 1em; */
   border-left: 2px solid transparent;
   transition: border .3s ease
 }
+@media screen and (min-width:768px){
+  .hitokoto{
+    max-width: 700px;
+  }
+}
 .hitokoto p {
    white-space: pre-line;
+}
+@media screen and (max-width:768px){
+  .hitokoto p {
+    font-size: 14px;
+  }
 }
 .actions{
   opacity: 0;
   transition: opacity .3s ease;
 }
 .hitokoto:hover{
-  border-left: 2px solid #4E4E4E;
+  border-left: 2px solid #ddd;
 }
 .hitokoto:hover .actions{
   opacity: 1;
+}
+.hitoSource{
+  margin-top: 8px;
 }
 .time{
   font-size: 14px;

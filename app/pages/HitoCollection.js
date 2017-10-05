@@ -6,13 +6,17 @@ import httpManager from '../API/httpManager';
 import CollectionBox from '../component/CollectionBox'
 import HitoView from '../component/HitoView'
 
-class HitoList extends Component {
+import Loading from '../component/Loading'
+import {CardContainer} from '../component/CollectionBox.css'
+
+class HitoCollection extends Component {
   constructor(props) {
     super(props);
     this.state = {
       status: 'collections',
       currentView: null,
-      hitokotos: null
+      hitokotos: null,
+      inited: false
     }
     this.viewCollection = this.viewCollection.bind(this);
     this.newCollection = this.newCollection.bind(this);
@@ -25,24 +29,20 @@ class HitoList extends Component {
   }
   fetchCollections() {
     httpManager.API_myCollections().then(result => {
-      console.log('result mycollection')
       if (result.err) {
         alert(result.err);
       } else {
+        this.setState({inited: true})
         this.props.fetchCollectionSuccess(result.collections);
       }
       console.log(result);
     }).catch(e => alert(e));
-    console.log('result mycollection')
   }
   viewCollection(name) {
     this.props.history.push('/home/' + name);
   }
   newCollection(name) {
-    let form = new FormData();
-    form.append('name', name);
-
-    return httpManager.API_newCollection(form).then(result => {
+    return httpManager.API_newCollection({name}).then(result => {
       if (result.err) {
         alert(result.err);
       } else {
@@ -56,10 +56,8 @@ class HitoList extends Component {
       console.log('默认句集无法修改')
       return;
     }
-    let form = new FormData();
-    form.append('oldname', oldname);
-    form.append('newname', newname);
-    httpManager.API_updateCollectionName(form).then(result => {
+
+    httpManager.API_updateCollectionName({oldname, newname}).then(result => {
       if (result.err) {
         alert(result.err);
       } else {
@@ -73,10 +71,7 @@ class HitoList extends Component {
       console.log('默认句集无法删除')
       return;
     }
-    let form = new FormData();
-    form.append('name', name);
-
-    httpManager.API_deleteCollection(form).then(result => {
+    httpManager.API_deleteCollection({name}).then(result => {
       if (result.err) {
         alert(result.err);
       } else {
@@ -86,13 +81,10 @@ class HitoList extends Component {
     });
   }
   render() {
-    let {status} = this.state;
-    let {
-        collections: {
-          inited,
+    let {status, inited} = this.state;
+    let {collections: {
           data
-        }
-      } = this.props,
+        }} = this.props,
       ListToShow;
     if (inited) {
 
@@ -113,9 +105,7 @@ class HitoList extends Component {
         data={{}}/>);
 
     } else {
-      ListToShow = (
-        <div>请求hitokoto中</div>
-      )
+      ListToShow = (<Loading key="loading"/>)
     }
 
     return (
@@ -134,12 +124,12 @@ class HitoList extends Component {
           translateX: [0, -50]
         }
       ]}
-        className='HitoCollection'>{ListToShow}</QueueAnim>
+        className={CardContainer}>{ListToShow}</QueueAnim>
     )
   }
 }
-HitoList.propTypes = {
+HitoCollection.propTypes = {
   collections: PropTypes.object.isRequired,
   fetchCollectionSuccess: PropTypes.func.isRequired
 }
-export default withRouter(HitoList)
+export default withRouter(HitoCollection)

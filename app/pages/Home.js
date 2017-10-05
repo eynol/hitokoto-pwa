@@ -8,13 +8,20 @@ import PropTypes from 'prop-types'
 import NewHitokoto from '../pages/NewHitokoto'
 import hitokotoDriver from '../API/hitokotoDriver';
 import HitoCollection from '../containers/HitoCollection';
-import HitoList from '../containers/HitoList';
+import HitoCollectionList from '../containers/HitoCollectionList';
 import HitokotoPreview from './HitokotoPreview';
 import UpdateHitokoto from '../pages/UpdateHitokoto'
 
 let httpManager = hitokotoDriver.httpManager;
 
-import {home, username, menu, left, right} from './Home.css';
+import {
+  home,
+  username,
+  menu,
+  left,
+  right,
+  active
+} from './Home.css';
 class Home extends Component {
   constructor(props) {
     super(props);
@@ -141,7 +148,7 @@ class Home extends Component {
     if (/^\/home$/gim.test(pathname)) {
       frameToShow = (<HitoCollection/>)
     } else if (/^\/home\/[^\/]*/gim.test(pathname)) {
-      frameToShow = (<HitoList
+      frameToShow = (<HitoCollectionList
         updateHitokoto={this.storeHitokotoToUpdate}
         remove={this.removeHitokoto}
         preview={this.previewHitokoto}/>)
@@ -156,12 +163,11 @@ class Home extends Component {
               <Link to='/'>返回首页</Link>
             </li>
             <li>
-              <Link to='/home'>所有句集</Link>
+              <Link to='/home' className={active}>所有句集</Link>
             </li>
             <li>
               <Link to='/profile'>账户设置</Link>
             </li>
-
           </ul>
         </div>
         <QueueAnim

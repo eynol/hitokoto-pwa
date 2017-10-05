@@ -9,7 +9,6 @@ import {
 } from '../actions'
 
 const DEFAULT_COLLECTIONS = {
-  inited: false,
   data: [],
   hitokotos: [],
   editing: {}
@@ -19,9 +18,6 @@ const collection = (collections = DEFAULT_COLLECTIONS, action) => {
   switch (action.type) {
     case COLLECTIONS_FETCHED_SUCCESS:
       return update(collections, {
-        inited: {
-          $set: true
-        },
         data: {
           $set: action.value
         }

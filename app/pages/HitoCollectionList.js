@@ -9,7 +9,7 @@ import hitokotoDriver from '../API/hitokotoDriver'
 
 import HitoView from '../component/HitoView'
 
-class HitoList extends Component {
+class HitoCollectionList extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -30,55 +30,28 @@ class HitoList extends Component {
     let pathname = this.props.location.pathname;
     let match = matchPath(pathname, {path: '/home/:name'});
     if (match) {
-
-      let col_name = match.params.name;
+      let collection = match.params.name;
       let username = this.props.user.nickname;
-      let url = location.protocol + '//' + location.host + '/api/' + username + '/' + col_name;
-      return {url, username, name: col_name};
-    } else {
-      return;
+      let url = hitokotoDriver.patterManager.getCORSUrlOfUserCol(username, collection);
+      return {username, url, collection}
     }
   }
   addToSources() {
 
-    let url = this.getURL();
-
+    let url = this.getURL()
     if (url) {
-
-      hitokotoDriver.patterManager.newSource({
-        id: Date.now(),
-        url: url.url,
-        name: url.name,
-        adapter: 0,
-        online: true,
-        local: true
-      });
+      hitokotoDriver.patterManager.newSourceWithUsernameAndCol(url.username, url.collection);
       this.forceUpdate();
     }
 
   }
 
   isSourcesContians() {
-
     let url = this.getURL()
-    if (url) {
-      let reg = new RegExp('^' + url.url);
-      let index = hitokotoDriver.patterManager.sources.findIndex((source => {
-
-        console.log(reg, source.url, reg.test(source.url))
-        if (reg.test(source.url)) {
-          return true;
-        } else {
-          return false;
-        }
-      }));
-      if (~ index) {
-        return true;
-      }
+    if (!url) {
+      return false;
     }
-
-    return false;
-
+    return hitokotoDriver.patterManager.isSourceExsit(url.url);
   }
   fetchHitokotos() {
     let pathname = this.props.location.pathname;
@@ -162,12 +135,12 @@ class HitoList extends Component {
           translateY: [0, -50]
         }
       ]}
-        className='HitokotoList'>{ListToShow}</QueueAnim>
+        className='tryFlexContainer'>{ListToShow}</QueueAnim>
     )
   }
 }
 
-HitoList.propTypes = {
+HitoCollectionList.propTypes = {
   hitokotos: PropTypes.arrayOf(PropTypes.object).isRequired,
   leaveCollection: PropTypes.func.isRequired,
   user: PropTypes.object.isRequired,
@@ -175,4 +148,4 @@ HitoList.propTypes = {
   remove: PropTypes.func.isRequired,
   preview: PropTypes.func.isRequired
 }
-export default withRouter(HitoList)
+export default withRouter(HitoCollectionList)

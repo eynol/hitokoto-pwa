@@ -27,19 +27,25 @@ class HitokotoPreview extends Component {
       return null;
     }
     if (typeof hitokoto == 'string') {
-      return <FullPageCard>
-        <h1>
-          <i className="iconfont icon-prompt_fill color-red"></i>hitokoto已被清空</h1>
-        <button onClick={this.goBack}>返回</button>
-      </FullPageCard>
+      return (
+        <FullPageCard>
+          <h1>
+            <i className="iconfont icon-prompt_fill color-red"></i>hitokoto已被清空</h1>
+          <button onClick={this.goBack}>返回</button>
+        </FullPageCard>
+      )
     }
     let Actions = (
       <ul data-role="actions">
-        <li key={id + 'return'}>
-          <a href="javascript:" onClick={this.goBack}>返回</a>
-        </li>
         <li key={id + 'style'}>
-          <a href="javascript:" onClick={this.props.switchLayout}>更换排版</a>
+          <a href="javascript:" onClick={this.props.switchLayout}>
+            <i className="iconfont icon-settings"></i>
+          </a>
+        </li>
+        <li key={id + 'return'}>
+          <a href="javascript:" onClick={this.goBack}>
+            <i className="iconfont icon-check"></i>
+          </a>
         </li>
       </ul>
     );
