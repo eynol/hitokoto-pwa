@@ -84,7 +84,7 @@ class Home extends Component {
         alert(result.err)
       } else {
         this.props.history.push('/home/' + collectionName);
-        this.props.requestCollectionHitokotos(collectionName)
+        this.props.publishHitokotoSuccess()
       }
       return result
     });
@@ -108,7 +108,7 @@ class Home extends Component {
       } else {
 
         this.props.history.push('/home/' + collectionName);
-        this.props.requestCollectionHitokotos(collectionName)
+        this.props.publishHitokotoSuccess()
       }
       return result
     });

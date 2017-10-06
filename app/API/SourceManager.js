@@ -163,7 +163,6 @@ export default class SourceManager {
     }
     let reg = new RegExp('^' + url);
     let index = this.sources.findIndex((source => {
-      console.log(reg, source.url, reg.test(source.url))
       if (reg.test(source.url)) {
         return true;
       } else {

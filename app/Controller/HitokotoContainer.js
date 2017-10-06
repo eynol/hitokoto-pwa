@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types';
-import style from '../component/HitokotoLayout.css'
 
 import QueueAnim from 'rc-queue-anim';
 import hitokotoDriver from '../API/hitokotoDriver'

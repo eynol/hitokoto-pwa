@@ -1,14 +1,17 @@
 import React, {Component} from 'react';
+import ReactDOM from 'react-dom';
 import {Link, withRouter, Route} from 'react-router-dom';
 import FullPageCard from '../component/FullPageCard'
-import Loading from '../component/Loading'
-import PublicHitokotosList from '../component/PublicHitokotosList'
+
 import httpManager from '../API/httpManager';
 import QueueAnim from 'rc-queue-anim';
 import CollectionBox from '../component/CollectionBox';
 
 import hitokotoDriver from '../API/hitokotoDriver';
+
 import HitoView from '../component/HitoView'
+import Pagination from '../component/Pagination';
+import Loading from '../component/Loading'
 
 import {CardContainer} from '../component/CollectionBox.css'
 
@@ -17,21 +20,34 @@ class ExploreUserCollection extends Component {
     super(props);
     this.state = {
       hitokotos: [],
-      inited: false
+      inited: false,
+      total: 1,
+      current: 1
     }
     this.handleView = this.handleView.bind(this);
+    this.exploreUserCollection = this.exploreUserCollection.bind(this);
+
   }
   componentWillMount() {
-    this.exploreUserCollection();
+    this.exploreUserCollection(1);
   }
-  exploreUserCollection() {
+  exploreUserCollection(page, perpage = 10) {
     let {uid, collectionName} = this.props;
     if (!uid) {
       return this.props.history.push('/');
     }
-
-    httpManager.API_getPublicUserHitokotos(uid, collectionName).then(result => {
-      this.setState({inited: true, hitokotos: result.hitokotos})
+    let element = ReactDOM.findDOMNode(this);
+    if (element) {
+      if (element.scrollIntoView) {
+        console.log(element);
+        element.firstElementChild.scrollIntoView({behavior: 'smooth', block: "start", inline: "nearest"});
+      } else {
+        element.scrollTop = 0;
+      }
+    }
+    this.setState({inited: false})
+    httpManager.API_getPublicUserHitokotos(uid, collectionName, page, perpage).then(result => {
+      this.setState({inited: true, hitokotos: result.hitokotos, current: result.currentPage, total: result.totalPage})
     })
   }
   handleView(colname) {
@@ -50,14 +66,7 @@ class ExploreUserCollection extends Component {
       if (hitokotos.length == 0) {
         ListToShow = (
           <div key='empty' className='align-center'>
-            <div class="pacman">
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-            </div>
+            <h1>Oops...</h1>
             <p>当前句集还没有发布句子哦！</p>
           </div>
         )
@@ -69,25 +78,28 @@ class ExploreUserCollection extends Component {
 
     return (
       <FullPageCard cardname={collectionName}>
-        {this.state.inited
-          ? (
-            <QueueAnim
-              animConfig={[
-              {
-                opacity: [
-                  1, 0
-                ],
-                translateX: [0, 50]
-              }, {
-                opacity: [
-                  1, 0
-                ],
-                position: 'absolute',
-                translateX: [0, -50]
-              }
-            ]}>{ListToShow}</QueueAnim>
-          )
-          : (<Loading key="loading"/>)}
+        <QueueAnim
+          ease='easeOutQuart'
+          animConfig={[
+          {
+            opacity: [1, 0]
+          }, {
+            left: '0',
+            right: '0',
+            position: 'absolute',
+            opacity: [1, 0]
+          }
+        ]}>
+          {this.state.inited
+            ? null
+            : <Loading key="loading"/>}
+          <div className="view">{ListToShow}</div>
+        </QueueAnim>
+        <Pagination
+          current={this.state.current || 1}
+          total={this.state.total || 1}
+          limit={10}
+          func={this.exploreUserCollection}></Pagination>
       </FullPageCard>
     )
   }

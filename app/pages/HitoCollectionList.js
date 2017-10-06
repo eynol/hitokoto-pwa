@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types'
 import {matchPath} from 'react-router'
 import {Link, withRouter} from 'react-router-dom'
@@ -7,14 +8,21 @@ import httpManager from '../API/httpManager';
 
 import hitokotoDriver from '../API/hitokotoDriver'
 
+import Pagination from '../component/Pagination';
+import Loading from '../component/Loading'
+
 import HitoView from '../component/HitoView'
 
 class HitoCollectionList extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      inited: false,
+      total: 1,
+      current: 1,
       status: 'collections'
     };
+    this.fetchHitokotos = this.fetchHitokotos.bind(this);
     this.newHitokoto = this.newHitokoto.bind(this);
     this.updateHitokoto = this.updateHitokoto.bind(this);
     this.isSourcesContians = this.isSourcesContians.bind(this);
@@ -22,6 +30,13 @@ class HitoCollectionList extends Component {
 
   componentDidMount() {
     this.fetchHitokotos();
+  }
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.needRefresh) {
+      this.fetchHitokotos(this.state.current).then(() => {
+        this.props.refreshCollectionHitokotoSuccess()
+      })
+    }
   }
   componentWillUnmount() {
     this.props.leaveCollection()
@@ -53,7 +68,7 @@ class HitoCollectionList extends Component {
     }
     return hitokotoDriver.patterManager.isSourceExsit(url.url);
   }
-  fetchHitokotos() {
+  fetchHitokotos(page, perpage) {
     let pathname = this.props.location.pathname;
     if (pathname == '/home/') {
       this.props.history.replace('/home');
@@ -65,11 +80,29 @@ class HitoCollectionList extends Component {
       return;
     }
 
+    let element = ReactDOM.findDOMNode(this);
+    if (element) {
+      if (element.scrollIntoView) {
+        console.log(element);
+        element.firstElementChild && element.firstElementChild.scrollIntoView({behavior: 'smooth', block: "start", inline: "nearest"});
+      } else {
+        element.scrollTop = 0;
+      }
+    }
+
     let {params: {
         name
       }} = match;
     if (name && name.length) {
-      this.props.requestCollectionHitokotos(name).then(result => {}, (e) => {})
+      return httpManager.API_viewCollection(name, page, perpage).then(result => {
+        console.log(result);
+        if (result.err) {
+          return Promise.reject(result.err);
+        } else {
+          this.props.fetchHitokotosSuccess(result.hitokotos);
+          this.setState({inited: true, total: result.totalPage, current: result.currentPage})
+        }
+      })
     } else {
       alert('路径名不正确');
       this.props.history.push('/home');
@@ -119,24 +152,31 @@ class HitoCollectionList extends Component {
         data={hitokoto}/>)));;
     }
 
-    return (
-      <QueueAnim
-        animConfig={[
-        {
-          opacity: [
-            1, 0
-          ],
-          translateY: [0, 50]
-        }, {
-          opacity: [
-            1, 0
-          ],
-          position: 'absolute',
-          translateY: [0, -50]
-        }
-      ]}
-        className='tryFlexContainer'>{ListToShow}</QueueAnim>
-    )
+    return [(
+        <QueueAnim
+          ease='easeOutQuart'
+          animConfig={[
+          {
+            opacity: [1, 0]
+          }, {
+            left: '0',
+            right: '0',
+            position: 'absolute',
+            opacity: [1, 0]
+          }
+        ]}>
+          <div key="container" className='tryFlexContainer'>{ListToShow}</div>
+          {this.state.inited
+            ? null
+            : <Loading key="loading-co"/>}
+        </QueueAnim>
+      ), (
+        <Pagination
+          current={this.state.current || 1}
+          total={this.state.total || 1}
+          limit={10}
+          func={this.fetchHitokotos}></Pagination>
+      )]
   }
 }
 

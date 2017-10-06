@@ -35,7 +35,9 @@ class Index extends Component {
     $setNickname(nickname)
     hitokotoDriver.httpManager.updateToken(token);
   }
-
+  componentWillUnmount() {
+    this.props.hideNav();
+  }
   render() {
     let {user, layout, panel} = this.props,
       backgroundColor = layout.backgroundColor,

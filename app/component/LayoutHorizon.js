@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {Children} from 'react'
 import PropTypes from 'prop-types'
 import QueueAnim from 'rc-queue-anim';
 import windowSize from '../API/windowSize'
@@ -46,22 +46,17 @@ function LayoutHorizon(props) {
   if (hitokoto && hitokoto.length > JUDESIZE) {
     overLoad = true;
   }
-  if (props.children.length) {
-    for (let i = 0, len = props.children.length; i < len; i++) {
-      let one = props.children[i];
-      if (one.props['data-role'] == 'actions') {
-        OptionsChildren = one.props.children;
-      }
+  Children.forEach(props.children, (one) => {
+    if (one.props['data-role'] == 'actions') {
+      OptionsChildren = one.props.children;
     }
-  } else {
-    if (props.children.props['data-role'] == 'actions') {
-      OptionsChildren = props.children.props.children;
-    }
-  }
+  })
 
   return (
     <div
-      className={layout_horizon}
+      className={layout_horizon + (props.overflowhide
+      ? ' overflowhide'
+      : '')}
       style={{
       backgroundColor: backgroundColor
     }}>

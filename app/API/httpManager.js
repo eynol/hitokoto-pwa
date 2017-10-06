@@ -321,8 +321,8 @@ class HTTPManager {
   API_getPublicUserDetail(uid) {
     return this.fetchJSON('get', '/api/explore/users/' + uid)
   }
-  API_getPublicUserHitokotos(uid, collection) {
-    return this.fetchJSON('get', '/api/explore/users/' + uid + '/' + collection)
+  API_getPublicUserHitokotos(uid, collection, page, perpage) {
+    return this.fetchJSON('get', '/api/explore/users/' + uid + '/' + collection, {page, perpage})
   }
 
   //  Need Auth Token
@@ -358,8 +358,8 @@ class HTTPManager {
     return this.fetchAuthJSON('delete', '/api/collections', formData)
   }
 
-  API_viewCollection(name) {
-    return this.fetchAuthJSON('get', '/api/collections/' + name)
+  API_viewCollection(name, page, perpage) {
+    return this.fetchAuthJSON('get', '/api/collections/' + name, {page, perpage})
   }
 
   API_newHitokoto(name, formData) {

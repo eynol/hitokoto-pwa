@@ -7,7 +7,7 @@ import {Link} from 'react-router-dom'
 
 import LayoutHorizon from './LayoutHorizon'
 import LayoutVertical from './LayoutVertical'
-import {showPanel} from '../actions'
+import {showPanel, PANEL_OPEN} from '../actions'
 
 import {love, setting} from './HitokotoLayout.css'
 
@@ -76,6 +76,7 @@ class HitokotoPlayer extends Component {
           width: '100%'
         }}>
           <LayoutHorizon
+            overflowhide={this.props.panel === PANEL_OPEN + 'nav'}
             animateConfig={direction == 'next'
             ? ANIMATE_CONFIG_NEXT
             : ANIMATE_CONFIG_LAST}
@@ -106,7 +107,7 @@ HitokotoPlayer.PropTypes = {
   showLayoutSetting: PropTypes.func.isRequired
 }
 
-let mapStateToProps = (state) => ({layout: state.layout});
+let mapStateToProps = (state) => ({layout: state.layout, panel: state.panel});
 let mapActionsToProps = (dispatch) => ({
   showLayoutSetting: () => dispatch(showPanel("layoutSetting"))
 });

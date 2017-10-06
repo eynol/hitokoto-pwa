@@ -48,18 +48,14 @@ export const fetchCollectionFailed = (reason) => ({type: COLLECTIONS_FETCHED_FAI
 export const LEAVE_COLLECTION = 'collection leave';
 export const leaveCollection = () => ({type: LEAVE_COLLECTION, value: ''})
 
-export const requestCollectionHitokotos = (name) => dispatch => {
-  return httpManager.API_viewCollection(name).then(result => {
-    console.log(result);
-    if (result.err) {
-      return Promise.reject(result.err);
-    } else {
-      return dispatch(fetchHitokotosSuccess(result.hitokotos))
-    }
-  });
-};
 export const FETCH_COLLECTION_HITO_SUCCESS = 'hitokotos of collection'
 export const fetchHitokotosSuccess = (hitokotos) => ({type: FETCH_COLLECTION_HITO_SUCCESS, value: hitokotos})
+
+export const PUBLISH_COLLECTION_HITO_SUCCESS = 'publish collection-hitokoto success';
+export const publishHitokotoSuccess = () => ({type: PUBLISH_COLLECTION_HITO_SUCCESS})
+
+export const REFRESH_COLLECTION_HITO_DONE = 'refresh collection-hitokoto done'
+export const refreshCollectionHitokotoSuccess = () => ({type: REFRESH_COLLECTION_HITO_DONE})
 
 export const REMOVE_ONE_HITO_SUCCESS = 'hitokotos remove one success'
 export const removeHitokotosSuccess = (_id) => ({type: REMOVE_ONE_HITO_SUCCESS, value: _id})

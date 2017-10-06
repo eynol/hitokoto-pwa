@@ -32,7 +32,8 @@ class HitoCollection extends Component {
       if (result.err) {
         alert(result.err);
       } else {
-        this.setState({inited: true})
+        this.setState({inited: true});
+
         this.props.fetchCollectionSuccess(result.collections);
       }
       console.log(result);

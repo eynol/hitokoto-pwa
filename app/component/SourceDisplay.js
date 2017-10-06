@@ -93,6 +93,10 @@ export default class SourceDisplay extends Component {
     source = source || {};
     return (
       <FullPageCard cardname={props.title} close={props.hook.hide}>
+        <p className="fs-tip">
+          <i className="iconfont icon-tishi"></i>
+          <span>手机全屏模式下可能无法编辑底部区域，请退出全屏模式再编辑。</span>
+        </p>
         <div className="form">
           <div className="text-filed blocked">
             <input type="text" required ref="sourceName" defaultValue={source.name}/>

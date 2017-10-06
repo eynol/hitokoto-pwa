@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Link, withRouter, Route} from 'react-router-dom';
 import FullPageCard from '../component/FullPageCard'
 import Loading from '../component/Loading'
-import PublicHitokotosList from '../component/PublicHitokotosList'
+
 import httpManager from '../API/httpManager';
 import QueueAnim from 'rc-queue-anim';
 import CollectionBox from '../component/CollectionBox';

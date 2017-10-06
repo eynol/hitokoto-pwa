@@ -5,13 +5,16 @@ import {
   ENTER_COLLECTION,
   LEAVE_COLLECTION,
   FETCH_COLLECTION_HITO_SUCCESS,
+  PUBLISH_COLLECTION_HITO_SUCCESS,
+  REFRESH_COLLECTION_HITO_DONE,
   REMOVE_ONE_HITO_SUCCESS
 } from '../actions'
 
 const DEFAULT_COLLECTIONS = {
   data: [],
   hitokotos: [],
-  editing: {}
+  editing: {},
+  needRefreshHikotokos: false
 }
 
 const collection = (collections = DEFAULT_COLLECTIONS, action) => {
@@ -29,7 +32,18 @@ const collection = (collections = DEFAULT_COLLECTIONS, action) => {
           $set: []
         }
       })
-
+    case PUBLISH_COLLECTION_HITO_SUCCESS:
+      return update(collections, {
+        needRefreshHikotokos: {
+          $set: true
+        }
+      })
+    case REFRESH_COLLECTION_HITO_DONE:
+      return update(collections, {
+        needRefreshHikotokos: {
+          $set: false
+        }
+      })
     case FETCH_COLLECTION_HITO_SUCCESS:
       return update(collections, {
         hitokotos: {
