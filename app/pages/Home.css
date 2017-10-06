@@ -27,13 +27,15 @@
 .menu a {
     text-decoration: none;
     padding-bottom: 3px;
+    padding-left: 8px;
 }
 
 .menu a:focus,
 .menu a:hover,
 .menu a.active {
     outline: none;
-    border-bottom: 1px solid currentColor;
+    border-left: 4px solid currentColor;
+    /* border-bottom: 1px solid currentColor; */
 }
 
 .left {
@@ -101,10 +103,12 @@
     }
     .menu a {
         padding-bottom: 6px;
+        padding-left: 0;
     }
     .menu a:focus,
     .menu a:hover,
     .menu a.active {
+        border-left: none;
         border-bottom: 4px solid currentColor;
     }
 }

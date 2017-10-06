@@ -336,6 +336,21 @@ h2 {
   display: none!important;
 }
 
+:global(.overflowhide){
+  overflow-x: hidden!important;
+  overflow-y: hidden!important;
+  overflow: hidden!important;
+}
+
+
+:global(.fs-tip){
+  display: none;
+}
+
+:fullscreen :global(.fs-tip){
+  display: initial;
+}
+
 :global(.align-center){
   text-align: center;
 }
