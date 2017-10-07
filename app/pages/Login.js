@@ -2,11 +2,13 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import QueueAnim from 'rc-queue-anim';
 import {Link, withRouter} from 'react-router-dom';
-import here$you$are from '../API/PublicEncrypt';
-import FullPage from '../component/FullPage'
 
+import here$you$are from '../API/PublicEncrypt';
 import hitokotoDriver from '../API/hitokotoDriver'
 import httpManager from '../API/httpManager'
+import showNotification from '../API/showNotification';
+
+import FullPage from '../component/FullPage'
 
 import {PANEL_OPEN} from '../actions'
 import {GLOBAL_ANIMATE_TYPE} from '../configs'
@@ -32,6 +34,11 @@ class Login extends Component {
       password: undefined,
       errinfo: undefined
     }
+
+    this.handleKeyPress = this.handleKeyPress.bind(this);
+    this.handlePasswordChange = this.handlePasswordChange.bind(this);
+    this.handleSigninClick = this.handleSigninClick.bind(this);
+    this.handleUsernameChange = this.handleUsernameChange.bind(this);
   }
   componentWillMount() {
     hitokotoDriver.stop();
@@ -76,23 +83,25 @@ class Login extends Component {
     let $username = here$you$are(username);
     let $password = here$you$are(password);
 
-    console.log('encrypted username', $username);
-    console.log('encrypted password', $password);
-    let form = new FormData();
-    form.append('username', $username);
-    form.append('password', $password)
-    httpManager.API_login(form).then((resp) => {
+    if (process.env.NODE_ENV !== 'production') {
+
+      console.log('encrypted username', $username);
+      console.log('encrypted password', $password);
+
+    }
+
+    httpManager.API_login({username: $username, password: $password}).then((resp) => {
       if (resp.err) {
         this.setState({errinfo: resp.err})
       } else {
+
+        showNotification('登录成功！', 'success');
         // login done!!!!
         this.props.loginDone(resp)
-        console.log(resp);
         this.props.hideLogin()
       }
 
     }).catch(err => {
-      console.log(err);
       this.setState({errinfo: err})
     })
   }
@@ -114,14 +123,14 @@ class Login extends Component {
           return false;
         }}>
           <h1>登录</h1>
-          <div className="text-filed"><input type="text" onChange={this.handleUsernameChange.bind(this)} required/>
+          <div className="text-filed"><input type="text" onChange={this.handleUsernameChange} required/>
             <label data-content="账号">账号</label>
           </div>
           <div className="text-filed"><input
             type="password"
-            onChange={this.handlePasswordChange.bind(this)}
+            onChange={this.handlePasswordChange}
             required
-            onKeyPress={this.handleKeyPress.bind(this)}/>
+            onKeyPress={this.handleKeyPress}/>
             <label data-content="密码">密码</label>
           </div>
           {this.state.errinfo
@@ -131,17 +140,17 @@ class Login extends Component {
             : null}
           <br/>
           <p>
-            <button onClick={this.handleSigninClick.bind(this)}>立即登录</button>
+            <button onClick={this.handleSigninClick}>立即登录</button>
             <button onClick={showRegist}>前往注册</button>
           </p>
           <p><br/>
-            <button onClick={hideLogin}>关闭</button>&nbsp;
+            <button onClick={hideLogin}>关闭</button>
           </p>
         </div>
       </FullPage>
 
     } else {
-      Child = <div></div>;
+      Child = <div></div>; // QueueAnim can't resolve null children;
     }
     return (
       <QueueAnim type={GLOBAL_ANIMATE_TYPE} ease={['easeOutQuart', 'easeInOutQuart']}>

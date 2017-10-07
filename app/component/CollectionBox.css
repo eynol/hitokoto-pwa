@@ -65,7 +65,13 @@
     will-change: opacity;
     opacity: 1;
 }
-
+@media screen and (max-width:768px){
+    .Card .Card_options>a,
+    .Card .Card_options>a {
+        opacity: 1;
+    }
+        
+}
 .HitoCollection {
     color: red;
 }

@@ -18,7 +18,6 @@ class LayoutSetting extends Component {
     }
   }
   handlePatternChange(id) {
-    console.log('pattern change', id);
     if (id !== hitokotoDriver.pattern.id) {
       let pattern = hitokotoDriver.patterManager.getPatternById(id);
       hitokotoDriver.drive(pattern).start();
@@ -47,7 +46,6 @@ class LayoutSetting extends Component {
       patternOptions = patterns.map((pattern) => (
         <option key={pattern.id} value={pattern.id}>{pattern.name}</option>
       ))
-      console.log(currentPatternID);
       patternOptions = (
         <dl key="s-pattern">
           <dt>模式</dt>
@@ -74,7 +72,6 @@ class LayoutSetting extends Component {
           <div
             className={settingWrapper}
             onClick={e => {
-            console.dir(e);
             e.stopPropagation();
             return false;
           }}>

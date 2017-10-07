@@ -5,12 +5,17 @@ import update from 'immutability-helper';
 import QueueAnim from 'rc-queue-anim';
 import PropTypes from 'prop-types'
 
-import NewHitokoto from '../pages/NewHitokoto'
 import hitokotoDriver from '../API/hitokotoDriver';
+import showNotification from '../API/showNotification';
+
+import Modal from '../component/Modal';
+
+import NewHitokoto from './NewHitokoto'
+import HitokotoPreview from './HitokotoPreview';
+import UpdateHitokoto from './UpdateHitokoto'
+
 import HitoCollection from '../containers/HitoCollection';
 import HitoCollectionList from '../containers/HitoCollectionList';
-import HitokotoPreview from './HitokotoPreview';
-import UpdateHitokoto from '../pages/UpdateHitokoto'
 
 let httpManager = hitokotoDriver.httpManager;
 
@@ -30,7 +35,8 @@ class Home extends Component {
       horizon: true,
       currentCollectionName: '',
       hitokotos: [],
-      previewHitokoto: ''
+      previewHitokoto: '',
+      hitokotoToRemove: null
     }
     this.storeHitokotoToUpdate = this.storeHitokotoToUpdate.bind(this);
     this.doUpdateHitokoto = this.doUpdateHitokoto.bind(this)
@@ -38,6 +44,9 @@ class Home extends Component {
     this.pubulishHitokoto = this.pubulishHitokoto.bind(this);
     this.switchLayout = this.switchLayout.bind(this);
     this.removeHitokoto = this.removeHitokoto.bind(this);
+
+    this.doRemoveHitokoto = this.doRemoveHitokoto.bind(this);
+    this.hideRemoveModal = this.hideRemoveModal.bind(this);
   }
 
   switchLayout() {
@@ -79,10 +88,10 @@ class Home extends Component {
     hitokoto['creator'] = this.props.user.nickname;
 
     return httpManager.API_newHitokoto(collectionName, hitokoto).then(result => {
-      console.log(result);
       if (result.err) {
-        alert(result.err)
+        showNotification(result.err, 'error');
       } else {
+        showNotification('发布成功！', 'success');
         this.props.history.push('/home/' + collectionName);
         this.props.publishHitokotoSuccess()
       }
@@ -102,10 +111,10 @@ class Home extends Component {
       creator: this.props.user.nickname,
       category: hitokoto.category
     }).then(result => {
-      console.log(result);
       if (result.err) {
-        alert(result.err)
+        showNotification(result.err, 'error');
       } else {
+        showNotification('修改成功', 'success', true);
 
         this.props.history.push('/home/' + collectionName);
         this.props.publishHitokotoSuccess()
@@ -115,20 +124,26 @@ class Home extends Component {
   }
 
   removeHitokoto(hitokotoToRemove) {
-    if (!confirm('你确定删除该hitokoto?')) {
-      return;
-    }
+    this.setState({hitokotoToRemove});
+  }
+  hideRemoveModal() {
+    this.setState({hitokotoToRemove: null});
+  }
+
+  doRemoveHitokoto() {
+
+    let hitokotoToRemove = this.state.hitokotoToRemove;
 
     let reg = /^\/home\/([^\/]*)$/,
       matchs = reg.exec(this.props.location.pathname),
       collectionName = matchs[1];
 
     return httpManager.API_deleteHitokoto(collectionName, {id: hitokotoToRemove._id}).then(result => {
-      console.log(result);
-
       if (result.err) {
-        alert(result.err)
+        showNotification(result.err, 'error');
       } else {
+        showNotification('删除成功！', 'success');
+        this.hideRemoveModal();
         this.props.removeHitokotosSuccess(hitokotoToRemove._id)
       }
       return result
@@ -167,6 +182,7 @@ class Home extends Component {
             </li>
             <li>
               <Link to='/profile'>账户设置</Link>
+
             </li>
           </ul>
         </div>
@@ -197,7 +213,17 @@ class Home extends Component {
           layout={this.props.layout}
           switchLayout={this.switchLayout}
           hitokoto={this.state.previewHitokoto}
-          layoutHorizon={this.state.horizon}/>
+          layoutHorizon={this.state.horizon}/> {this.state.hitokotoToRemove
+          ? <Modal exit={this.hideRemoveModal}>
+              <h1>你确定要删除该hitokoto?</h1>
+              <div className="clearfix">
+                <span className="pull-right">
+                  <button role="exit">取消</button>
+                  <button onClick={this.doRemoveHitokoto}>确定</button>
+                </span>
+              </div>
+            </Modal>
+          : null}
       </div>
     );
   }

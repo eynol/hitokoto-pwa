@@ -4,8 +4,6 @@ import PropTypes from 'prop-types';
 
 import hitokotoDriver from '../API/hitokotoDriver'
 
-import Login from '../containers/Login'
-import Regist from '../containers/Regist'
 import LayoutSetting from '../containers/LayoutSetting'
 
 import Copyright from '../component/Copyright'
@@ -57,14 +55,12 @@ class Index extends Component {
         ? 'revert2white'
         : ''}>
         <HitokotoContainer/>
-        <Regist/>
         <LayoutSetting/>
-        <Login/>
+
         <Copyright/>
       </div>
     )
   }
-
 }
 Index.propTypes = {
   layout: PropTypes.object.isRequired,

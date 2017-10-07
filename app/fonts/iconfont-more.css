@@ -1,0 +1,11 @@
+
+:global(.icon-loading-anim:before ){ content: "\e64f";display: inline-block; animation: rolling .5s infinite ;}
+
+@keyframes rolling {
+  0%{
+    transform: rotateZ(0deg);
+  }
+  100%{
+    transform: rotateZ(360deg);
+  }
+}

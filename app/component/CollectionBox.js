@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import {Link, withRouter} from 'react-router-dom';
+import showNotification from '../API/showNotification';
 
 import style from './CollectionBox.css'
 
@@ -35,9 +36,7 @@ class CollectionBox extends Component {
   }
   handleChangeClick(e) {
     if (this.props.data.name == '默认句集') {
-      setTimeout(() => {
-        alert('默认句集无法修改！')
-      }, 4)
+      showNotification('默认句集无法修改！', 'error')
       return;
     }
     this.setState({status: 'change'});
@@ -50,9 +49,7 @@ class CollectionBox extends Component {
   newOne() {
     let name = this.refs.name.value.trim();
     if (name == '默认句集') {
-      setTimeout(() => {
-        alert('无法命名为默认句集无法修改！')
-      }, 4)
+      showNotification('无法命名为默认句集无法修改！', 'error')
       return;
     }
     this.props.newCollection(name).then(() => {
@@ -64,29 +61,22 @@ class CollectionBox extends Component {
     let name = this.refs.name.value.trim(),
       oldName = this.props.data.name;
     if (oldName == '默认句集') {
-      setTimeout(() => {
-        alert('默认句集无法修改！')
-      }, 4)
+      showNotification('默认句集无法修改！', 'error')
       return;
     }
     if (name == oldName) {
-      alert('两次名称相等！无法修改');
+      showNotification('两次名称相等！无法修改', 'error')
     } else {
-
       this.props.changeName(oldName, name);
     }
   }
   doDelete(e) {
     let oldName = this.props.data.name;
     if (oldName == '默认句集') {
-      setTimeout(() => {
-        alert('默认句集无法修改！')
-      }, 4)
+      showNotification('默认句集无法删除！', 'error')
       return;
     }
-    if (confirm('是否删除该句集？\n删除后，将会把该集合中所有的Hitokoto转入默认句集中')) {
-      this.props.delete(oldName);
-    }
+    this.props.delete(oldName);
     e.stopPropagation()
   }
   returnToNormal() {

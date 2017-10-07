@@ -309,6 +309,7 @@ ul.actions {
     }
     .layout_vertical .info {
         writing-mode: horizontal-tb;
+        pointer-events: none;
         top: auto;
         bottom: -25px;
         width: 100%;

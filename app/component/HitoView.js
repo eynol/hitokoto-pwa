@@ -1,14 +1,14 @@
 import React, {Component} from 'react'
-
 import PropTypes from 'prop-types'
 import {Link} from 'react-router-dom'
 import QueueAnim from 'rc-queue-anim';
+
 import hitokotoDriver from '../API/hitokotoDriver';
+import tranformDate from '../API/social-time-transform'
 
 import {hitokoto, time, actions, hitoSource} from './HitoView.css'
 
 let httpManager = hitokotoDriver.httpManager;
-import tranformDate from '../API/social-time-transform'
 
 class HitoView extends Component {
   constructor(props) {

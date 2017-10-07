@@ -5,10 +5,13 @@ import {Link, withRouter} from 'react-router-dom';
 import QueueAnim from 'rc-queue-anim';
 
 import _asign from 'lodash/assign';
+import Textarea from 'react-textarea-autosize';
+
+import showNotification from '../API/showNotification';
 
 import FullPageCard from '../component/FullPageCard'
+
 import style from './NewHitokoto.css';
-import Textarea from 'react-textarea-autosize';
 let {hitokotoTextarea, hitokotoSouceInput, hitokotoSouceTypeBlock, operations} = style;
 
 class UpdateHitokoto extends Component {
@@ -59,10 +62,12 @@ class UpdateHitokoto extends Component {
       } = this.refs,
       hitokoto = this.textarea.value;
     if (hitokoto.length == 0) {
-      return alert('hitokoto内容不能为空！')
+      this.showNotiication('hitokoto内容不能为空！', 'error');
+      return;
     }
     if (source.length == 0) {
-      return alert('hitokoto来源不能为空！')
+      this.showNotiication('hitokoto来源不能为空！', 'error');
+      return
     }
     return {hitokoto, author, source, category}
   }
@@ -70,9 +75,7 @@ class UpdateHitokoto extends Component {
     let hitokoto = this.getHitokoto();
     if (hitokoto) {
       hitokoto = _asign(JSON.parse(JSON.stringify(this.props.hitokoto)), hitokoto)
-      this.props.update(hitokoto).then(result => {
-        console.log(result);
-      });
+      this.props.update(hitokoto);
     }
   }
   render() {
@@ -80,7 +83,6 @@ class UpdateHitokoto extends Component {
         pathname
       }, hitokoto} = this.props;
 
-    console.log(hitokoto)
     let child = '';
     let reg = /^\/home\/[^\/]*\/update$/;
     return (

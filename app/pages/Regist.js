@@ -2,9 +2,11 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {Link, withRouter} from 'react-router-dom';
 import QueueAnim from 'rc-queue-anim';
-import here$you$are from '../API/PublicEncrypt';
 
+import here$you$are from '../API/PublicEncrypt';
+import showNotification from '../API/showNotification';
 import httpManager from '../API/httpManager'
+
 import FullPage from '../component/FullPage'
 
 import {PANEL_OPEN} from '../actions'
@@ -40,7 +42,16 @@ class Regist extends Component {
       code: null,
       step: 1,
       user: {}
-    }
+    };
+
+    this.handleCodeChange = this.handleCodeChange.bind(this);
+    this.handleEmailChange = this.handleEmailChange.bind(this);
+    this.handleNicknameChange = this.handleNicknameChange.bind(this);
+    this.handlePassword2Change = this.handlePassword2Change.bind(this);
+    this.handlePasswordChange = this.handlePasswordChange.bind(this);
+    this.handleRegist = this.handleRegist.bind(this);
+    this.handleRegist2 = this.handleRegist2.bind(this);
+    this.handleUsernameChange = this.handleUsernameChange.bind(this);
   }
 
   handleUsernameChange(event) {
@@ -142,14 +153,8 @@ class Regist extends Component {
         nickname: nickname
       }
     });
-    let form = new FormData();
-    form.append('username', $username);
-    form.append('password', $password);
-    form.append('email', email);
-    form.append('nickname', nickname);
-
     let that = this;
-    httpManager.API_regist(form).then(resp => {
+    httpManager.API_regist({username: $username, password: $password, email, nickname}).then(resp => {
       if (resp.err) {
         return Promise.reject(resp.err);
       } else {
@@ -175,19 +180,13 @@ class Regist extends Component {
       this.setState({errinfo: undefined});
     }
 
-    let form = new FormData();
-    form.append('code', code);
-    form.append('username', username);
-    form.append('password', password);
-    form.append('email', email);
-    form.append('nickname', nickname);
-
     let that = this;
-    httpManager.API_regist(form).then((resp) => {
+    httpManager.API_regist({code, username, password, email, nickname}).then((resp) => {
       if (resp.err) {
         return Promise.reject(resp.err);
       } else {
         //注册成功！
+        showNotification('注册成功！', 'success');
         this.props.hideRegist()
         this.props.registDone(resp);
       }
@@ -230,28 +229,28 @@ class Regist extends Component {
               <div className="text-filed"><input
                 type="text"
                 required
-                onChange={this.handleUsernameChange.bind(this)}
+                onChange={this.handleUsernameChange}
                 defaultValue={this.state.username}/>
                 <label data-content="用户名(仅登录时使用)">用户名(仅登录时使用)</label>
               </div>
               <div className="text-filed"><input
                 type="password"
                 required
-                onChange={this.handlePasswordChange.bind(this)}
+                onChange={this.handlePasswordChange}
                 defaultValue={this.state.password}/>
                 <label data-content="密码(任意字符至少七位)">密码</label>
               </div>
               <div className="text-filed"><input
                 type="password"
                 required
-                onChange={this.handlePassword2Change.bind(this)}
+                onChange={this.handlePassword2Change}
                 defaultValue={this.state.password2}/>
                 <label data-content="请再次确认您的密码">请再次确认您的密码</label>
               </div>
               <div className="text-filed"><input
                 type="text"
                 required
-                onChange={this.handleEmailChange.bind(this)}
+                onChange={this.handleEmailChange}
                 defaultValue={this.state.email}/>
                 <label data-content="验证邮箱(非常重要)">验证邮箱(非常重要)</label>
               </div>
@@ -259,18 +258,18 @@ class Regist extends Component {
                 type="text"
                 required
                 maxLength="20"
-                onChange={this.handleNicknameChange.bind(this)}
+                onChange={this.handleNicknameChange}
                 defaultValue={this.state.nickname}/>
                 <label data-content="显示的昵称(不可修改)">显示的昵称(不可修改)</label>
               </div>
               {errinfo}
               <p>
                 <br/>
-                <button onClick={this.handleRegist.bind(this)}>下一步</button>
+                <button onClick={this.handleRegist}>下一步</button>
                 <button onClick={this.props.showLogin}>前往登录</button>
               </p>
               <p><br/>
-                <button href="javascript:" onClick={this.props.hideRegist}>关闭</button>&nbsp;
+                <button href="javascript:" onClick={this.props.hideRegist}>关闭</button>
               </p>
             </div>
           </FullPage>
@@ -287,18 +286,14 @@ class Regist extends Component {
               <h1>请输入您收到的验证码</h1>
               <p>
                 <div className="text-filed">
-                  <input
-                    type="text"
-                    required
-                    maxLength="4"
-                    onChange={this.handleCodeChange.bind(this)}/>
+                  <input type="text" required maxLength="4" onChange={this.handleCodeChange}/>
 
                   <label data-content="验证码">验证码</label>
                 </div>
               </p>
               {errinfo}
               <p>没有收到验证码？
-                <button onClick={this.handleRegist.bind(this)}>重新发送</button>
+                <button onClick={this.handleRegist}>重新发送</button>
               </p>
               <p>
                 <br/>
@@ -306,7 +301,7 @@ class Regist extends Component {
                   onClick={(e) => {
                   this.setState({step: 1, errinfo: undefined})
                 }}>上一步</button>&nbsp;
-                <button onClick={this.handleRegist2.bind(this)}>立即注册</button>
+                <button onClick={this.handleRegist2}>立即注册</button>
               </p>
             </div>
           </FullPage>

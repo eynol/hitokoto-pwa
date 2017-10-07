@@ -18,14 +18,16 @@
     font-size: 14px;
   }
 }
-.actions{
+.actions button{
   opacity: 0;
   transition: opacity .3s ease;
 }
 .hitokoto:hover{
   border-left: 2px solid #ddd;
 }
-.hitokoto:hover .actions{
+.hitokoto .actions:hover button,
+.hitokoto .actions:focus button,
+.hitokoto .actions button:focus{
   opacity: 1;
 }
 .hitoSource{

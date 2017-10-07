@@ -1,22 +1,13 @@
 import React, {Component} from 'react';
 import FullPageCard from './FullPageCard'
+import showNotification from '../API/showNotification';
 
 import {timerbox} from './PatternDisplay.css';
 
-let showDemo = () => {
-  setTimeout(function () {
-    alert('使用new Function("resp",函数体代码)，构造adapter函数，所以只写函数体的代码。\nAPI请求的结果将作为参数resp传入函数，你可以直' +
-        '接在函数体里使用resp变量。\n函数体需要返回一个JSON对象，包含的键名有id、hitokoto、from、creator、type、created_at。' +
-        '\n示例：\nreturn {\n  id: resp.uuid,\n  hitokoto: resp.hitokoto,\n  from: resp.sour' +
-        'ce,\n  creator: resp.owner,\n  type: resp.info.type,\n  created_at: resp.info.wh' +
-        'en,\n}');
-  }, 0)
-}
 export default class PatternDisplay extends Component {
 
   constructor(props) {
     super(props);
-    console.log(props)
     let pattern = props.pattern;
     if (!pattern) {
       pattern = {}
@@ -86,7 +77,7 @@ export default class PatternDisplay extends Component {
 
     let valid = this.validatePattern(name, interval, sources)
     if (valid.length != 0) {
-      alert(valid.join('\n'));
+      showNotification(valid.join('\n'), 'error');
     } else {
       let newPattern = {
         id: pattern.id,
@@ -114,7 +105,7 @@ export default class PatternDisplay extends Component {
 
     let valid = this.validatePattern(name, interval, sources)
     if (valid.length != 0) {
-      alert(valid.join('\n'));
+      showNotification(valid.join('\n'), 'error');
     } else {
       let pattern = {
         id: Date.now(),
@@ -163,17 +154,14 @@ export default class PatternDisplay extends Component {
       oprations = (
         <div>
           <button onClick={this.handleUpdate.bind(this)}>确认修改</button>
-          <button
-            className="color-red"
-            onClick={props.hook.delete.bind(null, pattern.id)}>删除</button>&nbsp;
-          <button className="color-basic" onClick={props.hook.hide}>取消</button>&nbsp;
+          <button className="color-basic" onClick={props.hook.hide}>取消</button>
         </div>
       )
     } else {
       oprations = (
         <div>
           <button onClick={this.handleNewPattern.bind(this)}>确认添加</button>
-          <button className="color-basic" onClick={props.hook.hide}>取消</button>&nbsp;
+          <button className="color-basic" onClick={props.hook.hide}>取消</button>
         </div>
       )
     }

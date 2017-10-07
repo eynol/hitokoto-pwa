@@ -65,6 +65,7 @@ module.exports = {
         loader: "file-loader?limit=1024&name=fonts/[name].[ext]"
       }, {
         test: /\.(png|svg|jpg|gif)$/,
+        exclude: /app\/fonts/,
         loader: 'file-loader'
       }
     ]

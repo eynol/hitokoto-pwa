@@ -3,9 +3,12 @@ import PropTypes from 'prop-types'
 import {matchPath} from 'react-router'
 import {Link, withRouter} from 'react-router-dom';
 import QueueAnim from 'rc-queue-anim';
-import FullPageCard from '../component/FullPageCard'
-import style from './NewHitokoto.css';
 import Textarea from 'react-textarea-autosize';
+
+import FullPageCard from '../component/FullPageCard'
+import showNotification from '../API/showNotification';
+
+import style from './NewHitokoto.css';
 let {hitokotoTextarea, hitokotoSouceInput, hitokotoSouceTypeBlock, operations} = style;
 
 class NewHitokoto extends Component {
@@ -47,10 +50,12 @@ class NewHitokoto extends Component {
       hitokoto = this.textarea.value;
 
     if (hitokoto.length == 0) {
-      return alert('hitokoto内容不能为空！')
+      showNotification('hitokoto内容不能为空！', 'error');
+      return;
     }
     if (source.length == 0) {
-      return alert('hitokoto来源不能为空！')
+      showNotification('hitokoto来源不能为空！', 'error')
+      return;
     }
     return {hitokoto, author, source, category}
   }
@@ -58,7 +63,6 @@ class NewHitokoto extends Component {
     let hitokoto = this.getHitokoto();
     if (hitokoto) {
       this.props.publish(hitokoto).then(result => {
-        console.log(result);
         this.setState({hitokoto: ({})})
       });
     }

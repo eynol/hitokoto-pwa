@@ -1,6 +1,7 @@
 import 'react-hot-loader/patch';
 import './normalize.css';
-import './font/iconfont.css';
+import './fonts/iconfont.css';
+import './fonts/iconfont-more.css';
 import './ui.css';
 import 'core-js/es6/array';
 import 'core-js/es6/promise';

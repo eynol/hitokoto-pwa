@@ -1,11 +1,14 @@
 import React, {Component} from 'react';
+import QueueAnim from 'rc-queue-anim';
+import {Link, withRouter} from 'react-router-dom';
+
+import hitokotoDriver from '../API/hitokotoDriver';
+
 import FullPageCard from '../component/FullPageCard'
 import PatternDisplay from '../component/PatternDisplay'
-import QueueAnim from 'rc-queue-anim';
+import Modal from '../component/Modal';
 
 import {GLOBAL_ANIMATE_TYPE} from '../configs'
-import hitokotoDriver from '../API/hitokotoDriver';
-import {Link, withRouter} from 'react-router-dom';
 
 class Patterns extends Component {
   constructor(props) {
@@ -13,10 +16,22 @@ class Patterns extends Component {
     this.state = {
       patterns: hitokotoDriver.patterManager.patterns,
       update: undefined,
-      newPattern: undefined
+      newPattern: undefined,
+      deletePaternModal: null
     }
 
     this.showUpdate = this.showUpdate.bind(this);
+    this.handleUpdate = this.handleUpdate.bind(this);
+    this.hideUpdate = this.hideUpdate.bind(this);
+
+    this.showDeleteModal = this.showDeleteModal.bind(this);
+    this.hideDeleteModal = this.hideDeleteModal.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
+
+    this.showNewPattern = this.showNewPattern.bind(this);
+    this.hideNewPattern = this.hideNewPattern.bind(this);
+    this.handleNewPattern = this.handleNewPattern.bind(this);
+
   }
   showUpdate(id) {
     this.setState({update: id});
@@ -29,11 +44,16 @@ class Patterns extends Component {
   hideUpdate() {
     this.setState({update: undefined})
   }
+  showDeleteModal(id) {
+    this.setState({deletePaternModal: id});
+  }
+  hideDeleteModal() {
+    this.setState({deletePaternModal: null});
+  }
   handleDelete(id) {
-    if (confirm('你确认要删除该模式？')) {
-      hitokotoDriver.patterManager.deletePattern(id);
-      this.hideUpdate()
-    }
+    hitokotoDriver.patterManager.deletePattern(id);
+    this.hideUpdate();
+    this.hideDeleteModal();
   }
   showNewPattern() {
     this.setState({newPattern: Date.now()});
@@ -56,9 +76,11 @@ class Patterns extends Component {
       return (
         <li key={pattern.id}>
           <p className="ellipsis">
-            <button onClick={this.showUpdate.bind(this, pattern.id)}>修改</button>&nbsp; {pattern.name}{pattern.default
-              ? '（当前默认模式）'
-              : ''}
+            <button onClick={() => this.showUpdate(pattern.id)}>修改</button>
+            <button className="color-red" onClick={() => this.showDeleteModal(pattern.id)}>删除</button>&nbsp;{pattern.name}{pattern.default
+              ? '（默认）'
+              : ''}<br/>
+
           </p>
         </li>
       )
@@ -80,9 +102,8 @@ class Patterns extends Component {
         key={this.state.update}
         sources={hitokotoDriver.patterManager.sources}
         hook={{
-        hide: this.hideUpdate.bind(this),
-        update: this.handleUpdate.bind(this),
-        delete: this.handleDelete.bind(this)
+        hide: this.hideUpdate,
+        update: this.handleUpdate
       }}/>)
     } else if (this.state.newPattern) {
       patternDisplay = (<PatternDisplay
@@ -90,12 +111,13 @@ class Patterns extends Component {
         sources={hitokotoDriver.patterManager.sources}
         key={this.state.newPattern}
         hook={{
-        hide: this.hideNewPattern.bind(this),
-        newPattern: this.handleNewPattern.bind(this)
+        hide: this.hideNewPattern,
+        newPattern: this.handleNewPattern
       }}/>)
     }
     let {location, path} = this.props;
-    return [(
+    return [
+      (
         <FullPageCard cardname="模式管理">
           <QueueAnim
             component="ul"
@@ -104,7 +126,7 @@ class Patterns extends Component {
             {lists}
             <li key="new">
               <button
-                onClick={this.showNewPattern.bind(this)}
+                onClick={this.showNewPattern}
                 style={{
                 float: 'right'
               }}>添加</button>
@@ -113,7 +135,18 @@ class Patterns extends Component {
         </FullPageCard>
       ), (
         <QueueAnim type={GLOBAL_ANIMATE_TYPE} ease={['easeOutQuart', 'easeInOutQuart']}>{patternDisplay}</QueueAnim>
-      )]
+      ), this.state.deletePaternModal
+        ? <Modal exit={this.hideDeleteModal}>
+            <h1>你确定要删除该模式?</h1>
+            <div className="clearfix">
+              <span className="pull-right">
+                <button role="exit">取消</button>
+                <button onClick={this.handleDelete}>确定</button>
+              </span>
+            </div>
+          </Modal>
+        : null
+    ]
 
   }
 }

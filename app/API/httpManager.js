@@ -60,7 +60,17 @@ function timeoutPromise(ms, promise) {
  * @returns Promise
  */
 function FETCHREJECT(reason) {
-  return Promise.reject('请求失败：' + reason)
+
+  if (/TypeError: Failed to fetch/m.test(reason)) {
+    return Promise.reject(`请求未发送成功！
+    可能的原因:
+    1.您的网络异常
+    2.服务器未上线
+
+    详细:${reason}`)
+  } else {
+    return Promise.reject('请求失败：' + reason)
+  }
 }
 
 class HTTPManager {

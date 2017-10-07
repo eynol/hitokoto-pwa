@@ -38,7 +38,8 @@ module.exports = {
             options: {
               importLoaders: 1,
               modules: true,
-              sourceMap: true
+              sourceMap: true,
+              localIdentName: '[name]__[local]--[hash:base64:5]'
             }
           },
           'postcss-loader'
@@ -53,6 +54,7 @@ module.exports = {
         loader: "file-loader?limit=1024&name=fonts/[name].[ext]"
       }, {
         test: /\.(png|svg|jpg|gif)$/,
+        exclude: /app\/fonts/,
         loader: 'file-loader'
       }
     ]

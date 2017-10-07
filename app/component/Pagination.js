@@ -65,8 +65,6 @@ class Pagination extends Component {
   }
   go(event) {
     event.target.blur();
-    console.log(event.target);
-    console.log(event.target.textContent);
     this.props.func(event.target.textContent, this.props.limit || 20);
 
   }
@@ -138,7 +136,7 @@ class Pagination extends Component {
         ? 'disabled'
         : ''}
         onClick={this.lastOne}>
-        <i className="iconfont icon-next1"></i>
+        <i className="iconfont icon-last"></i>
       </button>
     ))
 

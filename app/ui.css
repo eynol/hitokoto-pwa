@@ -1,4 +1,123 @@
 
+:global .modal__root:before{
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 599;
+  background-color: rgba(0, 0, 0, 0.05);
+  
+  animation-duration: .3s;
+  transition: all .3s;
+  animation-timing-function: cubic-bezier(0.165, 0.84, 0.44, 1);
+  animation-fill-mode: forwards;
+}
+
+@keyframes :global(bgFadeIn){
+  from{
+    background-color: rgba(0, 0, 0, 0.00);
+  }
+  to{
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+}
+@keyframes :global(bgFadeOut){
+  from{
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+  to{
+    background-color: rgba(0, 0, 0, 0.00);
+  }
+}
+
+:global .modal-enter.modal__root:before{
+  animation-name: bgFadeIn; 
+}
+:global .modal-leave.modal__root:before{
+  animation-name: bgFadeOut; 
+}
+
+:global .modal{
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  z-index: 600;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow-x: hidden;
+  overflow-y: auto; 
+
+  transition: all .3s;
+  transform: translateX(0);
+  animation-duration: .3s;
+  animation-timing-function: cubic-bezier(0.165, 0.84, 0.44, 1);;
+}
+
+
+
+
+@keyframes :global(slideIn) {
+  from{
+    opacity: 0;
+    transform: translateX(100px);
+  }
+  to{
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+@keyframes :global(slideOut) {
+  from{
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to{
+    opacity: 0;
+    transform: translateX(-100px);
+  }
+}
+
+
+:global .modal-enter.modal__root :global .modal  {
+  animation-name: slideIn ;
+}
+:global .modal-leave.modal__root :global .modal  {
+  animation-name: slideOut ;
+  animation-fill-mode: forwards;
+}
+
+:global .modal__card{
+  display: inline-block;
+  position: relative;
+  min-width: 300px;
+  margin: 20px 10px;
+  padding: 20px 30px;
+  border-radius: 4px;
+  background-color: white;
+  box-shadow: 0px 3px 15px -7px rgba(29, 29, 29, 0.7);
+ 
+}
+
+
+
+
+@media screen and (max-width:768px){
+  :global .modal__card h1{
+    font-size: 16px;
+  }
+}
+
+:global .modal__default-close{
+  cursor: pointer;
+  position: absolute;
+  font-size: 20px;
+  top: 6px;
+  right: 6px;
+}
 ul {
   list-style: none;
 }
@@ -301,7 +420,7 @@ h2 {
   transition: border .3s;
 }
 
-:global(.form) :global(li.inactive){
+:global(.form li.inactive){
   border-left-color:  #9B9F9E;
 }
 :global(.form) select {
@@ -327,6 +446,9 @@ h2 {
   content: '';
   clear: both;
   display: table;
+}
+:global(.pull-left){
+  float: left;
 }
 :global(.pull-right){
   float: right;
@@ -359,3 +481,4 @@ h2 {
   cursor: wait;
   color:gray;
 }
+

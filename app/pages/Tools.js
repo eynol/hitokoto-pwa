@@ -9,7 +9,6 @@ class Tools extends Component {
   }
   clearLS() {
     window.localStorage.clear();
-    alert('已清除！');
     location.href = '#';
     location.reload();
   }

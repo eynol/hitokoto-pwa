@@ -7,6 +7,7 @@ import QueueAnim from 'rc-queue-anim';
 import httpManager from '../API/httpManager';
 
 import hitokotoDriver from '../API/hitokotoDriver'
+import showNotification from '../API/showNotification';
 
 import Pagination from '../component/Pagination';
 import Loading from '../component/Loading'
@@ -56,6 +57,7 @@ class HitoCollectionList extends Component {
     let url = this.getURL()
     if (url) {
       hitokotoDriver.patterManager.newSourceWithUsernameAndCol(url.username, url.collection);
+      showNotification('将句集加入来源成功！');
       this.forceUpdate();
     }
 
@@ -77,13 +79,13 @@ class HitoCollectionList extends Component {
     let match = matchPath(pathname, {path: '/home/:name'})
 
     if (!match) {
+      showNotification('当前路径错误');
       return;
     }
 
     let element = ReactDOM.findDOMNode(this);
     if (element) {
       if (element.scrollIntoView) {
-        console.log(element);
         element.firstElementChild && element.firstElementChild.scrollIntoView({behavior: 'smooth', block: "start", inline: "nearest"});
       } else {
         element.scrollTop = 0;
@@ -95,8 +97,8 @@ class HitoCollectionList extends Component {
       }} = match;
     if (name && name.length) {
       return httpManager.API_viewCollection(name, page, perpage).then(result => {
-        console.log(result);
         if (result.err) {
+          showNotification('获取用户句集列表失败！\n' + result.err, 'error');
           return Promise.reject(result.err);
         } else {
           this.props.fetchHitokotosSuccess(result.hitokotos);
@@ -104,7 +106,7 @@ class HitoCollectionList extends Component {
         }
       })
     } else {
-      alert('路径名不正确');
+
       this.props.history.push('/home');
     }
 
@@ -138,7 +140,7 @@ class HitoCollectionList extends Component {
               }}>将此句集加入来源</button>}
             <button
               onClick={() => {
-              alert('链接地址为：\n' + this.getURL().url)
+              showNotification('链接地址为：\n' + this.getURL().url, 'info', true)
             }}>API链接</button>
           </HitoView>
         )];

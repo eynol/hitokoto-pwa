@@ -50,7 +50,7 @@ class HitokotoPlayer extends Component {
         {lastCount > 1
           ? <li key={id + 'last'}>
               <a href='javascript:' onClick={handleLast} title="上一条">
-                <i className="iconfont icon-next1"></i>
+                <i className="iconfont icon-last"></i>
               </a>
             </li>
           : null}

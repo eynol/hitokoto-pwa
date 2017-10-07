@@ -1,0 +1,61 @@
+.contianer{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 700;
+  overflow-x:hidden;
+  overflow-y: auto;
+  text-align: center;
+  display: flex;  
+  flex-direction: column;
+  flex-wrap: nowrap;
+}
+
+.NWrapper{
+  display: inline-block;
+}
+:global .icon-paceholder{
+  padding-left: 8px;
+  padding-right: 8px;
+}
+.notification{
+  display: inline-block;
+  vertical-align: top;
+  min-width: 300px;
+  max-width: 700px;
+  text-align: left;
+  font-size: 14px;
+  line-height: 2;
+  padding: 10px 10px;
+  border-radius: 3px;
+  margin: 4px 10px;
+  pointer-events: all;
+  background-color: white;
+  /* color: white;
+  background-color: rgba(255, 44, 44, 0.9); */
+  box-shadow: 0 3px 12px -1px rgba(0 , 0, 0, .15);
+}
+
+.info{
+  color:black;
+  background-color: white;
+}
+.success{
+  color: rgb(0, 0, 0);
+  background-color: rgba(147, 245, 199, 0.9);
+}
+.error{
+  color: white;
+  background-color: rgba(255, 44, 44, 0.9);
+}
+.actions{
+  cursor: pointer;
+  float: right;
+}
+.content{
+  display: table-cell;
+  white-space: pre-line;
+}

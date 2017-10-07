@@ -3,10 +3,13 @@ import PropTypes from 'prop-types'
 import {Link, withRouter} from 'react-router-dom'
 import QueueAnim from 'rc-queue-anim';
 import httpManager from '../API/httpManager';
+import showNotification from '../API/showNotification';
+
 import CollectionBox from '../component/CollectionBox'
 import HitoView from '../component/HitoView'
-
+import Modal from '../component/Modal';
 import Loading from '../component/Loading'
+
 import {CardContainer} from '../component/CollectionBox.css'
 
 class HitoCollection extends Component {
@@ -16,11 +19,15 @@ class HitoCollection extends Component {
       status: 'collections',
       currentView: null,
       hitokotos: null,
-      inited: false
+      inited: false,
+      deleteCollectionModal: null
     }
     this.viewCollection = this.viewCollection.bind(this);
     this.newCollection = this.newCollection.bind(this);
     this.changeCollectionName = this.changeCollectionName.bind(this);
+
+    this.showDeleteModal = this.showDeleteModal.bind(this);
+    this.hideDeleteModal = this.hideDeleteModal.bind(this);
     this.deleteCollection = this.deleteCollection.bind(this);
   }
 
@@ -30,14 +37,13 @@ class HitoCollection extends Component {
   fetchCollections() {
     httpManager.API_myCollections().then(result => {
       if (result.err) {
-        alert(result.err);
+        showNotification(result.err, 'error');
       } else {
         this.setState({inited: true});
 
         this.props.fetchCollectionSuccess(result.collections);
       }
-      console.log(result);
-    }).catch(e => alert(e));
+    }).catch(e => showNotification(e, 'error'));
   }
   viewCollection(name) {
     this.props.history.push('/home/' + name);
@@ -45,40 +51,49 @@ class HitoCollection extends Component {
   newCollection(name) {
     return httpManager.API_newCollection({name}).then(result => {
       if (result.err) {
-        alert(result.err);
+        showNotification(result.err, 'error');
       } else {
+        showNotification('添加句集成功！', 'success');
         this.props.fetchCollectionSuccess(result.collections);
       }
-      console.log('result', result);
     });
   }
   changeCollectionName(oldname, newname) {
     if (oldname === '默认句集') {
-      console.log('默认句集无法修改')
+      showNotification('默认句集无法修改', 'error');
       return;
     }
 
     httpManager.API_updateCollectionName({oldname, newname}).then(result => {
       if (result.err) {
-        alert(result.err);
+        showNotification(result.err, 'error');
       } else {
+        showNotification('重命名句集成功！', 'success');
         this.props.fetchCollectionSuccess(result.collections);
       }
-      console.log('result', result);
     });
   }
-  deleteCollection(name) {
-    if (name === '默认句集') {
-      console.log('默认句集无法删除')
+  showDeleteModal(collectionName) {
+    if (collectionName === '默认句集') {
+      showNotification(默认句集无法删除, 'error');
       return;
     }
+    this.setState({deleteCollectionModal: collectionName})
+  }
+  hideDeleteModal() {
+
+    this.setState({deleteCollectionModal: null});
+  }
+  deleteCollection() {
+    let name = this.state.deleteCollectionModal;
     httpManager.API_deleteCollection({name}).then(result => {
       if (result.err) {
-        alert(result.err);
+        showNotification(result.err, 'error');
       } else {
+        this.hideDeleteModal();
+        showNotification('删除句集成功！', 'success');
         this.props.fetchCollectionSuccess(result.collections);
       }
-      console.log('result', result);
     });
   }
   render() {
@@ -92,7 +107,7 @@ class HitoCollection extends Component {
       ListToShow = data.map((collection, index) => {
         return (<CollectionBox
           changeName={this.changeCollectionName}
-          delete={this.deleteCollection}
+          delete={this.showDeleteModal}
           tabIndex={index}
           view={this.viewCollection}
           key={collection.name}
@@ -109,24 +124,36 @@ class HitoCollection extends Component {
       ListToShow = (<Loading key="loading"/>)
     }
 
-    return (
-      <QueueAnim
-        animConfig={[
-        {
-          opacity: [
-            1, 0
-          ],
-          translateX: [0, 50]
-        }, {
-          opacity: [
-            1, 0
-          ],
-          position: 'absolute',
-          translateX: [0, -50]
-        }
-      ]}
-        className={CardContainer}>{ListToShow}</QueueAnim>
-    )
+    return [
+      (
+        <QueueAnim
+          animConfig={[
+          {
+            opacity: [
+              1, 0
+            ],
+            translateX: [0, 50]
+          }, {
+            opacity: [
+              1, 0
+            ],
+            position: 'absolute',
+            translateX: [0, -50]
+          }
+        ]}
+          className={CardContainer}>{ListToShow}</QueueAnim>
+      ), this.state.deleteCollectionModal
+        ? <Modal exit={this.hideDeleteModal}>
+            <h1>你确定要删除该hitokoto?</h1>
+            <div className="clearfix">
+              <span className="pull-right">
+                <button role="exit">取消</button>
+                <button onClick={this.deleteCollection}>确定</button>
+              </span>
+            </div>
+          </Modal>
+        : null
+    ]
   }
 }
 HitoCollection.propTypes = {

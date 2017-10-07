@@ -39,8 +39,7 @@ class ExploreUserCollection extends Component {
     let element = ReactDOM.findDOMNode(this);
     if (element) {
       if (element.scrollIntoView) {
-        console.log(element);
-        element.firstElementChild.scrollIntoView({behavior: 'smooth', block: "start", inline: "nearest"});
+        element.scrollIntoView({behavior: 'smooth', block: "start", inline: "nearest"});
       } else {
         element.scrollTop = 0;
       }

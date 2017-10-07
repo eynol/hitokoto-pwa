@@ -10,20 +10,24 @@ import Tools from '../pages/Tools'
 import NavManagement from '../pages/NavManagement'
 import Explore from '../pages/Explore'
 
+import Login from '../containers/Login'
+import Regist from '../containers/Regist'
 import Home from '../containers/Home'
 import Index from '../containers/Index'
 import Profile from '../containers/Profile'
 
+import NotificationContainer from '../containers/Notification.Container'
+
 import {ANIMATE_CONFIG_NEXT, GLOBAL_ANIMATE_TYPE} from '../configs'
 const ROUTES = [
   {
-    to: /^\/$/,
+    to: /^(\/|\/login)$/,
     component: Index,
     name: '首页'
   }, {
     to: /^\/nav-management$/,
     component: NavManagement,
-    name: '管理导航'
+    name: '管理导航页面'
   }, {
     to: /^\/sources/,
     component: Sources,
@@ -94,6 +98,9 @@ class AppContainer extends Component {
          只好每次都重新渲染*/}
           <Child key={mathPath.name}/>
         </QueueAnim>
+        <Regist/>
+        <Login/>
+        <NotificationContainer/>
       </div>
     );
   }

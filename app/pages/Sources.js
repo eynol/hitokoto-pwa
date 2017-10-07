@@ -5,8 +5,10 @@ import QueueAnim from 'rc-queue-anim';
 import {GLOBAL_ANIMATE_TYPE} from '../configs'
 
 import hitokotoDriver from '../API/hitokotoDriver'
+
 import FullPageCard from '../component/FullPageCard'
 import SourceDisplay from '../component/SourceDisplay'
+import Modal from '../component/Modal';
 
 class Sources extends Component {
   constructor(props) {
@@ -14,8 +16,21 @@ class Sources extends Component {
     this.state = {
       sources: hitokotoDriver.patterManager.sources,
       update: undefined,
-      newSource: undefined
+      newSource: undefined,
+      deleteSourceModal: null
     }
+
+    this.showNewSource = this.showNewSource.bind(this);
+    this.handleNewSource = this.handleNewSource.bind(this);
+    this.hideNewSource = this.hideNewSource.bind(this);
+
+    this.showUpdate = this.showUpdate.bind(this);
+    this.handleUpdate = this.handleUpdate.bind(this);
+    this.hideUpdate = this.hideUpdate.bind(this);
+
+    this.showDeleteModal = this.showDeleteModal.bind(this);
+    this.hideDeleteModal = this.hideDeleteModal.bind(this);
+    this.handleDeleteSource = this.handleDeleteSource.bind(this);
   }
 
   showNewSource() {
@@ -64,13 +79,18 @@ class Sources extends Component {
       this.setState({update: undefined})
     }
   }
-  handleDeleteSource(id) {
-    if (confirm('确认删除该来源？')) {
+  showDeleteModal(id) {
+    this.setState({deleteSourceModal: id});
+  }
+  hideDeleteModal() {
+    this.setState({deleteSourceModal: null});
+  }
+  handleDeleteSource() {
+    let id = this.state.deleteSourceModal;
 
-      hitokotoDriver.patterManager.deleteSource(id);
+    hitokotoDriver.patterManager.deleteSource(id);
+    this.hideDeleteModal();
 
-      this.setState({update: undefined})
-    }
   }
   hideUpdate() {
     this.setState({update: undefined});
@@ -81,7 +101,8 @@ class Sources extends Component {
       return (
         <li key={source.id}>
           <p className="ellipsis">
-            <button onClick={this.showUpdate.bind(this, source.id)}>修改</button>&nbsp; {source.name}
+            <button onClick={() => this.showUpdate(source.id)}>修改</button>
+            <button className="color-red" onClick={() => this.showDeleteModal(source.id)}>删除</button>&nbsp; {source.name}
             - {source.url}</p>
         </li>
       )
@@ -101,9 +122,8 @@ class Sources extends Component {
         title='修改来源'
         sid={this.state.update}
         hook={{
-        update: this.handleUpdate.bind(this),
-        delete: this.handleDeleteSource.bind(this),
-        hide: this.hideUpdate.bind(this)
+        update: this.handleUpdate,
+        hide: this.hideUpdate
       }}
         source={sourceToUpdate}/>)
     } else if (this.state.newSource) {
@@ -111,12 +131,13 @@ class Sources extends Component {
         key={this.state.newSource}
         title='添加来源'
         hook={{
-        newSource: this.handleNewSource.bind(this),
-        hide: this.hideNewSource.bind(this)
+        newSource: this.handleNewSource,
+        hide: this.hideNewSource
       }}/>)
     }
 
-    return [(
+    return [
+      (
         <FullPageCard cardname="来源管理">
           <p>
             <i className="iconfont icon-tishi"></i>
@@ -129,7 +150,7 @@ class Sources extends Component {
               {lists}
               <li key="new">
                 <button
-                  onClick={this.showNewSource.bind(this)}
+                  onClick={this.showNewSource}
                   style={{
                   float: 'right'
                 }}>添加</button>
@@ -140,7 +161,18 @@ class Sources extends Component {
       ), (
         <QueueAnim type={['right', 'left']} ease={['easeOutQuart', 'easeInOutQuart']}>
           {sourceDisplayC}</QueueAnim>
-      )];
+      ), this.state.deleteSourceModal
+        ? <Modal exit={this.hideDeleteModal}>
+            <h1>你确定要删除该来源?</h1>
+            <div className="clearfix">
+              <span className="pull-right">
+                <button role="exit">取消</button>
+                <button onClick={this.handleDeleteSource}>确定</button>
+              </span>
+            </div>
+          </Modal>
+        : null
+    ];
   }
 }
 

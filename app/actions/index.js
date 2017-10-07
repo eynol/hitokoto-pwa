@@ -59,3 +59,27 @@ export const refreshCollectionHitokotoSuccess = () => ({type: REFRESH_COLLECTION
 
 export const REMOVE_ONE_HITO_SUCCESS = 'hitokotos remove one success'
 export const removeHitokotosSuccess = (_id) => ({type: REMOVE_ONE_HITO_SUCCESS, value: _id})
+
+/**
+ *  Notifications
+ *
+*/
+
+export const SHOW_NOTIFICATION = 'show notification'
+export const REMOVE_NOTIFICATION = 'remove notification'
+
+/**
+ * @param {String} type
+ * @param {String} msg
+ * @param {boolean} [interactive=false]
+ */
+export const sendNotification = (value, type = 'info', interactive = false, timeout = 3) => dispatch => {
+  let id = Date.now();
+  if (!interactive) {
+    setTimeout(() => {
+      dispatch(removeNotification(id));
+    }, timeout * 1000);
+  }
+  dispatch({type: SHOW_NOTIFICATION, id, value, ntype: type, interactive});
+}
+export const removeNotification = (id) => ({type: REMOVE_NOTIFICATION, value: id})

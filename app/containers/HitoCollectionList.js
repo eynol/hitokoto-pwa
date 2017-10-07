@@ -4,7 +4,6 @@ import HitoCollectionList from '../pages/HitoCollectionList'
 
 import {fetchHitokotosSuccess, leaveCollection, refreshCollectionHitokotoSuccess, requestCollectionHitokotos} from '../actions'
 const mapStoreToProps = (state) => {
-  console.log(state);
   return ({hitokotos: state.collections.hitokotos, needRefresh: state.collections.needRefreshHikotokos, user: state.user, currentCollection: state.collections.currentCollection})
 };
 const mapActionToProps = (dispatch) => ({

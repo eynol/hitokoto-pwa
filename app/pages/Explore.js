@@ -35,7 +35,6 @@ class NavManagement extends Component {
     let element = ReactDOM.findDOMNode(this);
     if (element) {
       if (element.scrollIntoView) {
-        console.log(element);
         element.firstElementChild.scrollIntoView({behavior: 'smooth', block: "start", inline: "nearest"});
       } else {
         element.scrollTop = 0;
@@ -43,7 +42,6 @@ class NavManagement extends Component {
     }
     this.setState({inited: false})
     httpManager.API_getAllPublicHitokotos(page, 10).then(result => {
-      console.log(result);
       this.setState({inited: true, totalPages: result.total, currentPage: result.current, publicHitokotos: result.hitokotos})
     })
   }
