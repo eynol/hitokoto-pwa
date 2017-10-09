@@ -87,7 +87,7 @@ class ProxyModal extends React.Component {
             <span className="modal__default-close" onClick={this.proxyExit}>
               <i className="iconfont icon-round_close_light" onClick={this.proxyExit}></i>
             </span>
-            {children};
+            {children}
           </div>
         </div>
       </Modal>

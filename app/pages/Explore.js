@@ -6,6 +6,7 @@ import FullPageCard from '../component/FullPageCard'
 import QueueAnim from 'rc-queue-anim';
 
 import httpManager from '../API/httpManager';
+import showNotification from '../API/showNotification';
 
 import ExploreUser from './ExploreUser'
 import ExploreUserCollection from './ExploreUserCollection'
@@ -21,6 +22,7 @@ class NavManagement extends Component {
     super(props);
     this.state = {
       inited: false,
+      error: null,
       currentPage: 1,
       totalPages: 0,
       publicHitokotos: [],
@@ -42,7 +44,10 @@ class NavManagement extends Component {
     }
     this.setState({inited: false})
     httpManager.API_getAllPublicHitokotos(page, 10).then(result => {
-      this.setState({inited: true, totalPages: result.total, currentPage: result.current, publicHitokotos: result.hitokotos})
+      this.setState({inited: true, error: null, totalPages: result.total, currentPage: result.current, publicHitokotos: result.hitokotos})
+    }).catch(e => {
+      this.setState({error: e, inited: false});
+      showNotification('获取所有公开数据失败', 'error');
     })
   }
   uidByName(name) {
@@ -81,9 +86,19 @@ class NavManagement extends Component {
                 ]}>
                   {this.state.inited
                     ? null
-                    : <Loading key="loading"/>}
+                    : <Loading
+                      error={this.state.error}
+                      retry={() => this.getAllPublicHitokotos(this.state.currentPage)}
+                      key="loading"/>}
                   <div className="view">{this.state.publicHitokotos.map(hito => (
-                      <PublicHitokoto data={hito}></PublicHitokoto>
+                      <PublicHitokoto data={hito}>
+                        <a href="javascript:">
+                          <i className="iconfont icon-like"></i>
+                        </a>
+                        <a href="javascript:">
+                          <i className="iconfont icon-favor"></i>
+                        </a>
+                      </PublicHitokoto>
                     ))}</div>
                 </QueueAnim>
                 <Pagination

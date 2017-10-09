@@ -9,13 +9,14 @@ import tranformDate from '../API/social-time-transform'
 import {
   tag,
   item,
-  idspan,
+
+  timetag,
   userName,
   userHitokotoFlex,
   userHitokotoFlexChild,
   userHitokoto,
   userHitokotoSource,
-  userHitokotoAction
+  actions
 } from './PublicHitokoto.css'
 
 const _ = (n) => n < 10
@@ -24,7 +25,6 @@ const _ = (n) => n < 10
 function PublicHitokoto(props) {
   let {
       data: {
-        id,
         hitokoto,
         source,
         author,
@@ -32,7 +32,7 @@ function PublicHitokoto(props) {
         creator_id,
         category,
         created_at,
-        collec
+        collection
       }
     } = props,
 
@@ -40,14 +40,14 @@ function PublicHitokoto(props) {
 
   return (
     <div className={item}>
-      <div>
+      <div className="clearfix">
         <Link to={"/explore/" + creator} className={userName}>
           <span>{creator}</span>
         </Link>
-        <Link className="color-basic" to={"/explore/" + creator + '/' + collec[0]}>{collec[0]}</Link>&nbsp;&nbsp;
-        <span className="color-basic">{timeStr}</span>
+        <Link className="color-basic" to={"/explore/" + creator + '/' + collection}>{collection}</Link>
+        <br/>
+        <span className={timetag}>{timeStr}</span>
       </div>
-
       <div className={userHitokotoFlex}>
         <div className={userHitokotoFlexChild + ' clearfix'}>
           <span className={userHitokoto}>{hitokoto}</span><br/>
@@ -57,17 +57,9 @@ function PublicHitokoto(props) {
         </div>
       </div>
       <div className="clearfix">
-        <span className={tag + ' color-basic'}>No.{id}</span>
-        <span className={tag + ' color-basic'}>#{category}#</span>
-        <div className="pull-right">
-          <a href="javascript:" className={userHitokotoAction}>
-            <i className="iconfont icon-like">喜欢</i>
-          </a>
-          <a href="javascript:" className={userHitokotoAction}>
-            <i className="iconfont icon-favor">收藏</i>
-          </a>
+        <div className={"pull-right " + actions}>
+          {props.children}
         </div>
-
       </div>
     </div>
   )

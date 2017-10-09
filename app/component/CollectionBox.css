@@ -15,6 +15,11 @@
     cursor: pointer;
     position: relative;
     flex: 1 1 130px;
+    /* transition: .5s cubic-bezier(0.23, 1, 0.32, 1); */
+}
+
+.Card:hover{
+    background-color: #f6f6f6;
 }
 @media screen and (min-width:768px){
     .CardContainer{
@@ -34,6 +39,9 @@
 .Card--change {
     padding: 9px 20px 10px;
 }
+.Card--change:hover{
+    background-color: white
+}
 /* 20 +16 +20 = 56px +4 60px */
 .Card_content,
 .Card_content p {
@@ -44,6 +52,10 @@
 .Card_options>a {
     transition: opacity .5s cubic-bezier(0.23, 1, 0.32, 1);
     opacity: 0;
+    text-decoration: none;
+}
+.Card_options>a:hover,.Card_options>a:focus{
+    text-decoration: underline;
 }
 
 .Card--change .Card_options {
@@ -82,56 +94,4 @@
     text-align: center;
     padding: 13px 0;
     margin-bottom: 15px;
-}
-
-.Card:before,
-.Card_content:before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 2px;
-    background-color: black;
-    transition: .5s cubic-bezier(0.23, 1, 0.32, 1);
-    transform-origin: left top;
-    transform: scale(.005, 1)
-}
-
-.Card_content:before {
-    top: auto;
-    bottom: 0;
-    transform-origin: bottom right;
-}
-
-.Card:after,
-.Card_content:after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 2px;
-    background-color: black;
-    height: 100%;
-    transition: .5s cubic-bezier(0.23, 1, 0.32, 1);
-    transform-origin: top left;
-    transform: scale(1, .005)
-}
-
-.Card_content:after {
-    left: auto;
-    right: 0;
-    bottom: 0;
-    transform-origin: bottom right;
-}
-
-.Card:focus:before,
-.Card:focus .Card_content:before,
-.Card:focus:after,
-.Card:focus .Card_content:after,
-.Card:hover:before,
-.Card:hover .Card_content:before,
-.Card:hover:after,
-.Card:hover .Card_content:after {
-    transform: scale(1);
 }

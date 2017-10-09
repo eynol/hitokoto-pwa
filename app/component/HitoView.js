@@ -21,7 +21,6 @@ class HitoView extends Component {
   render() {
 
     let {
-      newone,
       newHitokoto,
       data,
       update,
@@ -29,14 +28,7 @@ class HitoView extends Component {
       preview,
       viewonly
     } = this.props;
-    if (newone) {
-      return (
-        <div>
-          <button onClick={newHitokoto}>新增一言</button>
-          {this.props.children}
-        </div>
-      )
-    } else if (viewonly) {
+    if (viewonly) {
       let hitokotoText = data.hitokoto,
         author = data.author,
         source = data.source;

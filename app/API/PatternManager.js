@@ -2,7 +2,7 @@ import SourceManager, {SOURCES} from './SourceManager';
 
 const PREFIX = 'hikotoko';
 
-export const VERSION = '20170811';
+export const VERSION = '20170811 count1';
 const VERSION_NAME = PREFIX + 'patterns_version';
 
 export const PATTERN_UPDATE_KEYS = ['name', 'interval', 'type'];
@@ -70,6 +70,15 @@ export default class PatternManager extends SourceManager {
       this.patterns = PATTERNS;
     }
 
+    if (this.version_source.indexOf('count1') === -1) {
+      //  来源不包含计数器，所有来源初始化为0
+      this.patterns.forEach(function (pattern) {
+        pattern.sources.forEach(function (item) {
+          item.count = 0;
+        })
+      });
+      $setPatterns(this.patterns);
+    }
     /**
       * 3.如果VERSION高于_Verision，执行以下步骤，否则执行第4步。
       *    3.1   从SOURCE中找出_Sources中缺少的来源，追加到_Sources中。依据的标准是URL
@@ -110,15 +119,6 @@ export default class PatternManager extends SourceManager {
   }
   deleteSource(id) {
     super.deleteSource(id);
-    //  更新所有pattern的来源
-    this.patterns.forEach((pattern) => {
-      pattern.sources.forEach((oldSource, index) => {
-        if (oldSource.id == id) {
-          pattern.sources.splice(index, 1);
-        }
-      });
-    });
-    $setPatterns(this.patterns); //  保存修改到本地
   }
   newPattern(pattern) {
     this.patterns.push(pattern);

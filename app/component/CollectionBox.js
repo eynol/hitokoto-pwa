@@ -26,7 +26,8 @@ class CollectionBox extends Component {
     this.handleChangeClick = this.handleChangeClick.bind(this);
     this.doChange = this.doChange.bind(this);
     this.doDelete = this.doDelete.bind(this);
-    this.handleChangeKeyPress = this.handleKeyPress.bind(this);
+    this.handleChangeKeyPress = this.handleChangeKeyPress.bind(this);
+    this.handleKeyPress = this.handleKeyPress.bind(this);
     this.handleNewOneClick = this.handleNewOneClick.bind(this);
     this.newOne = this.newOne.bind(this);
     this.returnToNormal = this.returnToNormal.bind(this);
@@ -152,7 +153,7 @@ class CollectionBox extends Component {
               <label data-content="句集的名称">句集的名称</label>
             </div>
             <div className={Card_options}>
-              <a href="javascript:" onClick={this.newOne} tabIndex={0}>确认添加</a>&nbsp;
+              <a href="javascript:" onClick={this.newOne} tabIndex={0}>新增</a>&nbsp;
               <a href="javascript:" onClick={this.returnToNormal} tabIndex={0}>取消</a>
             </div>
           </div>

@@ -8,8 +8,9 @@ import QueueAnim from 'rc-queue-anim';
 import CollectionBox from '../component/CollectionBox';
 
 import hitokotoDriver from '../API/hitokotoDriver';
+import showNotification from '../API/showNotification';
 
-import HitoView from '../component/HitoView'
+import PublicHitokoto from '../component/PublicHitokoto'
 import Pagination from '../component/Pagination';
 import Loading from '../component/Loading'
 
@@ -21,6 +22,7 @@ class ExploreUserCollection extends Component {
     this.state = {
       hitokotos: [],
       inited: false,
+      error: null,
       total: 1,
       current: 1
     }
@@ -46,7 +48,10 @@ class ExploreUserCollection extends Component {
     }
     this.setState({inited: false})
     httpManager.API_getPublicUserHitokotos(uid, collectionName, page, perpage).then(result => {
-      this.setState({inited: true, hitokotos: result.hitokotos, current: result.currentPage, total: result.totalPage})
+      this.setState({inited: true, error: null, hitokotos: result.hitokotos, current: result.currentPage, total: result.totalPage})
+    }).catch(e => {
+      showNotification('获取句集内容失败！', 'error');
+      this.setState({error: e, inited: false});
     })
   }
   handleView(colname) {
@@ -71,7 +76,16 @@ class ExploreUserCollection extends Component {
         )
       } else {
 
-        ListToShow = hitokotos.map((hitokoto, index) => (<HitoView viewonly key={hitokoto.hitokoto} data={hitokoto}/>))
+        ListToShow = hitokotos.map((hitokoto, index) => (
+          <PublicHitokoto key={hitokoto._id} data={hitokoto}>
+            <a href="javascript:">
+              <i className="iconfont icon-like"></i>
+            </a>
+            <a href="javascript:">
+              <i className="iconfont icon-favor"></i>
+            </a>
+          </PublicHitokoto>
+        ))
       }
     }
 
@@ -91,7 +105,12 @@ class ExploreUserCollection extends Component {
         ]}>
           {this.state.inited
             ? null
-            : <Loading key="loading"/>}
+            : <Loading
+              error={this.state.error}
+              retry={() => {
+              this.exploreUserCollection(this.state.current)
+            }}
+              key="loading"/>}
           <div className="view">{ListToShow}</div>
         </QueueAnim>
         <Pagination

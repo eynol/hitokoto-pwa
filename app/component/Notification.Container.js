@@ -5,6 +5,8 @@ import {contianer} from './Notification.css';
 
 import Notification from './Notification';
 
+import {GLOBAL_ANIMATE_TYPE} from '../configs'
+
 class GlobalNotificationContainer extends Component {
   constructor(props) {
     super(props);
@@ -23,7 +25,7 @@ class GlobalNotificationContainer extends Component {
   render() {
     let {notifications, removeNotification} = this.props;
     return (
-      <QueueAnim className={contianer}>{notifications.map(noti => (<Notification data={noti} key={noti.id} remove={removeNotification}/>))}</QueueAnim>
+      <QueueAnim className={contianer} type={GLOBAL_ANIMATE_TYPE}>{notifications.map(noti => (<Notification data={noti} key={noti.id} remove={removeNotification}/>))}</QueueAnim>
     )
   }
 }

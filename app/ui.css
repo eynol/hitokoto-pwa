@@ -148,6 +148,38 @@ h2 {
   margin:.5em 0;
 }
 
+button {
+  outline: none;
+  -webkit-appearance: none;
+  border: none;
+  background-color: transparent;
+  color: #000;
+  cursor: pointer;
+  padding: .6em .9em;
+  position: relative;
+}
+
+button:after {
+  content: '';
+  position: absolute;
+  width: 50%;
+  margin-left: 25%;
+  height: 2px;
+  bottom: 0px;
+  left: 0;
+  background-color: currentColor;
+  display: block;
+  transform-origin: right bottom;
+  transition: transform .3s;
+  transform: scale(0, 1);
+}
+
+button:hover:after,
+button:focus:after {
+  transform-origin: top left;
+  transform: scale(1, 1);
+
+}
 
 
 @media screen and (min-width:768px){

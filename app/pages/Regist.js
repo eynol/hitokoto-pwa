@@ -187,8 +187,19 @@ class Regist extends Component {
       } else {
         //注册成功！
         showNotification('注册成功！', 'success');
-        this.props.hideRegist()
         this.props.registDone(resp);
+        that.setState({
+          username: undefined,
+          password: undefined,
+          password2: undefined,
+          showPasswordDiff: false,
+          email: undefined,
+          nickname: undefined,
+          errinfo: undefined,
+          code: null,
+          step: 1
+        })
+        this.props.hideRegist()
       }
     }).catch(reson => {
       if (typeof reson == 'string') {

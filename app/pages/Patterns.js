@@ -50,7 +50,8 @@ class Patterns extends Component {
   hideDeleteModal() {
     this.setState({deletePaternModal: null});
   }
-  handleDelete(id) {
+  handleDelete() {
+    let id = this.state.deletePaternModal;
     hitokotoDriver.patterManager.deletePattern(id);
     this.hideUpdate();
     this.hideDeleteModal();
@@ -107,7 +108,7 @@ class Patterns extends Component {
       }}/>)
     } else if (this.state.newPattern) {
       patternDisplay = (<PatternDisplay
-        title="添加模式"
+        title="新增模式"
         sources={hitokotoDriver.patterManager.sources}
         key={this.state.newPattern}
         hook={{
@@ -129,7 +130,7 @@ class Patterns extends Component {
                 onClick={this.showNewPattern}
                 style={{
                 float: 'right'
-              }}>添加</button>
+              }}>新增</button>
             </li>
           </QueueAnim>
         </FullPageCard>

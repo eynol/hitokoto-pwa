@@ -58,4 +58,5 @@
 .content{
   display: table-cell;
   white-space: pre-line;
+  text-align: justify;
 }

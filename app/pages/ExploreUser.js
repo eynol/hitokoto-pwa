@@ -8,6 +8,7 @@ import QueueAnim from 'rc-queue-anim';
 import CollectionBox from '../component/CollectionBox';
 
 import hitokotoDriver from '../API/hitokotoDriver';
+import showNotification from '../API/showNotification';
 
 import {CardContainer} from '../component/CollectionBox.css'
 
@@ -16,9 +17,11 @@ class ExploreUser extends Component {
     super(props);
     this.state = {
       user: {},
-      inited: false
+      inited: false,
+      error: null
     }
     this.handleView = this.handleView.bind(this);
+    this.exploreUser = this.exploreUser.bind(this);
   }
   componentWillMount() {
     this.exploreUser();
@@ -28,11 +31,19 @@ class ExploreUser extends Component {
       return this.props.history.push('/');
     }
     httpManager.API_getPublicUserDetail(this.props.uid).then(result => {
-      this.setState({inited: true, user: result.user})
+      this.setState({inited: true, error: null, user: result.user})
+    }).catch(e => {
+      this.setState({error: e, inited: false});
+      showNotification('获取用户句集失败', 'error');
     })
   }
   handleView(colname) {
     this.props.history.push(this.props.location.pathname + '/' + colname);
+  }
+  removeFromSoure(colname, evt) {
+    hitokotoDriver.patterManager.removeSourceWithUsernameAndCol(this.props.userName, colname);
+    this.forceUpdate();
+    evt.stopPropagation();
   }
   addToSource(colname, event) {
     hitokotoDriver.patterManager.newSourceWithUsernameAndCol(this.props.userName, colname);
@@ -45,9 +56,7 @@ class ExploreUser extends Component {
       patterManager = hitokotoDriver.patterManager,
       ListToShow = null;
     if (this.state.inited) {
-      ListToShow = profile.collectionsCount.map((count, index) => {
-        return ({name: profile.collections[index], count: count})
-      }).map((item, index) => (
+      ListToShow = profile.collections.map((item, index) => (
         <CollectionBox
           data={item}
           key={index}
@@ -55,7 +64,12 @@ class ExploreUser extends Component {
           viewonly={true}
           view={this.handleView}>
           {patterManager.isSourceExsit(patterManager.getCORSUrlOfUserCol(userName, item.name))
-            ? null
+            ? (
+              <a
+                href="javascript:"
+                tabIndex={index}
+                onClick={this.removeFromSoure.bind(this, item.name)}>从来源中删除</a>
+            )
             : (
               <a
                 href="javascript:"
@@ -87,7 +101,7 @@ class ExploreUser extends Component {
             ]}
               className={CardContainer}>{ListToShow}</QueueAnim>
           )
-          : (<Loading key="loading"/>)}
+          : (<Loading error={this.state.error} retry={this.exploreUser} key="loading"/>)}
       </FullPageCard>
     )
   }

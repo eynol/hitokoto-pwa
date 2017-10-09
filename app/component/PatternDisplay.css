@@ -1,24 +1,43 @@
-:local(.timerbox){
-  user-select:none;
-}
-:local(.timerbox) :global(.iconfont){
-  cursor: pointer;
-  display: inline-block;
-  transition: transform .3s;
+:local(.timerbox),
+:local(.countBox) {
+    user-select: none;
 }
 
-:local(.timerbox) :global(.iconfont:hover){
-  transform: rotateZ(180deg);
+:local(.timerbox) :global(.iconfont),
+:local(.countBox) :global(.iconfont) {
+    cursor: pointer;
+    display: inline-block;
+    transition: transform .3s;
 }
+
+:local(.timerbox) :global(.iconfont:hover) {
+    transform: rotateZ(180deg);
+}
+
+:local(.timerbox) :global(.iconfont.icon-question:hover) {
+    transform: rotateZ(0);
+}
+
 :local(.timerbox) input[type=number] {
-  text-align: center;
-  border:none;
-  border-radius: 0;
-  border-bottom: 1px solid black;
-  width: 4em;
+    text-align: center;
+    border: none;
+    border-radius: 0;
+    border-bottom: 1px solid black;
+    width: 4em;
 }
-:local(.timerbox) input[type=number]:focus {
-  border:none;
-  border-bottom: 1px solid black;
 
+:local(.countBox) input[type=number] {
+    text-align: left;
+    border: none;
+    border-radius: 0;
+    width: 13em;
+}
+
+:local(.timerbox) input[type=number]:focus {
+    border: none;
+    border-bottom: 1px solid black;
+}
+
+:local(.countBox) input[type=number]:focus {
+    border: none;
 }

@@ -1,7 +1,15 @@
 import React from 'react';
 
 import {withRouter} from 'react-router-dom';
-import {wrapper, paper, manageBox, closeButton, backButton} from './FullPageCard.css'
+import {
+  wrapper,
+  paper,
+  header,
+  content,
+  manageBox,
+  closeButton,
+  backButton
+} from './FullPageCard.css'
 
 function FullPageCard(props) {
   let {style, onClick} = props;
@@ -9,7 +17,7 @@ function FullPageCard(props) {
     <div key="default" style={style} className={wrapper} onClick={onClick}>
       <div className={paper}>
         <div className={manageBox}>
-          <h1>
+          <h1 className={header}>
             <a
               href="javascript:"
               onClick={props.close
@@ -25,7 +33,7 @@ function FullPageCard(props) {
             </a> */}
 
           </h1>
-          <div>
+          <div className={content}>
             {props.children}
           </div>
         </div>

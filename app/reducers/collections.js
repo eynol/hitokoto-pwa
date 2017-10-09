@@ -5,19 +5,22 @@ import {
   ENTER_COLLECTION,
   LEAVE_COLLECTION,
   FETCH_COLLECTION_HITO_SUCCESS,
-  PUBLISH_COLLECTION_HITO_SUCCESS,
+  REFRESH_COLLECTION_HITO,
   REFRESH_COLLECTION_HITO_DONE,
-  REMOVE_ONE_HITO_SUCCESS
+  REMOVE_ONE_HITO_SUCCESS,
+  PREVIEW_HITOKOTO,
+  CLEAN_PREVIEW
 } from '../actions'
 
 const DEFAULT_COLLECTIONS = {
   data: [],
   hitokotos: [],
-  editing: {},
-  needRefreshHikotokos: false
+  needRefreshHikotokos: false,
+  within: null,
+  preview: null
 }
 
-const collection = (collections = DEFAULT_COLLECTIONS, action) => {
+const collectionReducer = (collections = DEFAULT_COLLECTIONS, action) => {
   switch (action.type) {
     case COLLECTIONS_FETCHED_SUCCESS:
       return update(collections, {
@@ -32,7 +35,7 @@ const collection = (collections = DEFAULT_COLLECTIONS, action) => {
           $set: []
         }
       })
-    case PUBLISH_COLLECTION_HITO_SUCCESS:
+    case REFRESH_COLLECTION_HITO:
       return update(collections, {
         needRefreshHikotokos: {
           $set: true
@@ -64,9 +67,21 @@ const collection = (collections = DEFAULT_COLLECTIONS, action) => {
       } else {
         return collections
       }
+    case PREVIEW_HITOKOTO:
+      return update(collections, {
+        [action.ptype]: {
+          $set: action.value
+        }
+      })
 
+    case CLEAN_PREVIEW:
+      return update(collections, {
+        [action.ptype]: {
+          $set: null
+        }
+      })
     default:
       return collections;
   }
 }
-export default collection
+export default collectionReducer

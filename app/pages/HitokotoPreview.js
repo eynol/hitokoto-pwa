@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import QueueAnim from 'rc-queue-anim';
 import {Link, withRouter} from 'react-router-dom';
+
 import LayoutHorizon from '../component/LayoutHorizon'
 import LayoutVertical from '../component/LayoutVertical'
 import FullPage from '../component/FullPage'
@@ -9,36 +10,46 @@ import FullPageCard from '../component/FullPage'
 class HitokotoPreview extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      horizon: true
+    }
     this.goBack = this.goBack.bind(this);
-
+    this.switchLayout = this.switchLayout.bind(this);
+  }
+  switchLayout() {
+    this.setState(state => {
+      state.horizon = !state.horizon;
+      return state
+    })
   }
 
   goBack() {
     this.props.history.goBack();
   }
   render() {
-    let {hitokoto, layout, layoutHorizon, path, location: {
-          pathname
-        }} = this.props,
-      id = hitokoto.id,
-      pathReg = /^\/home\/[^\/]*\/preview$/;
+    let {layout, path, history, preview: hitokoto} = this.props,
+      pathname = history.location.pathname;
 
-    if (!pathReg.test(pathname)) {
+    console.log(pathname, hitokoto, this.props)
+    if (!/^\/home\/[^\/]+\/preview$/.test(pathname)) {
       return null;
     }
-    if (typeof hitokoto == 'string') {
+    if (!hitokoto) {
       return (
         <FullPageCard>
           <h1>
             <i className="iconfont icon-prompt_fill color-red"></i>hitokoto已被清空</h1>
-          <button onClick={this.goBack}>返回</button>
+          <button onClick={() => this.props.history.goBack()}>返回</button>
+          <button onClick={() => this.props.history.push('/')}>前往首页</button>
         </FullPageCard>
       )
     }
+
+    let id = hitokoto.id;
     let Actions = (
       <ul data-role="actions">
         <li key={id + 'style'}>
-          <a href="javascript:" onClick={this.props.switchLayout}>
+          <a href="javascript:" onClick={this.switchLayout}>
             <i className="iconfont icon-settings"></i>
           </a>
         </li>
@@ -50,7 +61,7 @@ class HitokotoPreview extends Component {
       </ul>
     );
 
-    if (layoutHorizon) {
+    if (this.state.horizon) {
       return (
         <FullPage style={{
           backgroundColor: layout.backgroundColor
@@ -92,4 +103,4 @@ class HitokotoPreview extends Component {
   }
 }
 
-export default withRouter(HitokotoPreview);
+export default HitokotoPreview;

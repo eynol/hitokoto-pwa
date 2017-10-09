@@ -1,7 +1,19 @@
 .item {
     margin-bottom: 30px;
+    padding: 10px 20px;
+    position: relative;
+    /* border:1p/x solid rgba(0, 0, 0, .05); */
+    border-radius: 4px;
+    transition: background-clor .3s;
+    /* background-color: #f6f6f6; */
+    /* box-shadow: 0 2px 4px -1px rgba(0 , 0, 0, .15); */
 }
-
+.item:hover{
+    background-color: #f6f6f6;
+}
+.item a {
+    text-decoration: none;
+}
 .item:after {
     content: '、，；。';
     display: block;
@@ -11,24 +23,10 @@
     width: 100%;
 }
 
-.idspan:before {
-    content: '# ';
-    display: inline-block;
-    padding-bottom: 4px;
-    border-bottom: 2px solid black;
+.timetag{
+    font-size: 12px;
+    line-height: 6px;
 }
-
-.tag {
-    border-radius: 8px;
-    padding: 3px 6px;
-    margin-right: 3px;
-    display: inline-block;
-    font-size: 0.7em;
-    line-height: 1;
-    border: 1px solid currentColor;
-    /* background-color: #e6e6e6; */
-}
-
 .userName {
     color: black;
     margin-right: 10px;
@@ -57,6 +55,9 @@
 }
 
 @media screen and (max-width:768px) {
+    .item{
+        padding: 20px;
+    }
     .userHitokotoFlex {
         padding: 20px 0;
     }
@@ -71,10 +72,8 @@
     font-size: 12px;
 }
 
-.userHitokotoAction {
+.actions a{
     text-decoration: none;
-    font-size: 14px;
-}
-.userHitokotoAction:hover{
-  color: pink;
+    font-size: 20px;
+    margin: 0 4px;
 }

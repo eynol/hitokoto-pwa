@@ -11,5 +11,5 @@ const mapActionToProps = (dispatch) => ({
   hideRegist: () => dispatch(hidePanel('regist')),
   showLogin: () => dispatch(showPanel('login')),
   registDone: (ret) => dispatch(userLogin(ret))
-})
+});
 export default connect(mapStoreToProps, mapActionToProps)(Regist)

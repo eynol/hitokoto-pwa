@@ -1,6 +1,6 @@
 const PREFIX = 'hikotoko';
 
-export const VERSION = '2017081401';
+export const VERSION = '2017081401 count1';
 const VERSION_NAME = PREFIX + 'sources_version';
 
 export const SOURCES = [
@@ -15,7 +15,8 @@ export const SOURCES = [
       return resp;
     }`,
     online: true,
-    local: true
+    local: true,
+    count: 0
   }, {
     id: 1002,
     name: 'hitoapi.cc',
@@ -32,7 +33,8 @@ export const SOURCES = [
         }
       }`,
     online: true,
-    local: true
+    local: true,
+    count: 0
   }, {
     id: 1005,
     name: 'hitoapi.cc',
@@ -48,7 +50,8 @@ export const SOURCES = [
        source:resp.source}
     }`,
     online: true,
-    local: true
+    local: true,
+    count: 0
   }, {
     id: 1006,
     name: 'https://api.satori.moe/hitokoto.php',
@@ -65,7 +68,8 @@ export const SOURCES = [
       }
     }`,
     online: true,
-    local: true
+    local: true,
+    count: 0
   }
 ];
 const SOURCES_NAME = PREFIX + 'sources';
@@ -118,6 +122,14 @@ export default class SourceManager {
      *    3.1   从SOURCE中找出_Sources中缺少的来源，追加到_Sources中。依据的标准是URL
      *    3.2   如果有修改，保存_Sources到本地;
      */
+    if (this.version_source.indexOf('count1') === -1) {
+      //  来源不包含计数器，所有来源初始化为0
+      this.sources.forEach(function (item) {
+        item.count = 0;
+      });
+      $setSources(this.sources);
+    }
+
     if (VERSION > this.version_source) {
       //  用map缓存已有的本地的url
       let urlMap = {};
@@ -127,7 +139,7 @@ export default class SourceManager {
       });
       SOURCES.forEach((src) => {
         if (!urlMap[src.url]) {
-          //url不存在,添加至_sources
+          //  url不存在,添加至_sources
           this.sources.push(src);
           needUpdateSource = true;
         }
@@ -142,6 +154,10 @@ export default class SourceManager {
   newSource(source) {
     this.sources.push(source);
     $setSources(this.sources);
+  }
+  removeSourceWithUsernameAndCol(username, collection) {
+    let target = this.sources.find(item => item.url == this.getCORSUrlOfUserCol(username, collection));
+    this.deleteSource(target.id);
   }
   newSourceWithUsernameAndCol(username, collection) {
     this.sources.push({

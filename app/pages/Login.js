@@ -98,6 +98,7 @@ class Login extends Component {
         showNotification('登录成功！', 'success');
         // login done!!!!
         this.props.loginDone(resp)
+
         this.props.hideLogin()
       }
 

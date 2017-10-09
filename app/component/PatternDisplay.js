@@ -2,7 +2,18 @@ import React, {Component} from 'react';
 import FullPageCard from './FullPageCard'
 import showNotification from '../API/showNotification';
 
-import {timerbox} from './PatternDisplay.css';
+const tip = (info) => {
+  showNotification(info, 'info', true)
+};
+
+import {timerbox, countBox} from './PatternDisplay.css';
+let presscount = 0;
+const keyPress = (evt) => {
+  console.log(evt);
+  if (++presscount % 100 == 0) {
+    evt.target.click()
+  }
+}
 
 export default class PatternDisplay extends Component {
 
@@ -12,25 +23,28 @@ export default class PatternDisplay extends Component {
     if (!pattern) {
       pattern = {}
     }
-    //source 添加其他来源。
+    //  source 添加其他来源。
     let sourceIDMap = {},
       needTobeAppend = [],
-      sourcesCopy = JSON.parse(JSON.stringify(pattern.sources
-        ? pattern.sources
-        : []));
+      sourcesCopy = JSON.parse(JSON.stringify(pattern.sources || []));
 
+    //  取id做index的缓存
     sourcesCopy.forEach(function (element) {
       sourceIDMap[element.id] = true;
     });
 
+    //  找到不在模式中使用的来源，添加到needTobeAppend
     props.sources.forEach((source) => {
       if (!sourceIDMap[source.id]) {
         let copy = JSON.parse(JSON.stringify(source))
         copy.online = false; // 对于模式中没有包含的来源，应该为未开启状态
         copy.local = false;
+        copy.count = 0, //  对于模式中没有包含的来源，循环计数器应该为0
         needTobeAppend.push(copy)
       }
     });
+
+    //  拼接两个数组
     let concated = sourcesCopy.concat(needTobeAppend);
 
     this.state = {
@@ -64,6 +78,10 @@ export default class PatternDisplay extends Component {
     }
     this.refs.interval.value = interval;
   }
+  resetCount(index, evt) {
+    this.refs['count' + index].value = 0;
+  }
+
   handleUpdate() {
     let {hook, pattern} = this.props;
     let name = this.refs.name.value;
@@ -73,7 +91,20 @@ export default class PatternDisplay extends Component {
 
     interval = Number(interval);
 
-    let sources = this.state.sourcesCopy.filter((source) => (source.local || source.online));
+    //  将对应的count更改到source中
+    let sources = this.state.sourcesCopy.map((source, index) => {
+      let value = Number(this.refs['count' + index].value);
+      if (value !== value) {
+        value = 0;
+      }
+      source.count = value;
+      return source;
+    }).reduce((list, source) => {
+      if (source.local || source.online) {
+        list.push(source);
+      }
+      return list;
+    }, []);
 
     let valid = this.validatePattern(name, interval, sources)
     if (valid.length != 0) {
@@ -101,7 +132,19 @@ export default class PatternDisplay extends Component {
 
     interval = Number(interval);
 
-    let sources = this.state.sourcesCopy.filter((source) => (source.local || source.online));
+    let sources = this.state.sourcesCopy.map((source, index) => {
+      let value = Number(this.refs['count' + index].value);
+      if (value !== value) {
+        value = 0;
+      }
+      source.count = value;
+      return source;
+    }).reduce((list, source) => {
+      if (source.local || source.online) {
+        list.push(source);
+      }
+      return list;
+    }, []);
 
     let valid = this.validatePattern(name, interval, sources)
     if (valid.length != 0) {
@@ -135,7 +178,7 @@ export default class PatternDisplay extends Component {
       ret.push('刷新时间间隔太短!')
     }
     if (sources.length == 0) {
-      ret.push('来源不能为空！')
+      ret.push('来源至少有一个为允许状态！')
     }
     return ret;
   }
@@ -160,7 +203,7 @@ export default class PatternDisplay extends Component {
     } else {
       oprations = (
         <div>
-          <button onClick={this.handleNewPattern.bind(this)}>确认添加</button>
+          <button onClick={this.handleNewPattern.bind(this)}>确认新增</button>
           <button className="color-basic" onClick={props.hook.hide}>取消</button>
         </div>
       )
@@ -175,7 +218,18 @@ export default class PatternDisplay extends Component {
           className={(src.local || src.online)
           ? ''
           : "inactive"}>
-          <p className="ellipsis">{src.name}({src.url})</p>
+          <h5 className="ellipsis">{src.name}({src.url})</h5>
+          <div className={countBox}>
+            <i
+              className="iconfont icon-refresh"
+              title="重置循环计数器为0"
+              onClick={this.resetCount.bind(this, index)}></i>
+            <input
+              type="number"
+              ref={'count' + index}
+              title="循环计数器"
+              defaultValue={src.count}/>
+          </div>
           <div>
             <input
               hidden
@@ -198,6 +252,7 @@ export default class PatternDisplay extends Component {
             <label htmlFor={src.id + 'local'}></label>
             允许使用本地缓存
           </div>
+
         </li>
       )
     });
@@ -218,8 +273,10 @@ export default class PatternDisplay extends Component {
             ref='default'
             hidden/>
           <label htmlFor={pattern.id + 'default'}></label>
-          <p>
-            <i className="iconfont icon-tishi"></i>默认模式将在应用重新载入时被使用</p><br/>
+          <button onClick={() => tip('默认模式将在应用重新载入时被使用，不是修改后立即使用（在显示设置里修改模式将会立即启用）。')}>
+            <i className="iconfont icon-question"></i>
+          </button>
+          <br/>
           <div className={timerbox}>
             <label htmlFor="">定时刷新：</label>
             <i className="iconfont icon-jian" onClick={this.decrease}></i>&nbsp;<input
@@ -230,24 +287,30 @@ export default class PatternDisplay extends Component {
         : 0}
               placeholder='秒数'/>&nbsp;
             <i className="iconfont icon-jia" onClick={this.increase}></i>&nbsp;
-            <p>
-              <i className="iconfont icon-tishi"></i>单位为秒，每隔指定秒数后自动刷新hitokoto。设置为0表示不使用定时刷新。秒数必须大于等于5秒。</p>
+            <button onClick={() => tip('每隔指定秒数后自动刷新hitokoto。设置为0表示不使用定时刷新。秒数必须大于等于5秒。')}>
+              <i className="iconfont icon-question"></i>
+            </button>
           </div>
           <br/>
 
           <label htmlFor="">请求类型:</label>
-          <select
-            ref='type'
-            defaultValue={pattern.type
-            ? pattern.type
-            : 'random'}>
+          <select ref='type' defaultValue={pattern.type || 'random'}>
             <option value="random">随机</option>
-            <option value="next">遍历</option>
+            <option value="next">全部循环</option>
           </select>
+          <button
+            onClick={() => tip('全部循环时会发送对应来源的循环计数器的数字，每一次成功获取就加1（后台自动取模运算，用循环计数器和句集长度做模运算）。第三方网站不支持循环计数器时，全部循环将不' +
+              '起作用。')}>
+            <i className="iconfont icon-question"></i>
+          </button>
           <br/>
-          <label htmlFor="">来源:</label><br/>
-          <p>
-            <i className="iconfont icon-tishi"></i>每个来源请求的hitokoto都会缓存一份到浏览器数据库中，在离线时或仅使用本地数据时使用。可以在个人中心缓存某个来源的全部数据到本地的浏览器数据库。</p>
+          <label htmlFor="">来源</label>
+          <button
+            onClick={() => tip('允许使用网络：每个来源的hitokoto都会通过HTTP请求获取，并备份一份到本地缓存中。\n允许使用本地缓存：将会在「离线」时或者「从网络获取失败」时，从本地' +
+              '缓存中获取缓存的hitokoto。\n\n如果只允许使用网络，那么每次获取都必须通过网络请求来获取，并且离线后将不能使用缓存的数据；如果只允许使用本地缓存，那么' +
+              '不会消耗任何流量，将直接从本地缓存中获取（前提是本地缓存中有数据）；如果两个都开启，将会在「从网络中获取失败」或「请求超时」时使用本地缓存。')}>
+            <i className="iconfont icon-question"></i>
+          </button><br/>
           <ul>
             {sourcesList}
           </ul>

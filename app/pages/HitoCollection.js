@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
-import {Link, withRouter} from 'react-router-dom'
+
 import QueueAnim from 'rc-queue-anim';
 import httpManager from '../API/httpManager';
 import showNotification from '../API/showNotification';
@@ -20,8 +20,12 @@ class HitoCollection extends Component {
       currentView: null,
       hitokotos: null,
       inited: false,
+      error: null,
       deleteCollectionModal: null
     }
+
+    this.fetchCollections = this.fetchCollections.bind(this);
+
     this.viewCollection = this.viewCollection.bind(this);
     this.newCollection = this.newCollection.bind(this);
     this.changeCollectionName = this.changeCollectionName.bind(this);
@@ -39,11 +43,13 @@ class HitoCollection extends Component {
       if (result.err) {
         showNotification(result.err, 'error');
       } else {
-        this.setState({inited: true});
-
+        this.setState({inited: true, error: null});
         this.props.fetchCollectionSuccess(result.collections);
       }
-    }).catch(e => showNotification(e, 'error'));
+    }).catch(e => {
+      this.setState({error: e, inited: false});
+      showNotification(e, 'error');
+    });
   }
   viewCollection(name) {
     this.props.history.push('/home/' + name);
@@ -53,10 +59,10 @@ class HitoCollection extends Component {
       if (result.err) {
         showNotification(result.err, 'error');
       } else {
-        showNotification('添加句集成功！', 'success');
+        showNotification('新增句集成功！', 'success');
         this.props.fetchCollectionSuccess(result.collections);
       }
-    });
+    })
   }
   changeCollectionName(oldname, newname) {
     if (oldname === '默认句集') {
@@ -113,7 +119,7 @@ class HitoCollection extends Component {
           key={collection.name}
           data={collection}/>)
       })
-      ListToShow.push(<CollectionBox
+      ListToShow.unshift(<CollectionBox
         tabIndex={data.length}
         newone={true}
         newCollection={this.newCollection}
@@ -121,7 +127,7 @@ class HitoCollection extends Component {
         data={{}}/>);
 
     } else {
-      ListToShow = (<Loading key="loading"/>)
+      ListToShow = (<Loading error={this.state.error} retry={this.fetchCollections} key="loading"/>)
     }
 
     return [
@@ -157,7 +163,8 @@ class HitoCollection extends Component {
   }
 }
 HitoCollection.propTypes = {
+  history: PropTypes.object.isRequired,
   collections: PropTypes.object.isRequired,
   fetchCollectionSuccess: PropTypes.func.isRequired
 }
-export default withRouter(HitoCollection)
+export default HitoCollection

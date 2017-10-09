@@ -91,7 +91,7 @@ export default class SourceDisplay extends Component {
     } else {
       oprations = (
         <div>
-          <button onClick={this.handleNewSource.bind(this)}>确认添加</button>
+          <button onClick={this.handleNewSource.bind(this)}>新增</button>
           <button className={style.basicButton} onClick={props.hook.hide}>取消</button>
         </div>
       )

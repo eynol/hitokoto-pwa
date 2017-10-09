@@ -1,108 +1,113 @@
-.wrapper{
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  width: 100%;
-  z-index: 500;
-  overflow: auto;
-  background-color: #f0f0f0;
-  backface-visibility: hidden;
-  will-change:contents;
-}
-.paper{
-  max-width: 900px;
-  border-radius: 4px;
-  margin: auto;
-  background-color: white;
-  /* box-shadow: 0 3px 7px -1px rgba(0,0,0,.16); */
-  padding: 1px  20px 30px;
-}
-@media screen and (min-width:768px) and (min-height:400px){
-  .wrapper{
-    border-radius: 0;
-    padding-top: 50px;
-    padding-bottom: 30px;
-  }
-}
-@media screen and (max-width:768px){
-  .wrapper{
+.wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    z-index: 500;
+    overflow: auto;
     background-color: white;
-  }
-  .paper{
-    box-shadow: none;
-  }
+    /* background-color: #f0f0f0; */
+    backface-visibility: hidden;
+    will-change: contents;
 }
 
+.paper {
+    max-width: 900px;
+    border-radius: 4px;
+    margin: auto;
+    /* background-color: white; */
+    /* box-shadow: 0 3px 7px -1px rgba(0,0,0,.16); */
+}
+
+@media screen and (min-width:768px) and (min-height:400px) {
+    .wrapper {
+        border-radius: 0;
+        padding-top: 50px;
+        padding-bottom: 30px;
+    }
+}
+
+.header {
+    margin: 0;
+    margin-bottom: 4px;
+    font-size: 32px;
+    line-height: 80px;
+    background-color: white;
+    /* border-radius: 4px; */
+}
+
+.content {
+    padding: 0px 0px 30px;
+    border-radius: 4px;
+    background-color: white;
+}
+
+
+/* .content:hover {
+    background-color: rgb(231, 231, 231);
+} */
+
+@media screen and (max-width:768px) {
+    .wrapper {
+        /* background-color: white; */
+    }
+    .paper {
+        box-shadow: none;
+    }
+    .header {
+        /* font-size: 20px; */
+        padding: 0 20px;
+        box-shadow: 0 2px 4px -1px rgba(0, 0, 0, .15);
+    }
+    .content {
+        padding: 10px 10px 30px;
+    }
+}
 
 .closeButton {
-  float: right;
-  position: relative;
-  cursor: pointer;
-  text-decoration: none;
-  vertical-align: middle;
- 
+    float: right;
+    position: relative;
+    cursor: pointer;
+    text-decoration: none;
+    vertical-align: middle;
 }
 
 .closeButton:hover {
-  color: #303030;
-  -webkit-transition: color .3s;
-  transition: color .3s;
-  text-decoration: none;
-}
-.closeButton:hover i{
-  transform: rotate(90deg);
+    color: #303030;
+    -webkit-transition: color .3s;
+    transition: color .3s;
+    text-decoration: none;
 }
 
-
-
-.clearfix {
-  position: relative;
+.closeButton:hover i {
+    transform: rotate(90deg);
 }
-
-.clearfix:after {
-  content: '';
-  clear: both;
-  display: table;
-}
-
-
-.delete-button {
-  color: red;
-}
-
 
 .backButton {
-
-  font-size: 1em;
-  line-height: 36px;
-  position: relative;
-  margin-right: 10px;
-  bottom: 0px;
-  cursor: pointer;
-  text-decoration: none;
+    font-size: 1em;
+    line-height: 36px;
+    position: relative;
+    margin-right: 10px;
+    bottom: 0px;
+    cursor: pointer;
+    text-decoration: none;
 }
-
-
-
 
 .manageBox h1 {
-      font-weight: normal;
-   
-  }
-
-@media screen and (max-width:768px) {
-  .manageBox>hr {
-      border-color: transparent;
-  }
-  .manageBox .closeButton {
-      display: none;
-  }
-  .manageBox .backButton {
-    font-size: 32px;
-    line-height: 24px;
-  }
-  
+    font-weight: normal;
 }
 
+@media screen and (max-width:768px) {
+    .manageBox>hr {
+        border-color: transparent;
+    }
+    .manageBox .closeButton {
+        display: none;
+    }
+    .manageBox .backButton {
+        font-size: 32px;
+        line-height: 24px;
+    }
+}

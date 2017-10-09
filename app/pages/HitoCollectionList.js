@@ -2,14 +2,16 @@ import React, {Component} from 'react'
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types'
 import {matchPath} from 'react-router'
-import {Link, withRouter} from 'react-router-dom'
+
 import QueueAnim from 'rc-queue-anim';
 import httpManager from '../API/httpManager';
 
 import hitokotoDriver from '../API/hitokotoDriver'
 import showNotification from '../API/showNotification';
 
+import Modal from '../component/Modal';
 import Pagination from '../component/Pagination';
+import PublicHitokoto from '../component/PublicHitokoto';
 import Loading from '../component/Loading'
 
 import HitoView from '../component/HitoView'
@@ -19,9 +21,10 @@ class HitoCollectionList extends Component {
     super(props);
     this.state = {
       inited: false,
+      error: null,
       total: 1,
       current: 1,
-      status: 'collections'
+      delModal: false
     };
     this.fetchHitokotos = this.fetchHitokotos.bind(this);
     this.newHitokoto = this.newHitokoto.bind(this);
@@ -29,7 +32,7 @@ class HitoCollectionList extends Component {
     this.isSourcesContians = this.isSourcesContians.bind(this);
   }
 
-  componentDidMount() {
+  componentWillMount() {
     this.fetchHitokotos();
   }
   componentWillReceiveProps(nextProps) {
@@ -52,6 +55,14 @@ class HitoCollectionList extends Component {
       return {username, url, collection}
     }
   }
+  removeFromSource() {
+    let url = this.getURL()
+    if (url) {
+      hitokotoDriver.patterManager.removeSourceWithUsernameAndCol(url.username, url.collection);
+      showNotification('将句集从来源中删除成功！不影响已在模式中的来源！');
+      this.forceUpdate();
+    }
+  }
   addToSources() {
 
     let url = this.getURL()
@@ -70,7 +81,7 @@ class HitoCollectionList extends Component {
     }
     return hitokotoDriver.patterManager.isSourceExsit(url.url);
   }
-  fetchHitokotos(page, perpage) {
+  fetchHitokotos(page = 1, perpage = 10) {
     let pathname = this.props.location.pathname;
     if (pathname == '/home/') {
       this.props.history.replace('/home');
@@ -98,21 +109,28 @@ class HitoCollectionList extends Component {
     if (name && name.length) {
       return httpManager.API_viewCollection(name, page, perpage).then(result => {
         if (result.err) {
-          showNotification('获取用户句集列表失败！\n' + result.err, 'error');
+
           return Promise.reject(result.err);
         } else {
           this.props.fetchHitokotosSuccess(result.hitokotos);
-          this.setState({inited: true, total: result.totalPage, current: result.currentPage})
+          this.setState({inited: true, error: null, total: result.totalPage, current: result.currentPage})
         }
+      }).catch(e => {
+        showNotification('获取用户hitokoto失败！', 'error');
+        this.setState({error: e, inited: false});
+        return Promise.reject(e);
       })
     } else {
 
       this.props.history.push('/home');
     }
-
   }
-  updateHitokoto(data) {
-    this.props.updateHitokoto(data);
+  preview(hitokoto) {
+    this.props.preview(hitokoto, 'preview');
+    this.props.history.push(this.props.location.pathname + '/preview');
+  }
+  updateHitokoto(hitokoto) {
+    this.props.preview(hitokoto, 'within');
     this.props.history.push(this.props.location.pathname + '/update');
   }
   newHitokoto() {
@@ -120,41 +138,81 @@ class HitoCollectionList extends Component {
     if (!(/\/new$/.test(pathname))) {
       pathname += '/new';
     }
+    this.props.preview(null, 'within');
     this.props.history.push(pathname);
   }
+  showDelModal(delModal) {
+    this.setState({delModal});
+  }
+  hideDelModal() {
+    this.setState({delModal: null});
+  }
+
+  removeHitokoto() {
+
+    let hitokotoToRemove = this.state.delModal;
+
+    let reg = /^\/home\/([^\/]*)$/,
+      matchs = reg.exec(this.props.location.pathname),
+      collectionName = matchs[1];
+
+    return httpManager.API_deleteHitokoto(collectionName, {id: hitokotoToRemove._id}).then(result => {
+      if (result.err) {
+        showNotification(result.err, 'error');
+      } else {
+        showNotification('删除成功！', 'success');
+        this.hideDelModal();
+        this.fetchHitokotos(this.state.current);
+      }
+      return result
+    });
+  }
   render() {
-    let {status} = this.state;
+
     let {hitokotos, location: {
           pathname
         }} = this.props,
       ListToShow = [(
-          <HitoView
-            newone={true}
-            update={this.updateHitokoto}
-            newHitokoto={this.newHitokoto}
-            key='newone'>
+          <div key='menu'>
+
+            <button onClick={() => this.props.history.goBack()}>返回</button>
+            <button onClick={this.newHitokoto}>新增</button>
             {this.isSourcesContians()
-              ? ''
+              ? <button
+                  onClick={() => {
+                  this.removeFromSource()
+                }}>从来源中取消该句集</button>
               : <button onClick={() => {
                 this.addToSources()
               }}>将此句集加入来源</button>}
             <button
               onClick={() => {
-              showNotification('链接地址为：\n' + this.getURL().url, 'info', true)
-            }}>API链接</button>
-          </HitoView>
+              showNotification('该句集的API地址为：\n' + this.getURL().url, 'info', true)
+            }}>
+              <i className="iconfont icon-link">API</i>
+            </button>
+          </div>
         )];
 
     if (hitokotos.length > 0) {
-      ListToShow = ListToShow.concat(hitokotos.map((hitokoto) => (<HitoView
-        key={hitokoto.id}
-        preview={this.props.preview}
-        update={this.updateHitokoto}
-        remove={this.props.remove}
-        data={hitokoto}/>)));;
+      ListToShow = ListToShow.concat(hitokotos.map((hitokoto) => (
+        <PublicHitokoto key={hitokoto.id} data={hitokoto}>
+          <button onClick={this.preview.bind(this, hitokoto)}>预览</button>
+          <button onClick={() => this.updateHitokoto(hitokoto)}>修改</button>
+          <button onClick={() => this.showDelModal(hitokoto)} className="color-red">删除</button>
+        </PublicHitokoto>
+      )));;
+    } else if (!this.state.error) {
+      ListToShow.push(
+        <div key='empty' className='align-center'>
+          <h1>Oops...</h1>
+          <p>当前句集还没有发布句子哦！</p>
+        </div>
+      )
     }
 
-    return [(
+    return [
+      (
         <QueueAnim
           ease='easeOutQuart'
           animConfig={[
@@ -170,7 +228,10 @@ class HitoCollectionList extends Component {
           <div key="container" className='tryFlexContainer'>{ListToShow}</div>
           {this.state.inited
             ? null
-            : <Loading key="loading-co"/>}
+            : <Loading
+              error={this.state.error}
+              retry={() => this.fetchHitokotos(this.state.current, 10)}
+              key="loading-co"/>}
         </QueueAnim>
       ), (
         <Pagination
@@ -178,7 +239,18 @@ class HitoCollectionList extends Component {
           total={this.state.total || 1}
           limit={10}
           func={this.fetchHitokotos}></Pagination>
-      )]
+      ), this.state.delModal
+        ? <Modal exit={this.hideDelModal.bind(this)}>
+            <h1>你确定要删除该hitokoto?</h1>
+            <div className="clearfix">
+              <span className="pull-right">
+                <button role="exit">取消</button>
+                <button onClick={this.removeHitokoto.bind(this)}>确定</button>
+              </span>
+            </div>
+          </Modal>
+        : null
+    ]
   }
 }
 
@@ -186,8 +258,7 @@ HitoCollectionList.propTypes = {
   hitokotos: PropTypes.arrayOf(PropTypes.object).isRequired,
   leaveCollection: PropTypes.func.isRequired,
   user: PropTypes.object.isRequired,
-  updateHitokoto: PropTypes.func.isRequired,
   remove: PropTypes.func.isRequired,
   preview: PropTypes.func.isRequired
 }
-export default withRouter(HitoCollectionList)
+export default HitoCollectionList
