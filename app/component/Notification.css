@@ -57,6 +57,6 @@
 }
 .content{
   display: table-cell;
-  white-space: pre-line;
+  white-space: pre-wrap;
   text-align: justify;
 }

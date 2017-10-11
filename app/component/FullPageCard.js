@@ -8,16 +8,21 @@ import {
   content,
   manageBox,
   closeButton,
-  backButton
+  backButton,
+  cardActions,
+  withAction
 } from './FullPageCard.css'
 
 function FullPageCard(props) {
-  let {style, onClick} = props;
+  let {style, onClick, actions} = props;
   return (
     <div key="default" style={style} className={wrapper} onClick={onClick}>
       <div className={paper}>
         <div className={manageBox}>
-          <h1 className={header}>
+          <header
+            className={header + (actions
+            ? ' ' + withAction
+            : '')}>
             <a
               href="javascript:"
               onClick={props.close
@@ -25,14 +30,14 @@ function FullPageCard(props) {
               : () => props.history.goBack()}
               className={backButton}>
               <i className="iconfont icon-back_android"></i>
-            </a>{props.cardname} {/* <a
-              href="javascript:"
-              onClick={() => props.history.goBack()}
-              className={closeButton}>
-              <i className="iconfont icon-close"></i>
-            </a> */}
-
-          </h1>
+            </a>
+            <span>{props.cardname}</span>
+            {actions
+              ? <div className={cardActions}>
+                  {actions}
+                </div>
+              : null}
+          </header>
           <div className={content}>
             {props.children}
           </div>

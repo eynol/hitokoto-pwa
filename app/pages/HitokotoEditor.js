@@ -12,9 +12,6 @@ import httpManager from '../API/httpManager'
 import style from './HitokotoEditor.css';
 let {hitokotoTextarea, hitokotoSouceInput, hitokotoSouceTypeBlock, operations} = style;
 
-const doRender = /^\/home\/([^\/]+)\/(new|update)$/;
-const isNew = /\/new$/;
-
 class HitokotoEditor extends Component {
   constructor(props) {
     super(props);
@@ -68,15 +65,15 @@ class HitokotoEditor extends Component {
   publish() {
     let hitokoto = this.getHitokoto();
     if (hitokoto) {
-      let matchs = doRender.exec(this.props.location.pathname);
-      let collectionName = matchs[1];
+
+      let collectionName = this.props.rinfo[1];
 
       return httpManager.API_newHitokoto(collectionName, hitokoto).then(result => {
         if (result.err) {
           showNotification(result.err, 'error');
         } else {
           showNotification('发布成功！', 'success');
-          this.props.history.push('/home/' + collectionName);
+          this.props.history.goBack();
           this.props.refreshHitokotoList()
         }
         return result
@@ -87,8 +84,8 @@ class HitokotoEditor extends Component {
     let hitokoto = this.getHitokoto();
 
     if (hitokoto) {
-      let matchs = doRender.exec(this.props.location.pathname);
-      let collectionName = matchs[1];
+
+      let collectionName = this.props.rinfo[1];
 
       hitokoto._id = this.props.within._id;
 
@@ -98,7 +95,7 @@ class HitokotoEditor extends Component {
         } else {
           showNotification('修改成功', 'success');
 
-          this.props.history.push('/home/' + collectionName);
+          this.props.history.goBack();
           this.props.refreshHitokotoList()
         }
         return result
@@ -108,18 +105,31 @@ class HitokotoEditor extends Component {
   render() {
     let {location: {
         pathname
-      }} = this.props;
+      }, rinfo} = this.props;
+    let thisIsNew = rinfo[2] == 'new';
 
-    let hitokoto = this.props.within || {
-      category: '其他'
-    };
+    let hitokoto = this.props.within;
+
+    if (thisIsNew) {
+      hitokoto = {
+        category: '其他'
+      };
+    } else if (!thisIsNew && !hitokoto) {
+      return (
+        <FullPageCard
+          style={{
+          backgroundColor: '#fff'
+        }}
+          cardname={"未知错误"}>
+          <h1>数据已被清空</h1>
+          <p>
+            请不要在编辑的时候刷新页面<button onClick={() => this.props.history.push('/')}>返回首页</button>
+          </p>
+        </FullPageCard>
+      )
+    }
 
     let child = '';
-
-    if (!doRender.test(pathname)) {
-      return null;
-    }
-    let thisIsNew = isNew.test(pathname);
 
     return (
       <FullPageCard
@@ -179,12 +189,12 @@ class HitokotoEditor extends Component {
           <button onClick={this.goBack}>取消</button>
         </div>
       </FullPageCard>
-
     )
   }
 }
 
 HitokotoEditor.propTypes = {
+  rinfo: PropTypes.array.isRequired,
   preview: PropTypes.func.isRequired,
   refreshHitokotoList: PropTypes.func.isRequired
 }

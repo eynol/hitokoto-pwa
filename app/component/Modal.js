@@ -72,17 +72,23 @@ class ProxyModal extends React.Component {
     event && event.stopPropagation();
   }
   render() {
-    let {exit, children} = this.props;
+    let {exit, children, focus} = this.props;
     return (
       <Modal exit={this.state.exit}>
-        <div className="modal" onClick={this.proxyExit}>
+        <div
+          className="modal"
+          onClick={focus
+          ? null
+          : this.proxyExit}>
           <div
             className="modal__card"
             onClick={(e) => {
             if (e.target.getAttribute('role') == 'exit') {
               this.proxyExit();
             };
-            e.stopPropagation()
+            if (!focus) {
+              e.stopPropagation()
+            }
           }}>
             <span className="modal__default-close" onClick={this.proxyExit}>
               <i className="iconfont icon-round_close_light" onClick={this.proxyExit}></i>

@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux'
 import {withRouter} from 'react-router-dom'
 
-import HitoCollectionList from '../pages/HitoCollectionList'
+import UserCollection from '../pages/UserCollection'
 
 import {fetchHitokotosSuccess, leaveCollection, refreshCollectionHitokotoSuccess, requestCollectionHitokotos, previewHitokoto} from '../actions'
 
@@ -17,4 +17,4 @@ const mapActionToProps = (dispatch) => ({
   preview: (...hitokoto) => dispatch(previewHitokoto(...hitokoto))
 })
 
-export default withRouter(connect(mapStoreToProps, mapActionToProps)(HitoCollectionList))
+export default withRouter(connect(mapStoreToProps, mapActionToProps)(UserCollection))

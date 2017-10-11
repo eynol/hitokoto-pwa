@@ -70,8 +70,8 @@ class ExploreUserCollection extends Component {
       if (hitokotos.length == 0) {
         ListToShow = (
           <div key='empty' className='align-center'>
-            <h1>Oops...</h1>
-            <p>当前句集还没有发布句子哦！</p>
+            <h1>哦豁...</h1>
+            <p>这里什么都没有</p>
           </div>
         )
       } else {

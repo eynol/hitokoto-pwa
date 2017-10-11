@@ -32,7 +32,8 @@ class LayoutSetting extends Component {
         fontWeight,
         layoutHorizon,
         backgroundColor,
-        revert2white
+        revert2white,
+        showCover
       },
       hide,
       patternChange,
@@ -150,17 +151,31 @@ class LayoutSetting extends Component {
                   <label htmlFor="id-r2w"></label>
                 </dd>
               </dl>
+              <dl key="s-cover">
+                <dt>隐藏PC导航</dt>
+                <dd className="form">
+                  <input
+                    type="checkbox"
+                    hidden
+                    onChange={(event) => {
+                    changeLayout('showCover', event.target.checked)
+                  }}
+                    id="id-cover"
+                    defaultChecked={showCover}/>
+                  <label htmlFor="id-cover"></label>
+                </dd>
+              </dl>
               <dl key="s-sh">
                 <dt>加载思源宋体</dt>
                 <dd className="form">
                   <input
                     type="checkbox"
                     hidden
-                    onChange={(event) => {
+                    onChangesss={(event) => {
                     changeLayout('sourcehan', event.target.checked)
                   }}
                     id="id-sourcehan"
-                    defaultChecked={revert2white}/>
+                    defaultChecked={false}/>
                   <label htmlFor="id-sourcehan"></label>
                 </dd>
               </dl>

@@ -1,4 +1,4 @@
-.CardContainer{
+.CardContainer {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -14,15 +14,17 @@
     padding: 25px 20px 10px;
     cursor: pointer;
     position: relative;
-    flex: 1 1 130px;
+    flex: 1 1 178px;
     /* transition: .5s cubic-bezier(0.23, 1, 0.32, 1); */
 }
 
-.Card:hover{
+.Card:hover,
+.Card:focus {
     background-color: #f6f6f6;
 }
-@media screen and (min-width:768px){
-    .CardContainer{
+
+@media screen and (min-width:768px) {
+    .CardContainer {
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
@@ -30,8 +32,9 @@
     }
     .Card {
         flex: 0 1 190px;
-    } 
+    }
 }
+
 .Card:focus {
     outline: none;
 }
@@ -39,10 +42,14 @@
 .Card--change {
     padding: 9px 20px 10px;
 }
-.Card--change:hover{
+
+.Card--change:hover {
     background-color: white
 }
+
+
 /* 20 +16 +20 = 56px +4 60px */
+
 .Card_content,
 .Card_content p {
     font-size: 14px;
@@ -54,7 +61,9 @@
     opacity: 0;
     text-decoration: none;
 }
-.Card_options>a:hover,.Card_options>a:focus{
+
+.Card_options>a:hover,
+.Card_options>a:focus {
     text-decoration: underline;
 }
 
@@ -62,7 +71,7 @@
     opacity: 1!important;
 }
 
-.Card_options.hide {
+.Card_options a.hide {
     visibility: hidden;
     pointer-events: none;
 }
@@ -77,13 +86,14 @@
     will-change: opacity;
     opacity: 1;
 }
-@media screen and (max-width:768px){
+
+@media screen and (max-width:768px) {
     .Card .Card_options>a,
     .Card .Card_options>a {
         opacity: 1;
     }
-        
 }
+
 .HitoCollection {
     color: red;
 }

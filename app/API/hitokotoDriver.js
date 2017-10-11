@@ -3,7 +3,7 @@ import PatternManager, {SOURCE_UPDATE_KEYS} from './PatternManager'
 import httpManager from './httpManager'
 
 import {PERSE_ADAPTER_SAFE, AdapterValidate, PERSE_ADAPTER} from './AdapterValidate'
-import offlineWather from './Offline'
+import offlineWatcher from './Offline'
 import indexedDBManager from './IndexedDBManager'
 const HITOKOTO_KEYS = [
   'id',
@@ -97,13 +97,16 @@ class HitokotoDriver {
       if (this.signal.length == 0) {
         //  信号量为零，需要去获取hitokoto
         let allowedURL = this.sources.filter(source => source.online);
-        if (offlineWather.online && allowedURL.length !== 0) {
+        if (offlineWatcher.online && allowedURL.length !== 0) {
           //  在线采用在线的方式；
           let {type, id} = this.pattern;
           allowedURL.forEach((source, index) => {
             let pid = '' + Date.now() + index;
             this.signal.push(pid)
-            this.getHitokotoFromWEB(source.url, pid, type).then(hitokoto => {
+            this.getHitokotoFromWEB(source.url, {type, source}).then(hitokoto => {
+              //  increase count
+              this.increaseSourceCount(id, source.id);
+
               let index = this.signal.findIndex(item => item === pid);
               if (~ index) {
                 this.signal.splice(index, 1)
@@ -131,7 +134,10 @@ class HitokotoDriver {
           allowedURL.forEach((source, index) => {
             let pid = '' + Date.now() + index;
             this.signal.push(pid)
-            this.getHitokotoFromIDB(source.url, pid, type).then((hitokoto) => {
+            this.getHitokotoFromIDB(source.url, {type, source}).then((hitokoto) => {
+              //  increase count
+              this.increaseSourceCount(id, source.id);
+
               let index = this.signal.findIndex(item => item === pid);
               if (~ index) {
                 this.signal.splice(index, 1)
@@ -162,27 +168,6 @@ class HitokotoDriver {
     if (ROLLBACK.length > 5) {
       ROLLBACK.length = 5;
     }
-  }
-  whenGetHitokoto({hitokoto, pid}) {
-
-    let index = this.signal.findIndex(pid);
-    if (~ index) {
-      this.signal.splice(index, 1)
-      PREFETCH.push(hitokoto);
-      if (this.processing) {
-        this.updateProcessing(false);
-        this.next();
-      }
-    }
-  }
-  errorGetHitokoto({reason, pid}) {
-    console.log(this.signal, pid)
-    let index = this.signal.findIndex(pid);
-    if (~ index) {
-      this.signal.splice(index, 1)
-      // return Promise.reject(reason);
-    }
-    console.log(reason);
   }
   next() {
     if (PREFETCH.length == 0) {
@@ -268,16 +253,25 @@ class HitokotoDriver {
     })
   }
 
-  getHitokotoFromIDB(url, pid, patternType, id) {
+  getHitokotoFromIDB(url, options) {
 
-    return indexedDBManager.getHitokotoRandom(url).catch(e => {
+    return indexedDBManager.getHitokotoRandom(url, options).catch(e => {
       return Promise.reject(e);
     })
   }
-  getHitokotoFromWEB(url, pid, patternType, id) {
-    let p = this.httpManager.getHitokoto(url).then(this.getAdapter(url));
+  /**
+   *
+   *
+   * @param {String} url
+   * @param {Object} {type:String, source}
+   * @returns
+   * @memberof HitokotoDriver
+   */
+  getHitokotoFromWEB(url, {type, source}) {
+
+    let p = this.httpManager.getHitokoto(url, type, source).then(this.getAdapter(url));
     //  并行存储hitokoto
-    return p.then(hitokoto => {
+    p.then(hitokoto => {
       try {
         indexedDBManager.putHitokoto(url, hitokoto)
       } catch (e) {
@@ -288,7 +282,7 @@ class HitokotoDriver {
       console.log('oopppsss', e);
       return Promise.reject(e);
     });
-
+    return p;
   }
 
   updateSource(id, sourceToUpdate) {
@@ -301,6 +295,9 @@ class HitokotoDriver {
       }
     });
     this.drive(this.pattern).start();
+  }
+  increaseSourceCount(pid, sid) {
+    this.patterManager.increaseSourceCount(pid, sid);
   }
   updatePattern(id, patternToUpdate) {
     this.patterManager.updatePattern(id, patternToUpdate);

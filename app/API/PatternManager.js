@@ -70,8 +70,9 @@ export default class PatternManager extends SourceManager {
       this.patterns = PATTERNS;
     }
 
-    if (this.version_source.indexOf('count1') === -1) {
+    if (this.version_pattern.indexOf('count1') === -1) {
       //  来源不包含计数器，所有来源初始化为0
+      console.log('restore count', this.version_pattern);
       this.patterns.forEach(function (pattern) {
         pattern.sources.forEach(function (item) {
           item.count = 0;
@@ -101,6 +102,7 @@ export default class PatternManager extends SourceManager {
       if (needUpdatePatterns) {
         $setPatterns(this.patterns);
       }
+      $setVersion(VERSION);
     }
   }
   updateSource(id, source) {
@@ -116,6 +118,13 @@ export default class PatternManager extends SourceManager {
       });
     });
     $setPatterns(this.patterns); //  保存修改到本地
+  }
+  increaseSourceCount(pid, sid) {
+    let pattern = this.patterns.find(p => p.id == pid);
+    let source = pattern.sources.find(s => s.id == sid);
+    source.count = source.count + 1;
+    $setPatterns(this.patterns); //  保存修改到本地
+    console.log(this.patterns);
   }
   deleteSource(id) {
     super.deleteSource(id);

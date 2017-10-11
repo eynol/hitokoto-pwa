@@ -10,9 +10,11 @@ import HitoView from '../component/HitoView'
 import Modal from '../component/Modal';
 import Loading from '../component/Loading'
 
+import FullPageCard from '../component/FullPageCard'
+
 import {CardContainer} from '../component/CollectionBox.css'
 
-class HitoCollection extends Component {
+class UserCollections extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -52,7 +54,7 @@ class HitoCollection extends Component {
     });
   }
   viewCollection(name) {
-    this.props.history.push('/home/' + name);
+    this.props.history.push(this.props.location.pathname + '/' + name);
   }
   newCollection(name) {
     return httpManager.API_newCollection({name}).then(result => {
@@ -113,14 +115,15 @@ class HitoCollection extends Component {
       ListToShow = data.map((collection, index) => {
         return (<CollectionBox
           changeName={this.changeCollectionName}
+          nickname={this.props.user.nickname}
           delete={this.showDeleteModal}
-          tabIndex={index}
+          tabIndex={index + 1}
           view={this.viewCollection}
           key={collection.name}
           data={collection}/>)
       })
       ListToShow.unshift(<CollectionBox
-        tabIndex={data.length}
+        tabIndex={0}
         newone={true}
         newCollection={this.newCollection}
         key={'newcol'}
@@ -130,8 +133,8 @@ class HitoCollection extends Component {
       ListToShow = (<Loading error={this.state.error} retry={this.fetchCollections} key="loading"/>)
     }
 
-    return [
-      (
+    return (
+      <FullPageCard cardname="我的句集">
         <QueueAnim
           animConfig={[
           {
@@ -148,23 +151,24 @@ class HitoCollection extends Component {
           }
         ]}
           className={CardContainer}>{ListToShow}</QueueAnim>
-      ), this.state.deleteCollectionModal
-        ? <Modal exit={this.hideDeleteModal}>
-            <h1>你确定要删除该hitokoto?</h1>
-            <div className="clearfix">
-              <span className="pull-right">
-                <button role="exit">取消</button>
-                <button onClick={this.deleteCollection}>确定</button>
-              </span>
-            </div>
-          </Modal>
-        : null
-    ]
+        {this.state.deleteCollectionModal
+          ? <Modal exit={this.hideDeleteModal}>
+              <h1>你确定要删除该hitokoto?</h1>
+              <div className="clearfix">
+                <span className="pull-right">
+                  <button role="exit">取消</button>
+                  <button onClick={this.deleteCollection}>确定</button>
+                </span>
+              </div>
+            </Modal>
+          : null}
+      </FullPageCard>
+    )
   }
 }
-HitoCollection.propTypes = {
+UserCollections.propTypes = {
   history: PropTypes.object.isRequired,
   collections: PropTypes.object.isRequired,
   fetchCollectionSuccess: PropTypes.func.isRequired
 }
-export default HitoCollection
+export default UserCollections

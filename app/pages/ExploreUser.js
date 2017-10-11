@@ -60,20 +60,20 @@ class ExploreUser extends Component {
         <CollectionBox
           data={item}
           key={index}
-          tabIndex={index}
+          tabIndex={index + 1}
           viewonly={true}
           view={this.handleView}>
           {patterManager.isSourceExsit(patterManager.getCORSUrlOfUserCol(userName, item.name))
             ? (
               <a
                 href="javascript:"
-                tabIndex={index}
+                tabIndex={index + 1}
                 onClick={this.removeFromSoure.bind(this, item.name)}>从来源中删除</a>
             )
             : (
               <a
                 href="javascript:"
-                tabIndex={index}
+                tabIndex={index + 1}
                 onClick={this.addToSource.bind(this, item.name)}>加入来源</a>
             )}
         </CollectionBox>

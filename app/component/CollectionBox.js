@@ -1,6 +1,9 @@
 import React, {Component} from 'react'
 import {Link, withRouter} from 'react-router-dom';
+import PropTypes from 'prop-types';
+
 import showNotification from '../API/showNotification';
+import hitokotoDriver from '../API/hitokotoDriver'
 
 import style from './CollectionBox.css'
 
@@ -31,11 +34,16 @@ class CollectionBox extends Component {
     this.handleNewOneClick = this.handleNewOneClick.bind(this);
     this.newOne = this.newOne.bind(this);
     this.returnToNormal = this.returnToNormal.bind(this);
+
+    this.addToSources = this.addToSources.bind(this);
+    this.removeFromSources = this.removeFromSources.bind(this);
+
   }
   handleViewClick() {
     this.props.view(this.props.data.name);
   }
   handleChangeClick(e) {
+    showNotification('重命名后，原来的添加的来源将无法使用！需要重新添加来源！', 'error', true)
     if (this.props.data.name == '默认句集') {
       showNotification('默认句集无法修改！', 'error')
       return;
@@ -93,6 +101,37 @@ class CollectionBox extends Component {
       this.doChange();
     }
   }
+
+  removeFromSources(evt) {
+    evt.stopPropagation();
+    let {
+      nickname,
+      data: {
+        name: colleName
+      }
+    } = this.props;
+    hitokotoDriver.patterManager.removeSourceWithUsernameAndCol(nickname, colleName);
+    showNotification('将「' + colleName + '」从来源中删除成功！不影响已在模式中的来源！', 'success');
+    this.forceUpdate();
+  }
+  addToSources(evt) {
+    evt.stopPropagation();
+    let {
+      nickname,
+      data: {
+        name: colleName
+      }
+    } = this.props;
+    hitokotoDriver.patterManager.newSourceWithUsernameAndCol(nickname, colleName);
+    showNotification('将「' + colleName + '」加入来源成功！', 'success');
+    this.forceUpdate();
+  }
+
+  isSourcesContians(colleName) {
+    let patterManager = hitokotoDriver.patterManager;
+    let url = patterManager.getCORSUrlOfUserCol(this.props.nickname, colleName);
+    return hitokotoDriver.patterManager.isSourceExsit(url);
+  }
   render() {
     let {
         tabIndex,
@@ -127,7 +166,7 @@ class CollectionBox extends Component {
     if (pnewone && currentState == 'normal') {
       return (
         <div
-          tabIndex={tabIndex}
+          tabIndex={1}
           className={Card}
           title="点击新增句集"
           onClick={this.handleNewOneClick}>
@@ -153,8 +192,8 @@ class CollectionBox extends Component {
               <label data-content="句集的名称">句集的名称</label>
             </div>
             <div className={Card_options}>
-              <a href="javascript:" onClick={this.newOne} tabIndex={0}>新增</a>&nbsp;
-              <a href="javascript:" onClick={this.returnToNormal} tabIndex={0}>取消</a>
+              <a href="javascript:" onClick={this.newOne} tabIndex={tabIndex}>新增</a>&nbsp;
+              <a href="javascript:" onClick={this.returnToNormal} tabIndex={tabIndex}>取消</a>
             </div>
           </div>
         </div>
@@ -170,20 +209,32 @@ class CollectionBox extends Component {
           <div className={Card_content}>
             <p className="ellipsis">{name}</p>
             <span>{count}条</span>
-            <div
-              className={Card_options + (name == '默认句集'
-              ? ' ' + hide
-              : '')}>
+            <div className={Card_options}>{this.isSourcesContians(name)
+                ? <a
+                    tabIndex={tabIndex}
+                    href="javascript:"
+                    title="点击删除该句集"
+                    onClick={this.removeFromSources}>撤销来源</a>
+                : <a
+                  tabIndex={tabIndex}
+                  href="javascript:"
+                  title="点击删除该句集"
+                  onClick={this.addToSources}>加入来源</a>}&nbsp;
               <a
                 tabIndex={tabIndex}
                 href="javascript:"
                 title="点击修改该句集名称"
+                className={name == '默认句集'
+                ? 'hide color-red'
+                : 'color-red'}
                 onClick={this.handleChangeClick}>重命名</a>&nbsp;
               <a
                 tabIndex={tabIndex}
                 href="javascript:"
                 title="点击删除该句集"
-                className="color-red"
+                className={name == '默认句集'
+                ? 'hide color-red'
+                : 'color-red'}
                 onClick={this.doDelete}>删除</a>
             </div>
           </div>
@@ -211,5 +262,8 @@ class CollectionBox extends Component {
       )
     }
   }
+}
+CollectionBox.propTypes = {
+  nickname: PropTypes.string.isRequired
 }
 export default CollectionBox

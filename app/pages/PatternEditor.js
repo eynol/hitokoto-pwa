@@ -1,25 +1,27 @@
 import React, {Component} from 'react';
-import FullPageCard from './FullPageCard'
+import {withRouter} from 'react-router-dom';
+import FullPageCard from '../component/FullPageCard'
+
 import showNotification from '../API/showNotification';
+import hitokotoDriver from '../API/hitokotoDriver'
+
+import {timerbox, countBox} from './PatternEditor.css';
 
 const tip = (info) => {
   showNotification(info, 'info', true)
 };
 
-import {timerbox, countBox} from './PatternDisplay.css';
-let presscount = 0;
-const keyPress = (evt) => {
-  console.log(evt);
-  if (++presscount % 100 == 0) {
-    evt.target.click()
-  }
-}
+const patterManager = hitokotoDriver.patterManager;
 
-export default class PatternDisplay extends Component {
+class PatternEditor extends Component {
 
   constructor(props) {
     super(props);
-    let pattern = props.pattern;
+
+    let {rinfo} = this.props,
+      pid = Number(rinfo[1]);
+
+    let pattern = patterManager.patterns.find(p => p.id === pid);
     if (!pattern) {
       pattern = {}
     }
@@ -34,7 +36,7 @@ export default class PatternDisplay extends Component {
     });
 
     //  找到不在模式中使用的来源，添加到needTobeAppend
-    props.sources.forEach((source) => {
+    patterManager.sources.forEach((source) => {
       if (!sourceIDMap[source.id]) {
         let copy = JSON.parse(JSON.stringify(source))
         copy.online = false; // 对于模式中没有包含的来源，应该为未开启状态
@@ -54,7 +56,10 @@ export default class PatternDisplay extends Component {
     //bind functions
     this.increase = this.increase.bind(this);
     this.decrease = this.decrease.bind(this);
-
+    this.goBack = this.goBack.bind(this);
+  }
+  goBack() {
+    this.props.history.goBack();
   }
   increase() {
     let interval = Number(this.refs.interval.value);
@@ -83,7 +88,9 @@ export default class PatternDisplay extends Component {
   }
 
   handleUpdate() {
-    let {hook, pattern} = this.props;
+    let {rinfo} = this.props,
+      pid = Number(rinfo[1]);
+
     let name = this.refs.name.value;
     let defaultPattern = this.refs.default.checked;
     let interval = this.refs.interval.value;
@@ -111,7 +118,7 @@ export default class PatternDisplay extends Component {
       showNotification(valid.join('\n'), 'error');
     } else {
       let newPattern = {
-        id: pattern.id,
+        id: pid,
         name: name,
         default: defaultPattern,
         interval: interval,
@@ -119,12 +126,14 @@ export default class PatternDisplay extends Component {
         type: type
       }
 
-      hook.update(newPattern.id, newPattern);
+      hitokotoDriver.updatePattern(newPattern.id, newPattern);
+      showNotification('修改模式成功！', 'success');
+      this.goBack()
     }
   }
 
   handleNewPattern() {
-    let {hook} = this.props;
+
     let name = this.refs.name.value;
     let defaultPattern = this.refs.default.checked;
     let interval = this.refs.interval.value;
@@ -159,7 +168,9 @@ export default class PatternDisplay extends Component {
         type: type
       }
 
-      hook.newPattern(pattern);
+      patterManager.newPattern(pattern);
+      showNotification('添加模式成功！', 'success');
+      this.goBack()
     }
   }
 
@@ -189,24 +200,15 @@ export default class PatternDisplay extends Component {
   }
 
   render() {
-    let props = this.props;
-    let pattern = props.pattern;
-    let sources = this.props.sources;
-    let oprations;
-    if (pattern) {
-      oprations = (
-        <div>
-          <button onClick={this.handleUpdate.bind(this)}>确认修改</button>
-          <button className="color-basic" onClick={props.hook.hide}>取消</button>
-        </div>
-      )
-    } else {
-      oprations = (
-        <div>
-          <button onClick={this.handleNewPattern.bind(this)}>确认新增</button>
-          <button className="color-basic" onClick={props.hook.hide}>取消</button>
-        </div>
-      )
+    let {rinfo} = this.props,
+      pid = rinfo[1],
+      doNewone = pid === 'new',
+      sources = patterManager.sources,
+      pattern;
+
+    if (!doNewone) {
+      pid = Number(pid);
+      pattern = patterManager.patterns.find(p => p.id == pid);
     }
 
     pattern = pattern || {};
@@ -252,13 +254,14 @@ export default class PatternDisplay extends Component {
             <label htmlFor={src.id + 'local'}></label>
             允许使用本地缓存
           </div>
-
         </li>
       )
     });
 
     return (
-      <FullPageCard cardname={props.title} close={this.props.hook.hide}>
+      <FullPageCard cardname={doNewone
+        ? '新增模式'
+        : '修改模式'}>
         <div className="form">
           <div className="text-filed blocked">
             <input type="text" ref="name" required defaultValue={pattern.name}/>
@@ -315,9 +318,16 @@ export default class PatternDisplay extends Component {
             {sourcesList}
           </ul>
         </div>
-        {oprations}
+        <div>
+          {doNewone
+            ? <button onClick={this.handleNewPattern.bind(this)}>确认新增</button>
+            : <button onClick={this.handleUpdate.bind(this)}>确认修改</button>}
+          <button onClick={this.goBack} className="color-basic">取消</button>
+        </div>
 
       </FullPageCard>
     );
   }
 }
+
+export default withRouter(PatternEditor);

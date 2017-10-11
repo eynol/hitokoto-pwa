@@ -1,8 +1,3 @@
-/* Global Layout Element  */
-
-.info {
-    /* margin-bottom: 15px; */
-}
 
 .mu-category nav::-webkit-scrollbar {
     width: 10px;
@@ -15,52 +10,7 @@
     background: rgb(166, 151, 148);
 }
 
-@media screen and (max-width: 768px) {
-    .info {
-        /* padding: 180px 50px 0 0px; */
-        margin-bottom: 15px;
-    }
-}
 
-.info {
-    /* text-align: right; */
-    position: relative;
-    z-index: 2;
-    line-height: 70px;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-}
-
-:global(.revert2white) .layout_vertical .info {
-    color: white;
-}
-
-.info:after {
-    position: absolute;
-    content: attr(data-id);
-    color: #e7e7e7;
-    font-size: 70px;
-    width: 100%;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    left: 0;
-    padding-left: 32px;
-    top: 0px;
-    /* （70*0.68）-16/2 */
-    z-index: 1;
-}
-
-:global(.revert2white) .layout_vertical .info:after {
-    color: #423737;
-}
-
-.info b {
-    position: relative;
-    z-index: 2;
-    letter-spacing: 3px;
-}
 
 .song {
     font-weight: 900;
@@ -74,7 +24,7 @@
     width: 100%;
     overflow-y: auto;
     overflow-x: hidden;
-    padding: 140px 50px 50px;
+    padding: 170px 50px 50px;
     will-change: position;
     backface-visibility: hidden;
 }
@@ -204,18 +154,12 @@ ul.actions {
     font-weight: 900; */
 }
 
-.layout_vertical .info {
-    position: absolute;
-    right: 0;
-    top: 200px;
-    width: 300px;
-}
-
 .layout_vertical .oprations {
     position: absolute;
     right: 0;
-    top: 270px;
-    width: 300px;
+    bottom: 30px;
+    width: 480px;
+    writing-mode: horizontal-tb;
     z-index: 3;
 }
 
@@ -230,7 +174,7 @@ ul.actions {
 
 .verticalAnimate:before {
     content: '';
-    width: 400px;
+    width: 500px;
     height: 1px;
     display: block;
 }
@@ -278,16 +222,7 @@ ul.actions {
     .layout_vertical .Content.overLoadHitokoto>h1 {
         font-size: 1em;
     }
-    .layout_vertical .info {
-        writing-mode: vertical-rl;
-        top: 0;
-        text-align: left;
-        width: 70px;
-        height: 100%;
-        margin: 0;
-        padding-top: 60px;
-        /*edge make this block  */
-    }
+   
     .layout_vertical .oprations {
         text-align: right;
         margin-right: 29px;
@@ -307,24 +242,5 @@ ul.actions {
      .verticalAnimate::before {
         width: 180px;
     }
-    .layout_vertical .info {
-        writing-mode: horizontal-tb;
-        pointer-events: none;
-        top: auto;
-        bottom: -25px;
-        width: 100%;
-        text-align: right;
-        padding-top: 60px;
-        height: auto;
-    }
-    .layout_vertical .info:after {
-        position: absolute;
-        color: #e7e7e7;
-        font-size: 30px;
-        left: 0;
-        padding-left: 32px;
-        top: 60px;
-        /* （70*0.68）-16/2 */
-        z-index: 1;
-    }
+    
 }

@@ -142,7 +142,7 @@ class Profile extends Component {
     let {path, location, user} = this.props;
     let state = this.state;
     return (
-      <FullPageCard cardname="账户设置">
+      <FullPageCard cardname="账号设置">
         <div className="form">
           <div className={mb20}>
             <h4>基本信息</h4><hr/>
@@ -162,7 +162,6 @@ class Profile extends Component {
                 className={state.emailDelay == 0
                 ? ''
                 : 'disabled'}>发送验证码</button>
-
             </div>
             <div className={state.email == 1
               ? ''

@@ -10,7 +10,7 @@ import showNotification from '../API/showNotification';
 
 import HitokotoPreview from '../containers/HitokotoPreview';
 import HitoCollection from '../containers/HitoCollection';
-import HitoCollectionList from '../containers/HitoCollectionList';
+import UserCollection from '../containers/HitoCollectionList';
 import HitokotoEditor from '../containers/HitokotoEditor';
 
 let httpManager = hitokotoDriver.httpManager;
@@ -42,7 +42,7 @@ class Home extends Component {
     if (/^\/home$/gim.test(pathname)) {
       frameToShow = (<HitoCollection/>)
     } else if (/^\/home\/[^\/]*/gim.test(pathname)) {
-      frameToShow = (<HitoCollectionList/>)
+      frameToShow = (<UserCollection/>)
     }
 
     return (

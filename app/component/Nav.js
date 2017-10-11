@@ -7,8 +7,30 @@ import hitokotoDriver from '../API/hitokotoDriver';
 
 import {PANEL_OPEN} from '../actions'
 
-import style from './Nav.css';
-let {navWrapper, nav, navPhone, navPhoneDimmer, hamburger} = style;
+import {
+  navWrapper,
+  nav,
+  navPhone,
+  navPhoneDimmer,
+  hamburger,
+  navCover,
+  showCover
+} from './Nav.css';
+
+const Month = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December'
+]
 
 let beforeLogin = (props) => (
   <ul>
@@ -22,7 +44,7 @@ let beforeLogin = (props) => (
       <Link to='/explore'>探索</Link>
     </li>
     <li>
-      <Link to='/nav-management'>管理</Link>
+      <Link to='/managements'>管理</Link>
     </li>
     <li>
       <Link to='/about'>关于</Link>
@@ -33,13 +55,10 @@ let beforeLogin = (props) => (
 let online = (props) => (
   <ul>
     <li>
-      <Link to='/home' title="前往个人中心">个人中心</Link>
+      <Link to='/myspace' title="前往个人中心">个人中心</Link>
     </li>
     <li>
       <Link to='/explore'>探索</Link>
-    </li>
-    <li>
-      <Link to='/nav-management'>管理</Link>
     </li>
     <li>
       <Link to='/about'>关于</Link>
@@ -51,10 +70,17 @@ let online = (props) => (
 )
 
 function Nav(props) {
+
+  // 构建时间
+  let _today = new Date(),
+    yyyy = _today.getFullYear(),
+    mm = Month[_today.getMonth()],
+    dd = _today.getDate();
+
   let Child,
     PhoneChild = null,
     PhoneChildDimmer = null;
-  if (props.user.nickname) {
+  if (props.user && props.user.nickname) {
     Child = online;
   } else {
     Child = beforeLogin;
@@ -107,10 +133,17 @@ function Nav(props) {
       }}>
         <span></span>
       </a>
-
-      <div className={nav}>
+      <div
+        className={nav + (props.layout.showCover
+        ? ' ' + showCover
+        : '')}>
         {Child(props)}
       </div>
+      {props.layout.showCover
+        ? <div className={navCover}>
+            <h1>{yyyy}<br/>{mm}. {dd}</h1>
+          </div>
+        : null}
       <QueueAnim
         animConfig={[
         {

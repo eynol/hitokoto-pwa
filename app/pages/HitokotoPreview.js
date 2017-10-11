@@ -31,9 +31,7 @@ class HitokotoPreview extends Component {
       pathname = history.location.pathname;
 
     console.log(pathname, hitokoto, this.props)
-    if (!/^\/home\/[^\/]+\/preview$/.test(pathname)) {
-      return null;
-    }
+
     if (!hitokoto) {
       return (
         <FullPageCard>
@@ -66,28 +64,7 @@ class HitokotoPreview extends Component {
         <FullPage style={{
           backgroundColor: layout.backgroundColor
         }}>
-          <QueueAnim
-            animConfig={[
-            {
-              opacity: [1, 0]
-            }, {
-              opacity: [
-                1, 0
-              ],
-              position: 'absolute'
-            }
-          ]}
-            ease={['easeOutQuart', 'easeInOutQuart']}
-            className="animate-none-sense"
-            style={{
-            position: 'relative',
-            height: '100%',
-            width: '100%'
-          }}>
-            <LayoutHorizon key={id} hitokoto={hitokoto} layout={layout}>
-              {Actions}
-            </LayoutHorizon>
-          </QueueAnim>
+          <LayoutHorizon hitokoto={hitokoto} layout={layout} actions={Actions}></LayoutHorizon>
         </FullPage>
       )
     } else {
@@ -95,8 +72,7 @@ class HitokotoPreview extends Component {
         <FullPage style={{
           backgroundColor: layout.backgroundColor
         }}>
-          <LayoutVertical key={id} hitokoto={hitokoto} layout={layout}>
-            {Actions}</LayoutVertical>
+          <LayoutVertical hitokoto={hitokoto} layout={layout} actions={Actions}></LayoutVertical>
         </FullPage>
       )
     }

@@ -147,6 +147,7 @@ export default class SourceManager {
       if (needUpdateSource) {
         $setSources(this.sources);
       }
+      $setVersion(VERSION);
     }
 
   }

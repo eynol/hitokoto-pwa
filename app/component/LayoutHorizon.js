@@ -38,19 +38,14 @@ function LayoutHorizon(props) {
       font,
       fontWeight
     },
-    animateConfig
+    animateConfig,
+    actions: actionsList
   } = props;
-  let OptionsChildren = null,
-    overLoad = false;
+  let overLoad = false;
 
   if (hitokoto && hitokoto.length > JUDESIZE) {
     overLoad = true;
   }
-  Children.forEach(props.children, (one) => {
-    if (one.props['data-role'] == 'actions') {
-      OptionsChildren = one.props.children;
-    }
-  })
 
   return (
     <div
@@ -64,32 +59,43 @@ function LayoutHorizon(props) {
       <Nav/>
       <QueueAnim
         animConfig={animateConfig}
-        className={Content + (overLoad
-        ? ' ' + overLoadHitokoto
-        : '')}>
-        <div className={info} key={id + 'info'} data-id={id}>
+        ease={['easeOutQuart', 'easeInOutQuart']}
+        className="animate-none-sense"
+        style={{
+        position: 'relative',
+        height: '100%',
+        width: '100%'
+      }}>
+        <QueueAnim
+          key={id + 'content'}
+          animConfig={animateConfig}
+          className={Content + (overLoad
+          ? ' ' + overLoadHitokoto
+          : '')}>
+          {/* <div className={info} key={id + 'info'} data-id={id}>
           <b title="创建者">
             {creator}
           </b>
-        </div>
-        <h1
-          style={{
-          fontFamily: FONT_MAP[font],
-          fontWeight: fontWeight
-        }}
-          key={id + 'hito'}>{hitokoto}</h1>
-        {author || source
-          ? <p key={id + 'from'}>——&nbsp;&nbsp;{author
-                ? author
-                : ''}{author
-                ? ' '
-                : ''}{source}</p>
-          : null}
-        <div className='oprations' key={id + 'oprations'}>
-          <ul className={actions}>
-            {OptionsChildren}
-          </ul>
-        </div>
+        </div>*/}
+          <h1
+            style={{
+            fontFamily: FONT_MAP[font],
+            fontWeight: fontWeight
+          }}
+            key={id + 'hito'}>{hitokoto}</h1>
+          {author || source
+            ? <p key={id + 'from'}>——&nbsp;&nbsp;{author
+                  ? author
+                  : ''}{author
+                  ? ' '
+                  : ''}{source}</p>
+            : null}
+          <div className='oprations' key={id + 'oprations'}>
+            <ul className={actions}>
+              {actionsList}
+            </ul>
+          </div>
+        </QueueAnim>
       </QueueAnim>
     </div>
   );

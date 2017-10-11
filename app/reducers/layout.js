@@ -5,7 +5,8 @@ const DEFAULT_LAYOUT = {
   fontWeight: '600',
   layoutHorizon: false,
   backgroundColor: '#ffffff',
-  revert2white: false
+  revert2white: false,
+  showCover: false
 }
 
 const INSTANT_LAYOUT_NAME = 'instant_layout';

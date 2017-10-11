@@ -40,20 +40,15 @@ export default function LayoutVertical(props) {
       backgroundColor,
       font,
       fontWeight
-    }
+    },
+    actions: actionsList,
+    animateConfig
   } = props;
-  let OptionsChildren = null,
-    overLoad = false;
+  let overLoad = false;
 
   if (hitokoto && hitokoto.length > JUDESIZE) {
     overLoad = true;
   };
-
-  Children.forEach(props.children, (one) => {
-    if (one.props['data-role'] == 'actions') {
-      OptionsChildren = one.props.children;
-    }
-  })
 
   let Child = (
     <div
@@ -86,16 +81,19 @@ export default function LayoutVertical(props) {
       overflow: 'hidden'
     }}>
       <Logo/>
-      <Nav/>
-      <div className={info} data-id={id}>
+      <Nav/> {/*<div className={info} data-id={id}>
         <b title="创建者">{creator}</b>
-      </div>
-      <div className={oprations}>
-        <QueueAnim component="ul" className={actions}>
-          {OptionsChildren}
-        </QueueAnim>
-      </div>
-      <QueueAnim duration='1000' className={verticalAnimate}>
+  </div>*/}
+
+      <QueueAnim
+        duration='1000'
+        className={verticalAnimate}
+        animConfig={animateConfig}>
+        <div className={oprations} key="fff">
+          <ul component="ul" className={actions}>
+            {actionsList}
+          </ul>
+        </div>
         {Child}
       </QueueAnim>
     </div>

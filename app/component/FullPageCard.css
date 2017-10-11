@@ -33,9 +33,18 @@
     margin: 0;
     margin-bottom: 4px;
     font-size: 32px;
-    line-height: 80px;
+    box-sizing: border-box;
+    padding: 24px 0px;
+    height: 80px;
     background-color: white;
     /* border-radius: 4px; */
+}
+
+
+.header::before {
+    content: '';
+    font-size: 0;
+    vertical-align: bottom;
 }
 
 .content {
@@ -58,8 +67,8 @@
     }
     .header {
         /* font-size: 20px; */
-        padding: 0 20px;
-        box-shadow: 0 2px 4px -1px rgba(0, 0, 0, .15);
+        padding: 24px 20px;
+        box-shadow: 0 1px 2px -1px rgba(0, 0, 0, .15)
     }
     .content {
         padding: 10px 10px 30px;
@@ -110,4 +119,48 @@
         font-size: 32px;
         line-height: 24px;
     }
+}
+
+.cardActions {
+    float: right;
+}
+
+.cardActions :global(.action-phone) {
+    display: none;
+}
+
+@media screen and (min-width:768px) {
+    .header.withAction {
+        height: 96px;
+    }    
+    .cardActions :global(.hide-pc) {
+        display: none;
+    }
+    .cardActions {
+        margin: 10px 0 16px 42px;
+        font-size: 16px;
+        vertical-align: bottom;
+        float: none;
+        position: relative;
+    }
+    .cardActions a {
+        padding: 3px 8px;
+        border-radius: 4px;
+    }
+    .cardActions a:hover {
+        background-color: #dadada;
+    }
+    .cardActions a:after {
+        content: attr(data-text);
+    }
+}
+
+@media screen and (max-width:768px) {
+    .cardActions a {
+        float: right;
+    }
+}
+
+.cardActions a {
+    text-decoration: none;
 }

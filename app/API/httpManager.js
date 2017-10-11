@@ -103,6 +103,24 @@ class HTTPManager {
 
     }
   }
+  /**
+   *
+   *
+   * @param {Response} resp
+   * @returns
+   * @memberof HTTPManager
+   */
+  responseHeaderResolver(resp) {
+    if (resp.status == 403) {}
+    console.log(resp.headers.get('x-token-expired'));
+    console.log(resp.headers.get('X-Powered-By'));
+    console.log(resp)
+    for (var i of resp.headers.keys()) {
+
+      console.log(i)
+    }
+    return resp;
+  }
   parseToJSON(resp) {
     if (resp.status === 200) {
       try {
@@ -128,11 +146,23 @@ class HTTPManager {
     }
   }
 
-  getHitokoto(url) {
+  getHitokoto(url, type, source) {
     let _that = this;
 
+    //  判断next
+    if (type == 'next') {
+      let query = this.parseQeuery({seed: source.count});
+
+      if (/\?/.test(url)) {
+        //不可能为0
+        url += '&' + query;
+      } else {
+        url += '?' + query;
+      }
+    }
+
     if (this.inited) {
-      return timeoutPromise(13000, fetch(url)).then(this.parseToJSON).catch(FETCHREJECT)
+      return timeoutPromise(13000, fetch(url)).then(this.parseToJSON)
     } else {
 
       let chain = []; // store then and catch functions;
@@ -315,7 +345,7 @@ class HTTPManager {
       headers: {
         'X-API-TOKEN': this.token
       }
-    }).then(this.parseToJSON).catch(FETCHREJECT)
+    }).then(this.responseHeaderResolver).then(this.parseToJSON).catch(FETCHREJECT)
   }
 
   //   Without Auth Token

@@ -5,6 +5,7 @@ import QueueAnim from 'rc-queue-anim';
 import PropTypes from 'prop-types'
 import {Link} from 'react-router-dom'
 
+import Modal from './Modal'
 import LayoutHorizon from './LayoutHorizon'
 import LayoutVertical from './LayoutVertical'
 import {showPanel, PANEL_OPEN} from '../actions'
@@ -15,7 +16,19 @@ import {ANIMATE_CONFIG_LAST, ANIMATE_CONFIG_NEXT} from '../configs'
 
 class HitokotoPlayer extends Component {
   constructor(props) {
-    super(props)
+    super(props);
+    this.state = {
+      infoModal: false
+    }
+
+    this.showInfo = this.showInfo.bind(this);
+    this.hideInfo = this.hideInfo.bind(this);
+  }
+  showInfo() {
+    this.setState({infoModal: true});
+  }
+  hideInfo() {
+    this.setState({infoModal: false});
   }
   render() {
 
@@ -35,62 +48,72 @@ class HitokotoPlayer extends Component {
       id = hitokoto.id,
       layoutHorizon = layout.layoutHorizon;
 
-    let Actions = (
-      <ul data-role="actions">
+    let Actions = [
+      (
+        <li key={id + 'info'}>
+          <a href="javascript:" title="关于" onClick={this.showInfo}>
+            <i className="iconfont icon-info"></i>
+          </a>
+        </li>
+      ), (
         <li key={id + 'love'}>
           <a href="javascript:" title="收藏">
             <i className="iconfont icon-favor"></i>
           </a>
         </li>
+      ), (
         <li key={id + 'setting'} title="页面设置">
           <a href="javascript:" onClick={showLayoutSetting}>
             <i className="iconfont icon-shezhi"></i>
           </a>
         </li>
-        {lastCount > 1
-          ? <li key={id + 'last'}>
-              <a href='javascript:' onClick={handleLast} title="上一条">
-                <i className="iconfont icon-last"></i>
-              </a>
-            </li>
-          : null}
+      ), lastCount > 1
+        ? <li key={id + 'last'}>
+            <a href='javascript:' onClick={handleLast} title="上一条">
+              <i className="iconfont icon-last"></i>
+            </a>
+          </li>
+        : null,
+      (
         <li key={id + 'next'}>
           <a href="javascript:" onClick={handleNext} title="下一条">{processing
               ? <i className="iconfont icon-loading-anim"></i>
               : <i className="iconfont icon-next"></i>}</a>
         </li>
-      </ul>
-    )
-    console.log(direction);
+      )
+    ]
+    console.log(hitokoto);
     if (layoutHorizon) {
-      return (
-        <QueueAnim
-          animConfig={direction == 'next'
-          ? ANIMATE_CONFIG_NEXT
-          : ANIMATE_CONFIG_LAST}
-          ease={['easeOutQuart', 'easeInOutQuart']}
-          className="animate-none-sense"
-          style={{
-          position: 'relative',
-          height: '100%',
-          width: '100%'
-        }}>
+      return [
+        (
           <LayoutHorizon
             overflowhide={this.props.panel === PANEL_OPEN + 'nav'}
             animateConfig={direction == 'next'
             ? ANIMATE_CONFIG_NEXT
             : ANIMATE_CONFIG_LAST}
-            key={id}
             hitokoto={hitokoto}
-            layout={layout}>
-            {Actions}
-          </LayoutHorizon>
-        </QueueAnim>
-      )
+            layout={layout}
+            actions={Actions}></LayoutHorizon>
+        ),
+        (this.state.infoModal
+          ? <Modal exit={this.hideInfo}>
+              <p>ID：{hitokoto.id || '未知'}</p>
+              <p>发布者：{hitokoto.creator || '未知'}</p>
+              <p>所在句集：{hitokoto.f || '未知'}</p>
+              <p>分类：{hitokoto.category || '未知'}</p>
+              <p>发布时间：{(hitokoto.created_at && new Date(hitokoto.created_at).toLocaleString()) || '未知'}</p>
+            </Modal>
+          : null)
+      ]
     } else {
       return (
-        <LayoutVertical key={id} hitokoto={hitokoto} layout={layout}>
-          {Actions}</LayoutVertical>
+        <LayoutVertical
+          animateConfig={direction == 'next'
+          ? ANIMATE_CONFIG_NEXT
+          : ANIMATE_CONFIG_LAST}
+          hitokoto={hitokoto}
+          layout={layout}
+          actions={Actions}></LayoutVertical>
       )
     }
   }

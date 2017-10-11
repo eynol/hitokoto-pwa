@@ -514,3 +514,42 @@ button:focus:after {
   color:gray;
 }
 
+
+:global(.routes){
+    height: 100%;
+    overflow: auto;
+}
+:global(.routes) ul{
+  list-style: none;
+  margin:10px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+:global(.routes) ul:after{
+  content: '';
+  display: table-cell;
+  clear: both;
+}
+
+:global(.routes) li{
+  width: 300px;
+  display: inline-block;
+  vertical-align: top;
+  box-sizing: border-box;
+  cursor: pointer;
+  position: relative;
+  flex: 1 1 300px;
+}
+
+:global(.routes) li a {
+  display: block;
+  text-decoration: none;
+  padding:10px 20px;
+  border-radius: 4px;
+}
+
+:global(.routes) li a:hover{
+  background-color: #f6f6f6;
+}
