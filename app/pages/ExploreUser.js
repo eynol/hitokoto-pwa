@@ -43,46 +43,20 @@ class ExploreUser extends Component {
   handleView(colname) {
     this.props.history.push(this.props.location.pathname + '/' + colname);
   }
-  removeFromSoure(colname, evt) {
-    hitokotoDriver.patterManager.removeSourceWithUsernameAndCol(this.props.userName, colname, true);
-    showNotification('已从来源中移除「' + colname + '」!\n如果模式中含有该句集，请在「模式管理中删除」', 'info', false, 4)
-    this.forceUpdate();
-    evt.stopPropagation();
-  }
-  addToSource(colname, event) {
-    hitokotoDriver.patterManager.newSourceWithUsernameAndCol(this.props.userName, colname, true);
-    showNotification('已添加「' + colname + '」至来源!\n将会获取该来源内「公开」的句子', 'success')
-    this.forceUpdate();
-    event.stopPropagation();
-  }
+
   render() {
     let {path, location, userName} = this.props;
     let profile = this.state.user,
       patterManager = hitokotoDriver.patterManager,
       ListToShow = null;
     if (this.state.inited) {
-      ListToShow = profile.collections.map((item, index) => (
-        <CollectionBox
-          data={item}
-          key={index}
-          tabIndex={index + 1}
-          viewonly={true}
-          view={this.handleView}>
-          {patterManager.isSourceExsit(patterManager.getUrlOfUserCol(userName, item.name, true))
-            ? (
-              <a
-                href="javascript:"
-                tabIndex={index + 1}
-                onClick={this.removeFromSoure.bind(this, item.name)}>从来源中删除</a>
-            )
-            : (
-              <a
-                href="javascript:"
-                tabIndex={index + 1}
-                onClick={this.addToSource.bind(this, item.name)}>加入来源</a>
-            )}
-        </CollectionBox>
-      ));
+      ListToShow = profile.collections.map((item, index) => (<CollectionBox
+        data={item}
+        key={index}
+        ownerName={userName}
+        tabIndex={index + 1}
+        view={this.handleView}
+        isPublic/>));
 
     };
     return (

@@ -132,7 +132,7 @@ class UserCollection extends Component {
 
     if (hitokotos.length > 0) {
       ListToShow = hitokotos.map((hitokoto) => (
-        <PublicHitokoto key={hitokoto.id} data={hitokoto} viewonly>
+        <PublicHitokoto key={hitokoto.id} data={hitokoto} viewonly showState>
           <button onClick={this.preview.bind(this, hitokoto)}>预览</button>
           <button onClick={() => this.updateHitokoto(hitokoto)}>修改</button>
           <button onClick={() => this.showDelModal(hitokoto)} className="color-red">删除</button>

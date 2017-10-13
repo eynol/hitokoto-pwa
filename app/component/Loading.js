@@ -7,7 +7,7 @@ export default({inited, error, retry}) => {
       return (
         <div className={loading}>
           <h1 className="color-red">
-            <i className="iconfont icon-error-message">哦豁....</i>
+            <i className="iconfont icon-error-message">&nbsp;哦豁....</i>
           </h1>
           <p>似乎出了点状况<button onClick={retry}>重试</button>
           </p>

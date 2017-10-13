@@ -53,13 +53,13 @@ function Chinese(d) {
       } else if ((_date - date) == 2) {
         return `前天 ${addZero(hours)}:${addZero(minutes)}`
       } else {
-        return `${month}月${date}日 ${addZero(hours)}:${addZero(minutes)}`
+        return `${month + 1}月${date}日 ${addZero(hours)}:${addZero(minutes)}`
       }
     } else {
-      return `${month}月${date}日 ${addZero(hours)}:${addZero(minutes)}`
+      return `${month + 1}月${date}日 ${addZero(hours)}:${addZero(minutes)}`
     }
   } else {
-    return `${fullYear}年${month}月${date}日 ${addZero(hours)}:${addZero(minutes)}`
+    return `${fullYear}年${month + 1}月${date}日 ${addZero(hours)}:${addZero(minutes)}`
   }
 }
 export default Chinese;

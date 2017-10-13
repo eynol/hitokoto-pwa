@@ -88,3 +88,13 @@ export const sendNotification = (value, type = 'info', interactive = false, time
   dispatch({type: SHOW_NOTIFICATION, id, value, ntype: type, interactive});
 }
 export const removeNotification = (id) => ({type: REMOVE_NOTIFICATION, value: id})
+
+export const SOURCES_NEW_ONE = 'sources new one';
+export const SOURCES_REMOVE_ONE = 'sources remove one';
+export const SOURCES_NEW_ONE_DONE = 'sources new one done';
+export const SOURCES_REMOVE_ONE_DONE = 'sources remove one done';
+
+export const newOneSource = (source) => ({type: SOURCES_NEW_ONE, value: source})
+export const removeOneSource = (source) => ({type: SOURCES_REMOVE_ONE, value: source})
+export const newOneSourceDone = () => ({type: SOURCES_NEW_ONE_DONE})
+export const removeOneSourceDone = () => ({type: SOURCES_REMOVE_ONE_DONE})

@@ -17,7 +17,7 @@ class UserSpace extends Component {
   render() {
     return (
       <FullPageCard cardname="个人中心">
-        <div className="routes">
+        <div className="lum-list">
           <ul>
             <li>
               <Link to="/myspace/collections">
@@ -44,9 +44,9 @@ class UserSpace extends Component {
               </Link>
             </li>
             <li>
-              <Link to="/managements/sources">
+              <Link to="/managements/sync">
                 <h4>离线同步</h4>
-                <p>管理添加获取句子的URL</p>
+                <p>将来源的全部句子缓存到本地，离线时也可以使用</p>
               </Link>
             </li>
             <li>

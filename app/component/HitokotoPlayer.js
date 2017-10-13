@@ -86,6 +86,7 @@ class HitokotoPlayer extends Component {
     return [
       (layoutHorizon
         ? <LayoutHorizon
+            key="player-horizon"
             overflowhide={this.props.panel === PANEL_OPEN + 'nav'}
             animateConfig={direction == 'next'
             ? ANIMATE_CONFIG_NEXT
@@ -94,6 +95,7 @@ class HitokotoPlayer extends Component {
             layout={layout}
             actions={Actions}></LayoutHorizon>
         : <LayoutVertical
+          key="player-vertical"
           animateConfig={direction == 'next'
           ? ANIMATE_CONFIG_NEXT
           : ANIMATE_CONFIG_LAST}
@@ -101,7 +103,7 @@ class HitokotoPlayer extends Component {
           layout={layout}
           actions={Actions}></LayoutVertical>),
       (this.state.infoModal
-        ? <Modal exit={this.hideInfo}>
+        ? <Modal exit={this.hideInfo} key="player-info">
             <p>ID：{hitokoto.id || '未知'}</p>
             <p>发布者：{hitokoto.creator || '未知'}</p>
             <p>所在句集：{hitokoto.f || '未知'}</p>

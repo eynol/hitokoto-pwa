@@ -1,10 +1,41 @@
 import Dexie from 'dexie';
 
 var db = new Dexie("hitokoto_pwa");
-db.version(1).stores({hitokoto: ',url,id,hitokoto,type'});
+db.version(1).stores({hitokoto: ',url,id,hitokoto,type', syncRecord: ',url', asserts: ',name'});
 
 const KEY_SEPRATOR = '<%hitokoto%>';
 class IndexedDBManager {
+  constructor() {
+    // this.getHitokotoCount('http://localhost:8080/api/sources/59da1e278b4a8bf7a499
+    // 69f2/59dcdf40134ed063c0ae5' +     'ed9').then(count => { console.log(count)
+    // })
+    console.log(Dexie.version)
+  }
+  getStates() {
+    let urlsSet = new Set();
+    return db.table('hitokoto').each(v => urlsSet.add(v.url)).then(() => {
+      let map = new Map(),
+        plist = [];
+
+      for (let url of urlsSet.keys()) {
+        plist.push(this.getHitokotoCount(url).then(count => {
+          map.set(url, count);
+        }))
+      }
+
+      return Dexie.Promise.all(plist).then(results => [...map.entries()])
+    })
+  }
+  getAllURLS() {
+    let urlsSet = new Set();
+    return db.table('hitokoto').each(v => urlsSet.add(v.url)).then(() => [...urlsSet.keys()])
+  }
+  getHitokotoCount(url) {
+    return db.table('hitokoto').where('url').equals(url).count()
+  }
+  clearOneSource(url) {
+    return db.table('hitokoto').where('url').equals(url).delete()
+  }
   putHitokoto(url, hitokoto) {
     if (!hitokoto.url) {
       hitokoto.url = url;
@@ -12,7 +43,24 @@ class IndexedDBManager {
     return db.table('hitokoto').put(hitokoto, url + KEY_SEPRATOR + hitokoto.id)
     /// 先查询再存入会耗费9ms(Dxiex查询)+10ms(ji计时器); 原生的系统底层 get耗费0.9ms put耗费4.83ms
   }
-  getHitokotoRandom(url, option) {
+  /**
+   *
+   * @param {String} url
+   * @param {Object[]} hitokotos
+   * @memberof IndexedDBManager
+   */
+  putHitokotoBulk(url, hitokotos) {
+    let ids = []
+    hitokotos.forEach(h => {
+      if (!h.url) {
+        h.url = url;
+      }
+      ids.push(url + KEY_SEPRATOR + h.id);
+    });
+    return db.table('hitokoto').bulkPut(hitokotos, ids)
+  }
+
+  getHitokoto(url, option) {
     //获取某个固定域名下的随机hitokoto
     let collection = db.table('hitokoto').where('url').equals(url);
     return collection.count().then(count => {
@@ -33,6 +81,18 @@ class IndexedDBManager {
         return collection.offset(randomindex).first()
       }
     })
+  }
+  putSyncRecord(url, obj) {
+    return db.table('syncRecord').put(obj, url);
+  }
+  getSyncRecord(url) {
+    return db.table('syncRecord').get(url);
+  }
+  putAssert(key, assert) {
+    return db.table('asserts').put(assert, key);
+  }
+  getAssert(key) {
+    return db.table('asserts').get(key);
   }
   DEBUG_CLEAR_ALL() {
     db.table('hitokoto').clear()

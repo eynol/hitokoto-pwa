@@ -79,5 +79,5 @@ export default({data, remove}) => {
           </div>
         </div>
       </div>
-    ), (<br key={data.id}/>)]
+    ), (<br key={'br' + data.id}/>)]
 }

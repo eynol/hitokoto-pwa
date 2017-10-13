@@ -19,6 +19,12 @@ import {
   actions
 } from './PublicHitokoto.css'
 
+const STATE = {
+  'public': '公开',
+  'private': '私密',
+  'reviewing': '审核中'
+}
+
 const _ = (n) => n < 10
   ? '0' + n
   : n;
@@ -32,9 +38,11 @@ function PublicHitokoto(props) {
         creator_id,
         category,
         created_at,
-        collection
+        collection,
+        state
       },
-      viewonly
+      viewonly,
+      showState
     } = props,
 
     timeStr = tranformDate(new Date(created_at));
@@ -52,7 +60,9 @@ function PublicHitokoto(props) {
               <Link className="color-basic" to={"/explore/" + creator + '/' + collection}>{collection}</Link>
             ), (<br/>)])
 }
-        <span className={timetag}>{timeStr}</span>
+        <span className={timetag}>{showState
+            ? STATE[state] + ' - '
+            : null}{timeStr}</span>
       </div>
       <div className={userHitokotoFlex}>
         <div className={userHitokotoFlexChild + ' clearfix'}>

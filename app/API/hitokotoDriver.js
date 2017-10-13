@@ -126,7 +126,7 @@ class HitokotoDriver {
               }
               console.log('oops', e);
               //  失败了 使用离线缓存
-              return indexedDBManager.getHitokotoRandom(source.url);
+              return indexedDBManager.getHitokoto(source.url);
             })
           })
         } else {
@@ -259,7 +259,7 @@ class HitokotoDriver {
 
   getHitokotoFromIDB(url, options) {
 
-    return indexedDBManager.getHitokotoRandom(url, options).catch(e => {
+    return indexedDBManager.getHitokoto(url, options).catch(e => {
       return Promise.reject(e);
     })
   }

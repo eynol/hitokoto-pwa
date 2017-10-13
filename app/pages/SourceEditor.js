@@ -6,11 +6,16 @@ import Textarea from 'react-textarea-autosize';
 import hitokotoDriver from '../API/hitokotoDriver'
 import showNotification from '../API/showNotification';
 
+import {newOneSource} from "../actions";
+import store from '../store';
 const patterManager = hitokotoDriver.patterManager;
 
 import FullPageCard from '../component/FullPageCard'
-
-const URL_REG = /^((ht|f)tps?):\/\/[\w\-]+(\.[\w\-]+)+([\w\-\.,@?^=%&:\/~\+#]*[\w\-\@?^=%&\/~\+#])?$/;
+const isUrl = (str) => {
+  var urlRegex = `^(?!mailto:)(?:(?:http|https|ftp)://)(?:\\S+(?::\\S*)?@)?(?:(?:(?:[1-9]\\d?|1\\d\\d|2[01]\\d|22[0-3])(?:\\.(?:1?\\d{1,2}|2[0-4]\\d|25[0-5])){2}(?:\\.(?:[0-9]\\d?|1\\d\\d|2[0-4]\\d|25[0-4]))|(?:(?:[a-z\\u00a1-\\uffff0-9]+-?)*[a-z\\u00a1-\\uffff0-9]+)(?:\\.(?:[a-z\\u00a1-\\uffff0-9]+-?)*[a-z\\u00a1-\\uffff0-9]+)*(?:\\.(?:[a-z\\u00a1-\\uffff]{2,})))|localhost)(?::\\d{2,5})?(?:(/|\\?|#)[^\\s]*)?$`; //
+  var url = new RegExp(urlRegex, 'i');
+  return str.length < 2083 && url.test(str);
+}
 
 let showDemo = () => {
 
@@ -47,6 +52,20 @@ class SourceEditor extends Component {
     adapter = adapter
       ? adapter
       : 0;
+
+    if (name.length == 0) {
+      showNotification('名字不能为空！', 'error');
+      return;
+    }
+    if (url.length == 0) {
+      showNotification('url不能为空！', 'error');
+      return;
+    }
+
+    if (!isUrl(url)) {
+      showNotification('请填写正确的URL！包括请求的协议！', 'error');
+      return;
+    }
 
     let source = {
       id: sid,
@@ -91,8 +110,8 @@ class SourceEditor extends Component {
       return;
     }
 
-    if (url.length == 0) {
-      showNotification('url不能为空！', 'error');
+    if (!isUrl(url)) {
+      showNotification('请填写正确的URL！包括请求的协议！', 'error');
       return;
     }
 
@@ -112,7 +131,7 @@ class SourceEditor extends Component {
     if (source.adapter) {
       hitokotoDriver.testSourceAdapter(source.url, source.adapter).then(() => {
         patterManager.newSource(source);
-        showNotification('添加来源成功！', 'success');
+        store.dispatch(newOneSource(source));
         this.goBack()
       }).catch((e) => {
         if (typeof e == 'string') {
@@ -124,7 +143,7 @@ class SourceEditor extends Component {
 
     } else {
       patterManager.newSource(source);
-      showNotification('添加来源成功！', 'success');
+      store.dispatch(newOneSource(source));
       this.goBack()
     }
   }

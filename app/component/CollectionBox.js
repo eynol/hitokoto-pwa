@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import {Link, withRouter} from 'react-router-dom';
 import PropTypes from 'prop-types';
+import {connect} from 'react-redux'
 
 import showNotification from '../API/showNotification';
 import hitokotoDriver from '../API/hitokotoDriver'
@@ -17,6 +18,12 @@ let {
   Card_content
 } = style;
 
+import {newOneSource, removeOneSource} from '../actions'
+const mapStoreToProps = (state) => ({nickname: state.user.nickname})
+const mapActionToProps = (dispatch) => ({
+  newSource: (source) => dispatch(newOneSource(source)),
+  removeSource: (source) => dispatch(removeOneSource(source))
+})
 /****
  * 显示一个句集的盒子，有显示(normal) 修改(change) 新增按钮()新增(newone)四个状态
  */
@@ -106,27 +113,8 @@ class CollectionBox extends Component {
   removeFromSources(evt) {
     evt.stopPropagation();
     let {
-      nickname,
-      data: {
-        name: colleName,
-        owner,
-        _id
-      },
-      isPublic
-    } = this.props;
-
-    if (isPublic) {
-      patterManager.removeSourceWithUsernameAndCol(nickname, colleName, true);
-    } else {
-      patterManager.removeSourceWithUsernameAndCol(owner, _id, false);
-    }
-    showNotification('将「' + colleName + '」从来源中删除成功！如果模式中开启了该来源，请在模式管理中关闭该来源！', 'info', false, 4);
-    this.forceUpdate();
-  }
-  addToSources(evt) {
-    evt.stopPropagation();
-    let {
         nickname,
+        ownerName,
         data: {
           name: colleName,
           owner,
@@ -136,18 +124,49 @@ class CollectionBox extends Component {
       } = this.props,
       result;
 
-    if (isPublic) {
-      result = patterManager.newSourceWithUsernameAndCol(nickname, colleName, true);
+    if (isPublic && ownerName != nickname) {
+      result = patterManager.removeSourceWithUsernameAndCol(nickname, colleName, true);
+    } else {
+      result = patterManager.removeSourceWithUsernameAndCol(owner, _id, false);
+    }
+    if (this.props.removeSource) {
+      this.props.removeSource(result);
+    } else {
+      showNotification('将「' + colleName + '」从来源中删除成功！', 'info', false, 4);
+    }
+    this.forceUpdate();
+  }
+  addToSources(evt) {
+    evt.stopPropagation();
+    let {
+        nickname,
+        ownerName,
+        data: {
+          name: colleName,
+          owner,
+          _id
+        },
+        isPublic
+      } = this.props,
+      result;
+
+    if (isPublic && ownerName != nickname) {
+      result = patterManager.newSourceWithUsernameAndCol(ownerName, colleName, true);
     } else {
       result = patterManager.newSourceWithUsernameAndCol(nickname, colleName, false, owner, _id);
     }
-    showNotification('将「' + colleName + '」加入来源成功！\n该来源可以获取「公开」和「私密」的所有句子。', 'success');
+    if (this.props.newSource) {
+      this.props.newSource(result);
+    } else {
+      showNotification('将「' + colleName + '」加入来源成功！\n该来源可以获取「公开」和「私密」的所有句子。', 'success');
+    }
     this.forceUpdate();
   }
 
   isSourcesContians() {
     let {
         nickname,
+        ownerName,
         data: {
           name: colleName,
           owner,
@@ -157,8 +176,8 @@ class CollectionBox extends Component {
       } = this.props,
       url;
 
-    if (isPublic) {
-      url = patterManager.getUrlOfUserCol(nickname, colleName, true);
+    if (isPublic && ownerName != nickname) {
+      url = patterManager.getUrlOfUserCol(ownerName, colleName, true);
     } else {
       url = patterManager.getUrlOfUserCol(owner, _id, false);
     }
@@ -175,11 +194,11 @@ class CollectionBox extends Component {
           _id
         },
         'newone': pnewone,
-        viewonly
+        isPublic
       } = this.props,
       currentState = this.state.status;
 
-    if (viewonly) {
+    if (isPublic) {
       return (
         <div
           tabIndex={tabIndex}
@@ -189,8 +208,17 @@ class CollectionBox extends Component {
           <div className={Card_content}>
             <p className="ellipsis">{name}</p>
             <span>{count}条</span>
-            <div className={Card_options}>
-              {this.props.children}
+            <div className={Card_options}>{this.isSourcesContians()
+                ? <a
+                    tabIndex={tabIndex}
+                    href="javascript:"
+                    title="点击删除该句集"
+                    onClick={this.removeFromSources}>撤销来源</a>
+                : <a
+                  tabIndex={tabIndex}
+                  href="javascript:"
+                  title="点击删除该句集"
+                  onClick={this.addToSources}>加入来源</a>}&nbsp;
             </div>
           </div>
         </div>
@@ -300,4 +328,4 @@ class CollectionBox extends Component {
 CollectionBox.propTypes = {
   nickname: PropTypes.string.isRequired
 }
-export default CollectionBox
+export default connect(mapStoreToProps, mapActionToProps)(CollectionBox)

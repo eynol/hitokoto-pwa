@@ -6,6 +6,9 @@ import {GLOBAL_ANIMATE_TYPE} from '../configs'
 
 import hitokotoDriver from '../API/hitokotoDriver'
 
+import {removeOneSource} from "../actions";
+import store from '../store';
+
 import FullPageCard from '../component/FullPageCard'
 import SourceEditor from './SourceEditor'
 import Modal from '../component/Modal';
@@ -33,7 +36,8 @@ class Sources extends Component {
   handleDeleteSource() {
     let id = this.state.deleteSourceModal;
 
-    hitokotoDriver.patterManager.deleteSource(id);
+    let source = hitokotoDriver.patterManager.deleteSource(id);
+    store.dispatch(removeOneSource(source));
     this.hideDeleteModal();
     this.forceUpdate();
   }

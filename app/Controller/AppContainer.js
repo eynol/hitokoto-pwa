@@ -20,6 +20,8 @@ import Regist from '../containers/Regist'
 import Index from '../containers/Index'
 import Profile from '../containers/Profile'
 import UserSpace from '../pages/UserSpace'
+import NotFound from '../pages/NotFound'
+import Sync from '../pages/Management.sync';
 
 import UserCollections from '../containers/UserCollections'
 import UserCollection from '../containers/UserCollection'
@@ -27,6 +29,7 @@ import HitokotoPreview from '../containers/HitokotoPreview'
 import HitokotoEditor from '../containers/HitokotoEditor'
 
 import NotificationContainer from '../containers/Notification.Container'
+import PatternHelperModal from '../containers/PatternHelperModal'
 
 import {ANIMATE_CONFIG_NEXT, GLOBAL_ANIMATE_TYPE} from '../configs'
 const ROUTES = [
@@ -54,6 +57,10 @@ const ROUTES = [
     to: /^\/managements\/patterns\/(new|\d+)(\/update)?$/,
     component: PatternEditor,
     name: '模式编辑页面'
+  }, {
+    to: /^\/managements\/sync$/,
+    component: Sync,
+    name: '离线同步页面'
   }, {
     to: /^\/explore\/?/,
     component: Explore,
@@ -90,6 +97,10 @@ const ROUTES = [
     to: /^\/tools/,
     component: Tools,
     name: '工具页面'
+  }, {
+    to: /\w*/,
+    component: NotFound,
+    name: '404页面'
   }
 ];
 
@@ -138,6 +149,7 @@ class AppContainer extends Component {
         <Regist/>
         <Login/>
         <NotificationContainer/>
+        <PatternHelperModal/>
       </div>
     );
   }

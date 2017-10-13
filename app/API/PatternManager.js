@@ -124,10 +124,9 @@ export default class PatternManager extends SourceManager {
     let source = pattern.sources.find(s => s.id == sid);
     source.count = source.count + 1;
     $setPatterns(this.patterns); //  保存修改到本地
-    console.log(this.patterns);
   }
   deleteSource(id) {
-    super.deleteSource(id);
+    return super.deleteSource(id);
   }
   newPattern(pattern) {
     this.patterns.push(pattern);
@@ -162,7 +161,6 @@ export default class PatternManager extends SourceManager {
       }
     }
     $setPatterns(this.patterns);
-    console.log(this.patterns)
   }
   deletePattern(id) {
     for (var i = 0, len = this.patterns.length; i < len; i++) {

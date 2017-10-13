@@ -166,8 +166,12 @@ export default class SourceManager {
    */
   removeSourceWithUsernameAndCol(username, collection, isCros) {
     let url = this.getUrlOfUserCol(username, collection, isCros);
-    let target = this.sources.find(item => item.url == url);
+    let target = this.sources.find(item => item.url == url),
+      copy = JSON.parse(JSON.stringify(target));
+
     this.deleteSource(target.id);
+
+    return copy;
   }
   /**
    *
@@ -201,7 +205,7 @@ export default class SourceManager {
     };
     this.sources.push(source);
     $setSources(this.sources);
-    return source;
+    return JSON.parse(JSON.stringify(source));
   }
 
   getUrlOfUserCol(user, collection, isCros) {
@@ -235,13 +239,15 @@ export default class SourceManager {
     $setSources(this.sources);
   }
   deleteSource(id) {
+    var ret;
     for (var i = 0, len = this.sources.length; i < len; i++) {
       if (this.sources[i].id == id) {
-        this.sources.splice(i, 1);
+        ret = this.sources.splice(i, 1);
         i--;
         len--;
       }
     }
     $setSources(this.sources);
+    return JSON.parse(JSON.stringify(ret[0]))
   }
 }

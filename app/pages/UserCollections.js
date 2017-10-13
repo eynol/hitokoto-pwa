@@ -146,7 +146,7 @@ class UserCollections extends Component {
           className={CardContainer}>{ListToShow}</QueueAnim>
         {this.state.deleteCollectionModal
           ? <Modal exit={this.hideDeleteModal}>
-              <h1>你确定要删除该hitokoto?</h1>
+              <h1>你确定要删除该句集?</h1>
               <div className="clearfix">
                 <span className="pull-right">
                   <button role="exit">取消</button>

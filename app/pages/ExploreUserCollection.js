@@ -80,7 +80,7 @@ class ExploreUserCollection extends Component {
       } else {
 
         ListToShow = hitokotos.map((hitokoto, index) => (
-          <PublicHitokoto key={hitokoto._id} data={hitokoto}>
+          <PublicHitokoto key={hitokoto._id} data={hitokoto} viewonly>
             <a href="javascript:">
               <i className="iconfont icon-like"></i>
             </a>

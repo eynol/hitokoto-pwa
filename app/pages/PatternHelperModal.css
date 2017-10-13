@@ -1,0 +1,23 @@
+.patternsList{
+  list-style: none;
+}
+.patternsList li {
+  display: inline-block;
+  vertical-align: top;
+  margin: 8px 10px;
+  border-radius: 4px;
+  border: 1px dashed gray;
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: all .3s;
+}
+.patternsList li:hover{
+ border-color: #37BC97;
+ border-style: solid;
+}
+.patternsList li.active{
+  color: white;
+  border: 1px solid #37BC97;
+  background-color: #37BC97;
+  box-shadow: 0 0 1px #40be93;
+}
