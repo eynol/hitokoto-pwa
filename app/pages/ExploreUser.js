@@ -33,7 +33,10 @@ class ExploreUser extends Component {
     httpManager.API_getPublicUserDetail(this.props.uid).then(result => {
       this.setState({inited: true, error: null, user: result.user})
     }).catch(e => {
-      this.setState({error: e, inited: false});
+      this.setState({
+        error: e.message || e || '获取用户句集失败',
+        inited: false
+      });
       showNotification('获取用户句集失败', 'error');
     })
   }
@@ -41,12 +44,14 @@ class ExploreUser extends Component {
     this.props.history.push(this.props.location.pathname + '/' + colname);
   }
   removeFromSoure(colname, evt) {
-    hitokotoDriver.patterManager.removeSourceWithUsernameAndCol(this.props.userName, colname);
+    hitokotoDriver.patterManager.removeSourceWithUsernameAndCol(this.props.userName, colname, true);
+    showNotification('已从来源中移除「' + colname + '」!\n如果模式中含有该句集，请在「模式管理中删除」', 'info', false, 4)
     this.forceUpdate();
     evt.stopPropagation();
   }
   addToSource(colname, event) {
-    hitokotoDriver.patterManager.newSourceWithUsernameAndCol(this.props.userName, colname);
+    hitokotoDriver.patterManager.newSourceWithUsernameAndCol(this.props.userName, colname, true);
+    showNotification('已添加「' + colname + '」至来源!\n将会获取该来源内「公开」的句子', 'success')
     this.forceUpdate();
     event.stopPropagation();
   }
@@ -63,7 +68,7 @@ class ExploreUser extends Component {
           tabIndex={index + 1}
           viewonly={true}
           view={this.handleView}>
-          {patterManager.isSourceExsit(patterManager.getCORSUrlOfUserCol(userName, item.name))
+          {patterManager.isSourceExsit(patterManager.getUrlOfUserCol(userName, item.name, true))
             ? (
               <a
                 href="javascript:"

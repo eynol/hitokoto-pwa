@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 
 import showNotification from '../API/showNotification';
 import hitokotoDriver from '../API/hitokotoDriver'
+const patterManager = hitokotoDriver.patterManager;
 
 import style from './CollectionBox.css'
 
@@ -107,30 +108,61 @@ class CollectionBox extends Component {
     let {
       nickname,
       data: {
-        name: colleName
-      }
+        name: colleName,
+        owner,
+        _id
+      },
+      isPublic
     } = this.props;
-    hitokotoDriver.patterManager.removeSourceWithUsernameAndCol(nickname, colleName);
-    showNotification('将「' + colleName + '」从来源中删除成功！不影响已在模式中的来源！', 'success');
+
+    if (isPublic) {
+      patterManager.removeSourceWithUsernameAndCol(nickname, colleName, true);
+    } else {
+      patterManager.removeSourceWithUsernameAndCol(owner, _id, false);
+    }
+    showNotification('将「' + colleName + '」从来源中删除成功！如果模式中开启了该来源，请在模式管理中关闭该来源！', 'info', false, 4);
     this.forceUpdate();
   }
   addToSources(evt) {
     evt.stopPropagation();
     let {
-      nickname,
-      data: {
-        name: colleName
-      }
-    } = this.props;
-    hitokotoDriver.patterManager.newSourceWithUsernameAndCol(nickname, colleName);
-    showNotification('将「' + colleName + '」加入来源成功！', 'success');
+        nickname,
+        data: {
+          name: colleName,
+          owner,
+          _id
+        },
+        isPublic
+      } = this.props,
+      result;
+
+    if (isPublic) {
+      result = patterManager.newSourceWithUsernameAndCol(nickname, colleName, true);
+    } else {
+      result = patterManager.newSourceWithUsernameAndCol(nickname, colleName, false, owner, _id);
+    }
+    showNotification('将「' + colleName + '」加入来源成功！\n该来源可以获取「公开」和「私密」的所有句子。', 'success');
     this.forceUpdate();
   }
 
-  isSourcesContians(colleName) {
-    let patterManager = hitokotoDriver.patterManager;
-    let url = patterManager.getCORSUrlOfUserCol(this.props.nickname, colleName);
-    return hitokotoDriver.patterManager.isSourceExsit(url);
+  isSourcesContians() {
+    let {
+        nickname,
+        data: {
+          name: colleName,
+          owner,
+          _id
+        },
+        isPublic
+      } = this.props,
+      url;
+
+    if (isPublic) {
+      url = patterManager.getUrlOfUserCol(nickname, colleName, true);
+    } else {
+      url = patterManager.getUrlOfUserCol(owner, _id, false);
+    }
+    return patterManager.isSourceExsit(url);
   }
   render() {
     let {
@@ -138,7 +170,9 @@ class CollectionBox extends Component {
         view,
         data: {
           name,
-          count
+          count,
+          owner,
+          _id
         },
         'newone': pnewone,
         viewonly
@@ -209,7 +243,7 @@ class CollectionBox extends Component {
           <div className={Card_content}>
             <p className="ellipsis">{name}</p>
             <span>{count}条</span>
-            <div className={Card_options}>{this.isSourcesContians(name)
+            <div className={Card_options}>{this.isSourcesContians()
                 ? <a
                     tabIndex={tabIndex}
                     href="javascript:"

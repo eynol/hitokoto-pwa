@@ -44,20 +44,20 @@ class HitokotoPreview extends Component {
     }
 
     let id = hitokoto.id;
-    let Actions = (
-      <ul data-role="actions">
+    let Actions = [(
         <li key={id + 'style'}>
           <a href="javascript:" onClick={this.switchLayout}>
             <i className="iconfont icon-settings"></i>
           </a>
         </li>
+      ), (
         <li key={id + 'return'}>
           <a href="javascript:" onClick={this.goBack}>
             <i className="iconfont icon-check"></i>
           </a>
         </li>
-      </ul>
-    );
+
+      )];
 
     if (this.state.horizon) {
       return (

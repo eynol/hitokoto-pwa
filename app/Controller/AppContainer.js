@@ -3,6 +3,9 @@ import QueueAnim from 'rc-queue-anim';
 import style from '../component/HitokotoLayout.css';
 import {HashRouter as Router, withRouter, Route, Redirect} from 'react-router-dom';
 
+import showNotification from '../API/showNotification';
+import offlineWatcher from '../API/Offline';
+
 import Patterns from '../pages/Patterns'
 import PatternEditor from '../pages/PatternEditor'
 import Sources from '../pages/Sources'
@@ -89,6 +92,9 @@ const ROUTES = [
     name: '工具页面'
   }
 ];
+
+offlineWatcher.whenOnline(() => showNotification('检测到网络已上线', 'success'))
+offlineWatcher.whenOffline(() => showNotification('检测到网络已离线', 'error'))
 
 class AppContainer extends Component {
   constructor(props) {

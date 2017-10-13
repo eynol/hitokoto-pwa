@@ -48,6 +48,9 @@ class HitokotoEditor extends Component {
         },
         author: {
           value: author
+        },
+        state: {
+          checked: state
         }
       } = this.refs,
       hitokoto = this.textarea.value;
@@ -60,7 +63,7 @@ class HitokotoEditor extends Component {
       showNotification('hitokoto来源不能为空！', 'error')
       return;
     }
-    return {hitokoto, author, source, category}
+    return {hitokoto, author, source, category, state}
   }
   publish() {
     let hitokoto = this.getHitokoto();
@@ -69,13 +72,11 @@ class HitokotoEditor extends Component {
       let collectionName = this.props.rinfo[1];
 
       return httpManager.API_newHitokoto(collectionName, hitokoto).then(result => {
-        if (result.err) {
-          showNotification(result.err, 'error');
-        } else {
-          showNotification('发布成功！', 'success');
-          this.props.history.goBack();
-          this.props.refreshHitokotoList()
-        }
+
+        showNotification(result.message, 'success');
+        this.props.history.goBack();
+        this.props.refreshHitokotoList();
+
         return result
       });
     }
@@ -90,14 +91,12 @@ class HitokotoEditor extends Component {
       hitokoto._id = this.props.within._id;
 
       return httpManager.API_updateHitokoto(collectionName, hitokoto).then(result => {
-        if (result.err) {
-          showNotification(result.err, 'error');
-        } else {
-          showNotification('修改成功', 'success');
 
-          this.props.history.goBack();
-          this.props.refreshHitokotoList()
-        }
+        showNotification(result.message, 'success');
+
+        this.props.history.goBack();
+        this.props.refreshHitokotoList()
+
         return result
       });
     }
@@ -112,7 +111,8 @@ class HitokotoEditor extends Component {
 
     if (thisIsNew) {
       hitokoto = {
-        category: '其他'
+        category: '其他',
+        state: 'public'
       };
     } else if (!thisIsNew && !hitokoto) {
       return (
@@ -162,7 +162,7 @@ class HitokotoEditor extends Component {
             defaultValue={hitokoto.source}/>
         </div>
         <div className={hitokotoSouceTypeBlock}>
-          <p>先选择来源类别：
+          <p>类别：
             <select defaultValue={hitokoto.category} ref='type'>
               <option value="动漫">动漫</option>
               <option value="小说">小说</option>
@@ -179,6 +179,37 @@ class HitokotoEditor extends Component {
               <option value="其他">其他</option>
             </select>
           </p>
+          <hr/> {hitokoto.state == 'blocked'
+            ? (
+              <p className="color-red">该句子已被隔离</p>
+            )
+            : (
+              <p>
+                <span className="form">
+                  私密<a
+                    href="javascript:"
+                    title="点击查看提示"
+                    onClick={() => showNotification('公开的句子将会出现在「探索」中，私密的句子只有自己可以看到。\nps:目前发布的所有句子全部都是公开状态，如果有人发乱七八糟的内容，站长将会开启审核机制。', 'info', true)}>
+                    <i className="iconfont icon-question"></i>
+                  </a>：
+                  <input
+                    type="checkbox"
+                    ref="state"
+                    hidden
+                    id="id-public"
+                    onChange={() => console.log(this.getHitokoto())}
+                    defaultChecked={hitokoto.state == 'private' || hitokoto.state == 'reviewing'}/>
+                  <label htmlFor="id-public"></label>(暂时无效，发布的全部是公开的句子)
+                </span>
+                {hitokoto.state == 'reviewing'
+                  ? (
+                    <span className="color-red">正在审核中</span>
+                  )
+                  : null}
+              </p>
+            )
+}
+
         </div>
 
         <div className={operations}>

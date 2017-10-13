@@ -49,7 +49,7 @@ class UserCollection extends Component {
     if (this.props.rinfo) {
       let collection = this.props.rinfo[1];
       let username = this.props.user.nickname;
-      let url = hitokotoDriver.patterManager.getCORSUrlOfUserCol(username, collection);
+      let url = hitokotoDriver.patterManager.getUrlOfUserCol(username, collection, true);
       return {username, url, collection}
     }
   }
@@ -70,16 +70,16 @@ class UserCollection extends Component {
 
     if (colleName && colleName.length) {
       return httpManager.API_viewCollection(colleName, page, perpage).then(result => {
-        if (result.err) {
 
-          return Promise.reject(result.err);
-        } else {
-          this.props.fetchHitokotosSuccess(result.hitokotos);
-          this.setState({inited: true, error: null, total: result.totalPage, current: result.currentPage})
-        }
+        this.props.fetchHitokotosSuccess(result.hitokotos);
+        this.setState({inited: true, error: null, total: result.totalPage, current: result.currentPage})
+
       }).catch(e => {
         showNotification('获取用户hitokoto失败！', 'error');
-        this.setState({error: e, inited: false});
+        this.setState({
+          error: e.message || e,
+          inited: false
+        });
         return Promise.reject(e);
       })
     } else {
@@ -115,13 +115,11 @@ class UserCollection extends Component {
     let collectionName = this.props.rinfo[1];
 
     return httpManager.API_deleteHitokoto(collectionName, {id: hitokotoToRemove._id}).then(result => {
-      if (result.err) {
-        showNotification(result.err, 'error');
-      } else {
-        showNotification('删除成功！', 'success');
-        this.hideDelModal();
-        this.fetchHitokotos(this.state.current);
-      }
+
+      showNotification(result.message, 'success');
+      this.hideDelModal();
+      this.fetchHitokotos(this.state.current);
+
       return result
     });
   }
@@ -134,7 +132,7 @@ class UserCollection extends Component {
 
     if (hitokotos.length > 0) {
       ListToShow = hitokotos.map((hitokoto) => (
-        <PublicHitokoto key={hitokoto.id} data={hitokoto}>
+        <PublicHitokoto key={hitokoto.id} data={hitokoto} viewonly>
           <button onClick={this.preview.bind(this, hitokoto)}>预览</button>
           <button onClick={() => this.updateHitokoto(hitokoto)}>修改</button>
           <button onClick={() => this.showDelModal(hitokoto)} className="color-red">删除</button>
@@ -153,16 +151,22 @@ class UserCollection extends Component {
       <FullPageCard
         cardname={this.props.rinfo[1]}
         actions={[(
-          <a href="javascript:" title="" onClick={this.newHitokoto} data-text="新增">
+          <a
+            key="newone-hito"
+            href="javascript:"
+            title=""
+            onClick={this.newHitokoto}
+            data-text="新增">
             <i className="iconfont icon-add hide-pc"></i>
           </a>
         ), (
           <a
+            key="pub-api-hito"
             href="javascript:"
             title=""
-            data-text="API地址"
+            data-text="公开API地址"
             onClick={() => {
-            showNotification('该句集的API地址为：\n' + this.getURL().url, 'info', true)
+            showNotification('该句集的公开API地址为：\n' + this.getURL().url + '\n该地址支持跨域调用，仅可以获取所有「公开」的句子。', 'info', true)
           }}>
             <i className="iconfont icon-link"></i>
           </a>

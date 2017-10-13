@@ -65,6 +65,7 @@ export default({data, remove}) => {
 
   return [(
       <div
+        key={data.id}
         className={NWrapper}
         onClick={data.interactive
         ? null
@@ -78,5 +79,5 @@ export default({data, remove}) => {
           </div>
         </div>
       </div>
-    ), (<br/>)]
+    ), (<br key={data.id}/>)]
 }

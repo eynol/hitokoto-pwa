@@ -83,10 +83,9 @@ class HitokotoPlayer extends Component {
       )
     ]
     console.log(hitokoto);
-    if (layoutHorizon) {
-      return [
-        (
-          <LayoutHorizon
+    return [
+      (layoutHorizon
+        ? <LayoutHorizon
             overflowhide={this.props.panel === PANEL_OPEN + 'nav'}
             animateConfig={direction == 'next'
             ? ANIMATE_CONFIG_NEXT
@@ -94,28 +93,23 @@ class HitokotoPlayer extends Component {
             hitokoto={hitokoto}
             layout={layout}
             actions={Actions}></LayoutHorizon>
-        ),
-        (this.state.infoModal
-          ? <Modal exit={this.hideInfo}>
-              <p>ID：{hitokoto.id || '未知'}</p>
-              <p>发布者：{hitokoto.creator || '未知'}</p>
-              <p>所在句集：{hitokoto.f || '未知'}</p>
-              <p>分类：{hitokoto.category || '未知'}</p>
-              <p>发布时间：{(hitokoto.created_at && new Date(hitokoto.created_at).toLocaleString()) || '未知'}</p>
-            </Modal>
-          : null)
-      ]
-    } else {
-      return (
-        <LayoutVertical
+        : <LayoutVertical
           animateConfig={direction == 'next'
           ? ANIMATE_CONFIG_NEXT
           : ANIMATE_CONFIG_LAST}
           hitokoto={hitokoto}
           layout={layout}
-          actions={Actions}></LayoutVertical>
-      )
-    }
+          actions={Actions}></LayoutVertical>),
+      (this.state.infoModal
+        ? <Modal exit={this.hideInfo}>
+            <p>ID：{hitokoto.id || '未知'}</p>
+            <p>发布者：{hitokoto.creator || '未知'}</p>
+            <p>所在句集：{hitokoto.f || '未知'}</p>
+            <p>分类：{hitokoto.category || '未知'}</p>
+            <p>发布时间：{(hitokoto.created_at && new Date(hitokoto.created_at).toLocaleString()) || '未知'}</p>
+          </Modal>
+        : null)
+    ]
   }
 }
 

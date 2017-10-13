@@ -33,7 +33,8 @@ function PublicHitokoto(props) {
         category,
         created_at,
         collection
-      }
+      },
+      viewonly
     } = props,
 
     timeStr = tranformDate(new Date(created_at));
@@ -41,11 +42,16 @@ function PublicHitokoto(props) {
   return (
     <div className={item}>
       <div className="clearfix">
-        <Link to={"/explore/" + creator} className={userName}>
-          <span>{creator}</span>
-        </Link>
-        <Link className="color-basic" to={"/explore/" + creator + '/' + collection}>{collection}</Link>
-        <br/>
+        {viewonly
+          ? null
+          : ([(
+              <Link to={"/explore/" + creator} className={userName}>
+                <span>{creator}</span>
+              </Link>
+            ), (
+              <Link className="color-basic" to={"/explore/" + creator + '/' + collection}>{collection}</Link>
+            ), (<br/>)])
+}
         <span className={timetag}>{timeStr}</span>
       </div>
       <div className={userHitokotoFlex}>

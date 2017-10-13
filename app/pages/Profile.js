@@ -30,41 +30,35 @@ class Profile extends Component {
   }
   getUserEmail() {
     httpManager.API_getUserEmail().then(ret => {
-      if (ret.err) {
-        showNotification(ret.err, 'error');
-      } else {
-        this.setState({useremail: ret.email})
-      }
+
+      this.setState({useremail: ret.email})
+
     })
   }
   sendOldCode() {
     httpManager.API_sendOldEmailCode().then(result => {
-      if (result.err) {
-        showNotification(result.err, 'error');
-      } else {
-        showNotification('发送验证码至旧邮箱成功！');
-        this.setState({email: 1, emailDelay: 59});
-        let timmer = setInterval(() => {
-          if (this.state.emailDelay != 0) {
-            this.setState(state => {
-              state.emailDelay -= 1;
-              return state;
-            });
-          } else {
-            clearInterval(timmer);
-          }
-        }, 1000)
-      }
+
+      showNotification(result.message, 'success');
+      this.setState({email: 1, emailDelay: 59});
+      let timmer = setInterval(() => {
+        if (this.state.emailDelay != 0) {
+          this.setState(state => {
+            state.emailDelay -= 1;
+            return state;
+          });
+        } else {
+          clearInterval(timmer);
+        }
+      }, 1000)
+
     });
   }
   verifyOldCode() {
     httpManager.API_verifyOldEmailCode(this.refs.oldemailcode.value.trim()).then(ret => {
-      if (ret.err) {
-        showNotification(ret.err, 'error');
-      } else {
-        showNotification('旧邮箱验证成功！');
-        this.setState({email: 2, emailDelay: 0});
-      }
+
+      showNotification(ret.message);
+      this.setState({email: 2, emailDelay: 0});
+
     })
   }
 
@@ -77,35 +71,31 @@ class Profile extends Component {
     }
 
     httpManager.API_sendNewEmailCode(email).then(ret => {
-      if (ret.err) {
-        showNotification(ret.err, 'error');
-      } else {
-        showNotification('成功发送新的验证码至您的新邮箱！');
-        this.setState({email: 3, emailDelay: 59});
-        let timmer = setInterval(() => {
-          if (this.state.emailDelay != 0) {
-            this.setState(state => {
-              state.emailDelay -= 1;
-              return state;
-            });
-          } else {
-            clearInterval(timmer);
-          }
-        }, 1000)
-      }
+
+      showNotification(ret.message);
+      this.setState({email: 3, emailDelay: 59});
+      let timmer = setInterval(() => {
+        if (this.state.emailDelay != 0) {
+          this.setState(state => {
+            state.emailDelay -= 1;
+            return state;
+          });
+        } else {
+          clearInterval(timmer);
+        }
+      }, 1000)
+
     })
   }
   verifyNewEmailCode() {
     let email = this.refs.newemail.value.trim(),
       code = this.refs.newemailcode.value.trim();
     httpManager.API_verifyNewEmailCode(email, code).then(ret => {
-      if (ret.err) {
-        showNotification(ret.err, 'error');
-      } else {
-        showNotification('绑定新邮箱成功！');
-        this.setState({email: 0, emailDelay: 0});
-        this.getUserEmail();
-      }
+
+      showNotification(ret.message);
+      this.setState({email: 0, emailDelay: 0});
+      this.getUserEmail();
+
     })
   }
   updatePassword() {
@@ -127,15 +117,12 @@ class Profile extends Component {
     }
 
     httpManager.API_updatePassword($encode(oldpassword), $encode(password)).then(ret => {
-      if (ret.err) {
-        showNotification(ret.err, 'error');
 
-      } else {
-        showNotification('修改密码成功！');
-        this.refs.originpass.value = '';
-        this.refs.newpass.value = '';
-        this.refs.newpasscheck.value = '';
-      };
+      showNotification(ret.message);
+      this.refs.originpass.value = '';
+      this.refs.newpass.value = '';
+      this.refs.newpasscheck.value = '';
+
     })
   }
   render() {

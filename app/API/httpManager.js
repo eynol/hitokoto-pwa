@@ -1,4 +1,6 @@
-import indexedDBManager from './IndexedDBManager'
+import indexedDBManager from './IndexedDBManager';
+import showNotification from '../API/showNotification';
+
 const TOKEN_NAME = 'hitokotoToken'
 
 function $getLSToken() {
@@ -9,6 +11,10 @@ function $setLSToken(token) {
 }
 
 const toString = Object.prototype.toString;
+
+const GET_HITOKOTO_PRIVATE_URL = new RegExp('^' + location.protocol + '//' + location.host + '/api/sources/[^/]+/[^/]+');
+const SAME_ORIGIN = new RegExp('^' + location.protocol + '//' + location.host);
+
 const isPlainObject = (obj) => {
   if (!obj || typeof obj !== "object" || obj.nodeType || (obj != null && obj == obj.window)) {
     return false;
@@ -59,18 +65,26 @@ function timeoutPromise(ms, promise) {
  * @param {String} reason
  * @returns Promise
  */
-function FETCHREJECT(reason) {
-
-  if (/TypeError: Failed to fetch/m.test(reason)) {
-    return Promise.reject(`请求未发送成功！
-    可能的原因:
-    1.您的网络异常
-    2.服务器未上线
-
-    详细:${reason}`)
+function NOTIFY_ERROR(reason) {
+  console.log(reason);
+  console.warn(reason);
+  if (typeof reason == 'string') {
+    showNotification(reason, 'error', true);
+  } else if (typeof reason == 'object' && reason.message) {
+    if (/Failed to fetch/m.test(reason.message)) {
+      showNotification(`请求未发送成功！
+      可能的原因:
+      1.您的网络异常
+      2.服务器未上线
+  
+      详细:${reason.stack}`, 'error', true)
+    } else {
+      showNotification(reason.message, 'error', true)
+    }
   } else {
-    return Promise.reject('请求失败：' + reason)
+    showNotification('请求出错，错误：' + JSON.stringify(reason), 'error', true)
   }
+  return Promise.reject(reason);
 }
 
 class HTTPManager {
@@ -110,27 +124,93 @@ class HTTPManager {
    * @returns
    * @memberof HTTPManager
    */
-  responseHeaderResolver(resp) {
-    if (resp.status == 403) {}
-    console.log(resp.headers.get('x-token-expired'));
-    console.log(resp.headers.get('X-Powered-By'));
-    console.log(resp)
-    for (var i of resp.headers.keys()) {
-
-      console.log(i)
+  responseHeaderResolver(res) {
+    //处理紧急消息的逻辑
+    if (process.env.NODE_ENV !== 'production') {
+      console.log(res)
     }
-    return resp;
-  }
-  parseToJSON(resp) {
-    if (resp.status === 200) {
-      try {
-        return resp.json();
-      } catch (e) {
-        return Promise.reject(`转换成JSON格式失败！\n ${resp.status} - ${resp.statusText}`)
+
+    if (SAME_ORIGIN.test(res.url)) {
+      //  读取头部信息
+      let raw_message = res.headers.get('urgent-message');
+      if (raw_message) {
+        //如果有消息；
+
       }
+    }
+
+    return res;
+  }
+  /**
+   *
+   *
+   * @param {Response} res
+   * @returns
+   * @memberof HTTPManager
+   */
+  parseToJSON(res) {
+    console.log('enter parseToJSON')
+    if (res.status === 200) {
+      return res.json();
     } else {
-      console.log(resp);
-      return Promise.reject(`${resp.status} - ${resp.statusText}`)
+      return res.clone().json().catch(wrong => {
+        console.log(wrong);
+
+        if (typeof wrong == 'string') {
+          console.log(wrong);
+
+          if (/^Uncaught SyntaxError/.test(wrong)) {
+            console.log(wrong);
+            return Promise.reject(wrong);
+          } else {
+            return Promise.reject(wrong);
+          }
+        } else if (typeof wrong == 'object') {
+          if (wrong instanceof SyntaxError) {
+            let syntaxMessage = wrong.message;
+            return res.clone().text().catch(wrong => {
+              console.log(wrong);
+              return Promise.reject(wrong);
+            }).then(text => {
+              text = text.trim();
+              if (text.length == 0) {
+                return Promise.reject(`${res.status}-${res.statusText}\n尝试转换为JSON，错误：${syntaxMessage}\n尝试转换为文本，文本长度为0.`);
+              } else {
+
+                console.log(text);
+                return Promise.reject(text);
+              }
+            });
+            console.log('syntaxError');
+          } else if (wrong instanceof TypeError) {
+
+            return Promise.reject('请求失败：' + wrong.message)
+
+          } else {
+            return Promise.reject(wrong);
+          }
+
+        }
+
+        return Promise.reject(`${res.status} - ${res.statusText}`)
+
+      }).then(json => {
+        // 转换为json字符串成功
+        if (typeof json == 'string') {
+          console.log(json);
+          return Promise.reject(json);
+        } else if (typeof json == 'object') {
+
+          let message = json.message;
+          if (message == '授权过期，请重新登录') {
+            //重新登录;
+          }
+          return Promise.reject(message);
+        } else {
+
+          return Promise.reject(json);
+        }
+      })
     }
   }
   updateToken(token) {
@@ -160,38 +240,16 @@ class HTTPManager {
         url += '?' + query;
       }
     }
-
-    if (this.inited) {
-      return timeoutPromise(13000, fetch(url)).then(this.parseToJSON)
+    if (GET_HITOKOTO_PRIVATE_URL.test(url)) {
+      return timeoutPromise(13000, fetch(url, {
+        headers: {
+          'X-API-TOKEN': this.token
+        }
+      })).then(this.responseHeaderResolver).then(this.parseToJSON)
     } else {
-
-      let chain = []; // store then and catch functions;
-      let ret = {
-        then: function (func) {
-          chain.push({t: true, f: func}); // store as then function
-          return this;
-        }, catch: function (func) {
-          func('Working on Promise Polyfill ...')
-          chain.push({t: false, f: func}); //store as catch function
-          return this;
-        }
-      }
-      let walker = function () {
-        let req = fetch(url).then(resp => resp.json());
-        while (chain.length) {
-          let atempt = chain.shift();
-          if (atempt.t) {
-            req = req.then(atempt.f);
-          } else {
-            req = req.catch(atempt.f);
-          }
-        }
-        chain = null;
-      }
-      this.initQ.push(walker); //
-
-      return ret
+      return timeoutPromise(13000, fetch(url)).then(this.responseHeaderResolver).then(this.parseToJSON)
     }
+
   }
   _buildPrams(prefix, obj, traditional, add) {
     // jQeury._buildPrams v1.7.2
@@ -253,7 +311,7 @@ class HTTPManager {
           this._buildFormParams(prefix, item, phpStyle, add);
         }
       })
-    } else if (!phpStyle && typeof obj === 'object' && !obj.length) {
+    } else if (!phpStyle && typeof obj === 'object' && !obj.length && isPlainObject(obj)) {
       //不是数组，是对象
       for (var name in obj) {
         this._buildFormParams(prefix + "[" + name + "]", obj[name], phpStyle, add);
@@ -322,7 +380,7 @@ class HTTPManager {
       : ''), {
       method: method,
       body: _body
-    }).then(this.parseToJSON).catch(FETCHREJECT)
+    }).then(this.responseHeaderResolver).then(this.parseToJSON).catch(NOTIFY_ERROR)
   }
   fetchAuthJSON(method, url, data) {
     let _query,
@@ -333,9 +391,6 @@ class HTTPManager {
       _query = this.parseQeuery(data);
     } else if (~ ['post', 'put', 'delete'].indexOf(method)) {
       _body = this.parseFormData(data);
-      console.log('getbody');
-      console.log(_body.keys().next());
-
     }
     return fetch(url + (_query
       ? '?' + _query
@@ -345,7 +400,7 @@ class HTTPManager {
       headers: {
         'X-API-TOKEN': this.token
       }
-    }).then(this.responseHeaderResolver).then(this.parseToJSON).catch(FETCHREJECT)
+    }).then(this.responseHeaderResolver).then(this.parseToJSON).catch(NOTIFY_ERROR)
   }
 
   //   Without Auth Token

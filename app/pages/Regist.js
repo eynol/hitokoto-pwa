@@ -155,11 +155,10 @@ class Regist extends Component {
     });
     let that = this;
     httpManager.API_regist({username: $username, password: $password, email, nickname}).then(resp => {
-      if (resp.err) {
-        return Promise.reject(resp.err);
-      } else {
-        that.setState({step: 2})
-      }
+
+      showNotification(resp.message, 'success');
+      that.setState({step: 2})
+
     }).catch(reson => {
       if (typeof reson == 'string') {
         that.setState({errinfo: reson})
@@ -182,25 +181,24 @@ class Regist extends Component {
 
     let that = this;
     httpManager.API_regist({code, username, password, email, nickname}).then((resp) => {
-      if (resp.err) {
-        return Promise.reject(resp.err);
-      } else {
-        //注册成功！
-        showNotification('注册成功！', 'success');
-        this.props.registDone(resp);
-        that.setState({
-          username: undefined,
-          password: undefined,
-          password2: undefined,
-          showPasswordDiff: false,
-          email: undefined,
-          nickname: undefined,
-          errinfo: undefined,
-          code: null,
-          step: 1
-        })
-        this.props.hideRegist()
-      }
+
+      //注册成功！
+      showNotification(resp.message, 'success');
+      httpManager.updateToken(resp.token);
+      this.props.registDone(resp);
+      that.setState({
+        username: undefined,
+        password: undefined,
+        password2: undefined,
+        showPasswordDiff: false,
+        email: undefined,
+        nickname: undefined,
+        errinfo: undefined,
+        code: null,
+        step: 1
+      })
+      this.props.hideRegist()
+
     }).catch(reson => {
       if (typeof reson == 'string') {
         that.setState({errinfo: reson})

@@ -105,7 +105,9 @@ class HitokotoDriver {
             this.signal.push(pid)
             this.getHitokotoFromWEB(source.url, {type, source}).then(hitokoto => {
               //  increase count
-              this.increaseSourceCount(id, source.id);
+              if (type == 'next') {
+                this.increaseSourceCount(id, source.id);
+              }
 
               let index = this.signal.findIndex(item => item === pid);
               if (~ index) {
@@ -136,7 +138,9 @@ class HitokotoDriver {
             this.signal.push(pid)
             this.getHitokotoFromIDB(source.url, {type, source}).then((hitokoto) => {
               //  increase count
-              this.increaseSourceCount(id, source.id);
+              if (type == 'next') {
+                this.increaseSourceCount(id, source.id);
+              }
 
               let index = this.signal.findIndex(item => item === pid);
               if (~ index) {

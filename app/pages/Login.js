@@ -91,19 +91,18 @@ class Login extends Component {
     }
 
     httpManager.API_login({username: $username, password: $password}).then((resp) => {
-      if (resp.err) {
-        this.setState({errinfo: resp.err})
-      } else {
 
-        showNotification('登录成功！', 'success');
-        // login done!!!!
-        this.props.loginDone(resp)
+      showNotification(resp.message, 'success');
+      // login done!!!!
+      httpManager.updateToken(resp.token);
+      this.props.loginDone(resp)
 
-        this.props.hideLogin()
-      }
+      this.props.hideLogin()
 
     }).catch(err => {
-      this.setState({errinfo: err})
+      this.setState({
+        errinfo: err.message || err || '未知错误'
+      })
     })
   }
 

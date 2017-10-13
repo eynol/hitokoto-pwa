@@ -46,7 +46,10 @@ class NavManagement extends Component {
     httpManager.API_getAllPublicHitokotos(page, 10).then(result => {
       this.setState({inited: true, error: null, totalPages: result.total, currentPage: result.current, publicHitokotos: result.hitokotos})
     }).catch(e => {
-      this.setState({error: e, inited: false});
+      this.setState({
+        error: e.message || e || '获取失败',
+        inited: false
+      });
       showNotification('获取所有公开数据失败', 'error');
     })
   }

@@ -51,7 +51,10 @@ class ExploreUserCollection extends Component {
       this.setState({inited: true, error: null, hitokotos: result.hitokotos, current: result.currentPage, total: result.totalPage})
     }).catch(e => {
       showNotification('获取句集内容失败！', 'error');
-      this.setState({error: e, inited: false});
+      this.setState({
+        error: e.message || e || '获取句集内容失败！',
+        inited: false
+      });
     })
   }
   handleView(colname) {

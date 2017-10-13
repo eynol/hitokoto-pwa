@@ -147,7 +147,9 @@ p {
 h2 {
   margin:.5em 0;
 }
-
+a{
+  text-decoration: none;
+}
 button {
   outline: none;
   -webkit-appearance: none;

@@ -6,7 +6,6 @@ import httpManager from '../API/httpManager';
 import showNotification from '../API/showNotification';
 
 import CollectionBox from '../component/CollectionBox'
-import HitoView from '../component/HitoView'
 import Modal from '../component/Modal';
 import Loading from '../component/Loading'
 
@@ -42,15 +41,15 @@ class UserCollections extends Component {
   }
   fetchCollections() {
     httpManager.API_myCollections().then(result => {
-      if (result.err) {
-        showNotification(result.err, 'error');
-      } else {
-        this.setState({inited: true, error: null});
-        this.props.fetchCollectionSuccess(result.collections);
-      }
+
+      this.setState({inited: true, error: null});
+      this.props.fetchCollectionSuccess(result.collections);
+
     }).catch(e => {
-      this.setState({error: e, inited: false});
-      showNotification(e, 'error');
+      this.setState({
+        error: e.message || e,
+        inited: false
+      });
     });
   }
   viewCollection(name) {
@@ -58,12 +57,10 @@ class UserCollections extends Component {
   }
   newCollection(name) {
     return httpManager.API_newCollection({name}).then(result => {
-      if (result.err) {
-        showNotification(result.err, 'error');
-      } else {
-        showNotification('新增句集成功！', 'success');
-        this.props.fetchCollectionSuccess(result.collections);
-      }
+
+      showNotification(result.message, 'success');
+      this.props.fetchCollectionSuccess(result.collections);
+
     })
   }
   changeCollectionName(oldname, newname) {
@@ -73,12 +70,10 @@ class UserCollections extends Component {
     }
 
     httpManager.API_updateCollectionName({oldname, newname}).then(result => {
-      if (result.err) {
-        showNotification(result.err, 'error');
-      } else {
-        showNotification('重命名句集成功！', 'success');
-        this.props.fetchCollectionSuccess(result.collections);
-      }
+
+      showNotification(result.message, 'success');
+      this.props.fetchCollectionSuccess(result.collections);
+
     });
   }
   showDeleteModal(collectionName) {
@@ -95,13 +90,11 @@ class UserCollections extends Component {
   deleteCollection() {
     let name = this.state.deleteCollectionModal;
     httpManager.API_deleteCollection({name}).then(result => {
-      if (result.err) {
-        showNotification(result.err, 'error');
-      } else {
-        this.hideDeleteModal();
-        showNotification('删除句集成功！', 'success');
-        this.props.fetchCollectionSuccess(result.collections);
-      }
+
+      this.hideDeleteModal();
+      showNotification(result.message, 'success');
+      this.props.fetchCollectionSuccess(result.collections);
+
     });
   }
   render() {

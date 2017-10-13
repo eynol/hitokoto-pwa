@@ -156,23 +156,58 @@ export default class SourceManager {
     this.sources.push(source);
     $setSources(this.sources);
   }
-  removeSourceWithUsernameAndCol(username, collection) {
-    let target = this.sources.find(item => item.url == this.getCORSUrlOfUserCol(username, collection));
+  /**
+   *
+   *
+   * @param {String} username |uid
+   * @param {String} collection
+   * @param {boolean} isCros
+   * @memberof SourceManager
+   */
+  removeSourceWithUsernameAndCol(username, collection, isCros) {
+    let url = this.getUrlOfUserCol(username, collection, isCros);
+    let target = this.sources.find(item => item.url == url);
     this.deleteSource(target.id);
   }
-  newSourceWithUsernameAndCol(username, collection) {
-    this.sources.push({
+  /**
+   *
+   *
+   * @param {String} username
+   * @param {String} collection
+   * @param {boolean} isCros
+   * @param {String} uid
+   * @param {String} cid
+   * @returns
+   * @memberof SourceManager
+   */
+  newSourceWithUsernameAndCol(username, collection, isCros, uid, cid) {
+    let url,
+      source,
+      name = '' + username + collection;
+    if (isCros) {
+      url = this.getUrlOfUserCol(username, collection, true);
+    } else {
+      //not cross-origin
+      url = this.getUrlOfUserCol(uid, cid, false);
+    }
+
+    source = {
       id: Date.now(),
-      url: this.getCORSUrlOfUserCol(username, collection),
-      name: '' + username + collection,
+      url: url,
+      name: name,
       adapter: 0,
       online: true,
       local: true
-    });
+    };
+    this.sources.push(source);
     $setSources(this.sources);
+    return source;
   }
-  getCORSUrlOfUserCol(username, collection) {
-    return location.protocol + '//' + location.host + '/cors/' + username + '/' + collection
+
+  getUrlOfUserCol(user, collection, isCros) {
+    return location.protocol + '//' + location.host + (isCros
+      ? '/cors/'
+      : '/api/sources/') + user + '/' + collection
   }
   isSourceExsit(url) {
     if (!url) {
