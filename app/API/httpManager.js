@@ -39,7 +39,7 @@ const isPlainObject = (obj) => {
  * @param {Promise} promise
  * @returns {Promise}
  */
-function timeoutPromise(ms, promise) {
+export function timeoutPromise(ms, promise) {
   return new Promise((resolve, reject) => {
     let timeoutId = setTimeout(() => {
       timeoutId = undefined;
@@ -402,7 +402,33 @@ class HTTPManager {
       }
     }).then(this.responseHeaderResolver).then(this.parseToJSON).catch(NOTIFY_ERROR)
   }
+  API_sync(url, data) {
+    if (!data) {
+      data = ({})
+    }
+    if (!data.sync) {
+      data.sync = true;
+    }
 
+    let query = this.parseQeuery(data);
+
+    if (/\?/.test(url)) {
+      //不可能为0
+      url += '&' + query;
+    } else {
+      url += '?' + query;
+    }
+
+    if (GET_HITOKOTO_PRIVATE_URL.test(url)) {
+      return fetch(url, {
+        headers: {
+          'X-API-TOKEN': this.token
+        }
+      }).then(this.responseHeaderResolver).then(this.parseToJSON).catch(NOTIFY_ERROR)
+    } else {
+      return fetch(url).then(this.responseHeaderResolver).then(this.parseToJSON).catch(NOTIFY_ERROR)
+    }
+  }
   //   Without Auth Token
   API_login(formData) {
     return this.fetchJSON('post', '/api/login', formData)

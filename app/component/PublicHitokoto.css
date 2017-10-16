@@ -9,7 +9,7 @@
     /* box-shadow: 0 2px 4px -1px rgba(0 , 0, 0, .15); */
 }
 .item:hover{
-    background-color: #f6f6f6;
+    background-color: #cdf2f8;
 }
 .item a {
     text-decoration: none;

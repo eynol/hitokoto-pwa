@@ -3,9 +3,9 @@ import QueueAnim from 'rc-queue-anim';
 import style from '../component/HitokotoLayout.css';
 import {HashRouter as Router, withRouter, Route, Redirect} from 'react-router-dom';
 
+import Task from '../API/Task';
 import showNotification from '../API/showNotification';
 import offlineWatcher from '../API/Offline';
-
 import Patterns from '../pages/Patterns'
 import PatternEditor from '../pages/PatternEditor'
 import Sources from '../pages/Sources'
@@ -21,12 +21,15 @@ import Index from '../containers/Index'
 import Profile from '../containers/Profile'
 import UserSpace from '../pages/UserSpace'
 import NotFound from '../pages/NotFound'
-import Sync from '../pages/Management.sync';
+import Sync from '../pages/Managements.Sync';
+import Cleaner from '../pages/Managements.Cleaner';
 
 import UserCollections from '../containers/UserCollections'
 import UserCollection from '../containers/UserCollection'
 import HitokotoPreview from '../containers/HitokotoPreview'
 import HitokotoEditor from '../containers/HitokotoEditor'
+
+import sourceHanFont from '../plugins/SourceHan.font';
 
 import NotificationContainer from '../containers/Notification.Container'
 import PatternHelperModal from '../containers/PatternHelperModal'
@@ -60,7 +63,11 @@ const ROUTES = [
   }, {
     to: /^\/managements\/sync$/,
     component: Sync,
-    name: '离线同步页面'
+    name: '离线缓存页面'
+  }, {
+    to: /^\/managements\/cleaner$/,
+    component: Cleaner,
+    name: '缓存清理页面'
   }, {
     to: /^\/explore\/?/,
     component: Explore,

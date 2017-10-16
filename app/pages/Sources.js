@@ -46,11 +46,21 @@ class Sources extends Component {
     let lists = patterManager.sources.map((source) => {
       return (
         <li key={source.id}>
-          <p className="ellipsis">
-            <button
-              onClick={() => this.props.history.push(this.props.location.pathname + '/' + source.id + '/update')}>修改</button>
-            <button className="color-red" onClick={() => this.showDeleteModal(source.id)}>删除</button>&nbsp; {source.name}
-            - {source.url}</p>
+          <div>
+            <h4 className="ellipsis">{source.name}</h4>
+            <p className="ellipsis txt-sm">
+              <span >{source.url}</span>
+            </p>
+            <p className="acts">
+              <button
+                onClick={() => this.props.history.push(this.props.location.pathname + '/' + source.id + '/update')}>修改</button>
+              <button
+                className="color-red"
+                onClick={(evt) => {
+                this.showDeleteModal(source.id);
+              }}>删除</button>
+            </p>
+          </div>
         </li>
       )
     })
@@ -61,20 +71,19 @@ class Sources extends Component {
           <i className="iconfont icon-tishi"></i>
           在这里新增其他域名下的hitokoto一言接口，然后在「模式管理」中使用哦~
         </p>
-        <div>
-          <QueueAnim
-            component="ul"
-            type={GLOBAL_ANIMATE_TYPE}
-            ease={['easeOutQuart', 'easeInOutQuart']}>
+        <div className="lum-list tryFlexContainer">
+          <ul>
             {lists}
             <li key="new">
-              <button
-                onClick={() => this.props.history.push(this.props.location.pathname + '/new')}
-                style={{
-                float: 'right'
-              }}>新增</button>
+              <div className="pointer">
+                <h3
+                  href="javascript:"
+                  onClick={() => this.props.history.push(this.props.location.pathname + '/new')}>
+                  <i className="iconfont icon-add"></i>&nbsp;新增
+                </h3>
+              </div>
             </li>
-          </QueueAnim>
+          </ul>
         </div>{this.state.deleteSourceModal
           ? <Modal exit={this.hideDeleteModal}>
               <h1>你确定要删除该来源?</h1>

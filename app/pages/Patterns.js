@@ -74,33 +74,47 @@ class Patterns extends Component {
     let lists = patterManager.patterns.map((pattern) => {
       return (
         <li key={pattern.id}>
-          <p className="ellipsis">
-            <button
-              onClick={() => history.push(location.pathname + '/' + pattern.id + '/update')}>修改</button>
-            <button className="color-red" onClick={() => this.showDeleteModal(pattern.id)}>删除</button>&nbsp;{pattern.name}{pattern.default
-              ? '（默认）'
-              : ''}<br/>
+          <div>
+            <h3 className="ellipsis">{pattern.name}
+            </h3>
+            <p className="txt-sm">
+              {pattern.sources.length}个来源{pattern.default
+                ? '-默认模式'
+                : null} {hitokotoDriver.pattern.id == pattern.id
+                ? '-使用中'
+                : null}</p>
+            <p className="acts">
+              {hitokotoDriver.pattern.id == pattern.id
+                ? null
+                : <button
+                  onClick={() => {
+                  hitokotoDriver.drive(pattern);
+                  this.forceUpdate();
+                }}>立即使用</button>}
 
-          </p>
+              <button
+                onClick={() => history.push(location.pathname + '/' + pattern.id + '/update')}>修改</button>
+              <button className="color-red" onClick={() => this.showDeleteModal(pattern.id)}>删除</button>&nbsp;<br/>
+            </p>
+          </div>
         </li>
       )
     })
 
     return (
       <FullPageCard cardname="模式管理">
-        <QueueAnim
-          component="ul"
-          type={GLOBAL_ANIMATE_TYPE}
-          ease={['easeOutQuart', 'easeInOutQuart']}>
+        <ul className="lum-list">
           {lists}
           <li key="new">
-            <button
-              onClick={() => history.push(location.pathname + '/new')}
-              style={{
-              float: 'right'
-            }}>新增</button>
+            <div
+              className="pointer"
+              onClick={() => history.push(location.pathname + '/new')}>
+              <h3>
+                <i className="iconfont icon-add"></i>新增
+              </h3>
+            </div>
           </li>
-        </QueueAnim>{this.state.deletePaternModal
+        </ul>{this.state.deletePaternModal
           ? <Modal exit={this.hideDeleteModal}>
               <h1>你确定要删除该模式?</h1>
               <div className="clearfix">

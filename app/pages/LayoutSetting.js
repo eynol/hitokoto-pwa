@@ -1,10 +1,14 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types'
-
 import {Link, withRouter} from 'react-router-dom';
 import QueueAnim from 'rc-queue-anim';
+
+import Modal from '../component/Modal';
 import FullPage from '../component/FullPage';
 import hitokotoDriver from '../API/hitokotoDriver'
+import showNotification from '../API/showNotification'
+
+import fontPlugin from '../plugins/SourceHan.font'
 
 import {settingWrapper, left, right} from './LayoutSetting.css'
 import {PANEL_OPEN} from '../actions'
@@ -14,8 +18,12 @@ class LayoutSetting extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentPatternID: hitokotoDriver.pattern.id
+      currentPatternID: hitokotoDriver.pattern.id,
+      showLoadFontModal: false
     }
+
+    this.hideLoadFontModal = this.hideLoadFontModal.bind(this);
+    this.confirmDownload = this.confirmDownload.bind(this);
   }
   handlePatternChange(id) {
     if (id !== hitokotoDriver.pattern.id) {
@@ -23,6 +31,50 @@ class LayoutSetting extends Component {
       hitokotoDriver.drive(pattern).start();
       this.setState({currentPatternID: id})
     }
+  }
+  changedFont(evt) {
+    let checked = evt.target.checked;
+    if (checked) {
+      //未开启->开启
+      fontPlugin.enableFont().catch(e => {
+        showNotification(e)
+      });
+
+    } else {
+      //开启->未开启
+      let task = fontPlugin.getTask();
+      if (task) {
+        task.abort();
+      } else {
+        fontPlugin.disableFont();
+      }
+
+    }
+  }
+  handleClickFont(evt) {
+
+    let enabled = fontPlugin.getFontEabled();
+
+    if (enabled == 'no') {
+      //现在是关闭状态，用户要加载思源宋体
+
+      if (!fontPlugin.isStored()) {
+        //没有缓存
+        evt.stopPropagation();
+        evt.preventDefault(); //阻止触发onChange
+
+        this.setState({showLoadFontModal: true});
+      }
+    }
+  }
+
+  confirmDownload() {
+    this.hideLoadFontModal();
+    this.refs.sourcehan.click();
+    showNotification('再次提醒，要中断下载任务，可以刷新页面 或 关闭「加载思源宋体」开关！');
+  }
+  hideLoadFontModal() {
+    this.setState({showLoadFontModal: false});
   }
   render() {
     let {
@@ -171,12 +223,11 @@ class LayoutSetting extends Component {
                   <input
                     type="checkbox"
                     hidden
-                    onChangesss={(event) => {
-                    changeLayout('sourcehan', event.target.checked)
-                  }}
                     id="id-sourcehan"
-                    defaultChecked={false}/>
-                  <label htmlFor="id-sourcehan"></label>
+                    ref="sourcehan"
+                    onChange={this.changedFont.bind(this)}
+                    defaultChecked={fontPlugin.getFontEabled() == 'yes'}/>
+                  <label htmlFor="id-sourcehan" onClick={this.handleClickFont.bind(this)}></label>
                 </dd>
               </dl>
               {patternOptions}
@@ -187,11 +238,31 @@ class LayoutSetting extends Component {
     } else {
       Child = <div key='none'></div>
     }
-    return (
-      <QueueAnim type={GLOBAL_ANIMATE_TYPE} ease={['easeOutQuart', 'easeInOutQuart']}>
-        {Child}
-      </QueueAnim>
-    );
+    return [
+      (
+        <QueueAnim
+          key="panel"
+          type={GLOBAL_ANIMATE_TYPE}
+          ease={['easeOutQuart', 'easeInOutQuart']}>
+          {Child}
+        </QueueAnim>
+      ), this.state.showLoadFontModal
+        ? (
+          <Modal key="modal" exit={this.hideLoadFontModal}>
+            <h3 className="color-red">注意：下载字体将会消耗24MB的流量！</h3>
+            <p>只有这一次下载会消耗24MB的流量，字体下载后，将会缓存到本地，以后将会直接从本地读取。建议电脑用户自行安装思源宋体，然后禁用该选项，这是最好的解决方式。</p>
+            <p>可能出现的现象：进入页面后，页面中间的文字会消失1秒，然后恢复正常。</p>
+            <p className="color-red">注意：如果要中断下载，可以刷新页面 或 关闭「加载思源宋体」开关！</p>
+            <div className="clearfix">
+              <span className="pull-right">
+                <button role="exit">取消</button>
+                <button onClick={this.confirmDownload}>下载思源宋体(24MB)</button>
+              </span>
+            </div>
+          </Modal>
+        )
+        : null
+    ];
   }
 }
 LayoutSetting.propTypes = {

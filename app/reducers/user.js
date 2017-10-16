@@ -9,20 +9,20 @@ const user = (user = $getUser(), action) => {
           nextUser = update(user, {
             $set: {
               nickname: ret.nickname,
-              token: ret.token
+              token: ret.token,
+              uid: ret.uid
             }
           });
         $setUser(nextUser);
         httpManager.updateToken(ret.token)
         return nextUser;
-
       }
 
     case USER_LOGOUT:
       {
-        $setUser({nickname: '', token: ''})
+        $setUser({nickname: '', token: '', uid: ''})
         httpManager.updateToken('')
-        return {nickname: '', token: ''}
+        return {nickname: '', token: '', uid: ''}
       }
 
     case USER_UPDATE_USERNICKNAME:

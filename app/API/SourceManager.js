@@ -100,6 +100,12 @@ function $setSources(sources) {
   }
 }
 
+export const getURL = (user, collection, isCros) => {
+  return location.protocol + '//' + location.host + (isCros
+    ? '/cors/'
+    : '/api/sources/') + user + '/' + collection
+}
+
 export default class SourceManager {
 
   constructor() {
@@ -209,9 +215,7 @@ export default class SourceManager {
   }
 
   getUrlOfUserCol(user, collection, isCros) {
-    return location.protocol + '//' + location.host + (isCros
-      ? '/cors/'
-      : '/api/sources/') + user + '/' + collection
+    return getURL(user, collection, isCros);
   }
   isSourceExsit(url) {
     if (!url) {

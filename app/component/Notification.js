@@ -23,12 +23,20 @@ const getClass = (type) => {
 }
 export default({data, remove}) => {
   let action = data.interactive
-    ? <div className={actions} onClick={() => remove(data.id)}>
+    ? (
+      <div className={actions} onClick={() => remove(data.id)}>
         <i className="iconfont icon-roundclose icon-paceholder"></i>
       </div>
-    : <div className={actions}>
-      <i className="iconfont icon-loading-anim icon-paceholder"></i>
-    </div>;
+    )
+    : (
+      <div className={actions}>
+        <i className="iconfont icon-loading-anim icon-paceholder"></i>
+      </div>
+    );
+
+  if (data.type == 'task') {
+    action = null;
+  }
 
   let icon;
   switch (data.type) {
@@ -44,6 +52,13 @@ export default({data, remove}) => {
       icon = (
         <div className="pull-left">
           <i className="iconfont icon-error-message icon-paceholder"></i>
+        </div>
+      );
+      break;
+    case 'task':
+      icon = (
+        <div className="pull-left">
+          <i className="iconfont icon-loading-anim icon-paceholder"></i>
         </div>
       );
       break;
@@ -67,7 +82,7 @@ export default({data, remove}) => {
       <div
         key={data.id}
         className={NWrapper}
-        onClick={data.interactive
+        onClick={data.interactive || data.type == 'task'
         ? null
         : () => remove(data.id)}>
         <div className={notification + ' clearfix ' + getClass(data.type)}>

@@ -1,9 +1,10 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
-
 import QueueAnim from 'rc-queue-anim';
+
 import httpManager from '../API/httpManager';
 import showNotification from '../API/showNotification';
+import indexedDBManager from '../API/IndexedDBManager';
 
 import CollectionBox from '../component/CollectionBox'
 import Modal from '../component/Modal';
@@ -44,6 +45,9 @@ class UserCollections extends Component {
 
       this.setState({inited: true, error: null});
       this.props.fetchCollectionSuccess(result.collections);
+
+      //OFFLINE:cache collections
+      indexedDBManager.putCollections(result.collections);
 
     }).catch(e => {
       this.setState({

@@ -1,15 +1,27 @@
 import Dexie from 'dexie';
+import store from '../store'
 
 var db = new Dexie("hitokoto_pwa");
-db.version(1).stores({hitokoto: ',url,id,hitokoto,type', syncRecord: ',url', asserts: ',name'});
+db.version(1).stores({hitokoto: ',url,_id,fid,author,source,offline', collection: '_id,owner,name,offline', syncRecord: ',url', asserts: ',name'});
 
 const KEY_SEPRATOR = '<%hitokoto%>';
 class IndexedDBManager {
-  constructor() {
-    // this.getHitokotoCount('http://localhost:8080/api/sources/59da1e278b4a8bf7a499
-    // 69f2/59dcdf40134ed063c0ae5' +     'ed9').then(count => { console.log(count)
-    // })
-    console.log(Dexie.version)
+  constructor() {}
+  putCollections(list) {
+    return db.table('collection').bulkPut(list);
+  }
+  putCollection(collection) {
+    return db.table('collection').put(collection);
+  }
+  removeCollection(id) {
+    return db.table('collection').delete(id);
+  }
+  getCollections(uid) {
+    if (!uid) {
+      let state = store.getState();
+      uid = state.user && state.user.uid;
+    }
+    return db.table('collection').where('owner').equals(uid).toArray()
   }
   getStates() {
     let urlsSet = new Set();
@@ -42,6 +54,14 @@ class IndexedDBManager {
     }
     return db.table('hitokoto').put(hitokoto, url + KEY_SEPRATOR + hitokoto.id)
     /// 先查询再存入会耗费9ms(Dxiex查询)+10ms(ji计时器); 原生的系统底层 get耗费0.9ms put耗费4.83ms
+  }
+  updateHitokoto(url, hitokoto) {
+    if (!hitokoto.url) {
+      hitokoto.url = url;
+    }
+  }
+  removeHitokoto(_id) {
+    return db.table('hitokoto').where('_id').equals(_id).delete()
   }
   /**
    *
@@ -85,6 +105,9 @@ class IndexedDBManager {
   putSyncRecord(url, obj) {
     return db.table('syncRecord').put(obj, url);
   }
+  removeSyncRecord(url) {
+    return db.table('syncRecord').delete(url);
+  }
   getSyncRecord(url) {
     return db.table('syncRecord').get(url);
   }
@@ -94,8 +117,18 @@ class IndexedDBManager {
   getAssert(key) {
     return db.table('asserts').get(key);
   }
+
+  getHitokotoSuggestion(k, str) {
+    return db.table('hitokoto').where(k).startsWithAnyOfIgnoreCase(str).toArray().then(arr => {
+      let onlyKeys = arr.map(hito => hito[k]);
+      return [...new Set(onlyKeys)]
+    })
+  }
   DEBUG_CLEAR_ALL() {
     db.table('hitokoto').clear()
+  }
+  DROP_DB() {
+    return Dexie.delete('hitokoto_pwa')
   }
 }
 export default new IndexedDBManager();

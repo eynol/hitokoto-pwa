@@ -18,6 +18,7 @@ let PREFETCH = [],
   ROLLBACK = [];
 class HitokotoDriver {
   constructor() {
+    console.debug('driver initiating')
     this.patterManager = new PatternManager();
     this.httpManager = httpManager;
     this.state = {}; //  状态 用于保存模式的进度信息
@@ -69,14 +70,16 @@ class HitokotoDriver {
     return this;
   }
   start() {
+    console.debug('driver start')
     this.patternValid = this.sources.some(source => source.online || source.local);
-    if (this.patternValid) {
+    if (this.patternValid && this.nextHitokotoHandler !== Function.prototype) {
       this.timerDisabled = false;
     }
     this.lastTime = Date.now();
     return this;
   }
   stop() {
+    console.debug('driver stop')
     this.timerDisabled = true;
     return this;
   }

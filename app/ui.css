@@ -329,7 +329,6 @@ button:focus:after {
 
 :global(.color-basic) {
     color: #a6a6a6;
-    ;
 }
 
 :global(.ellipsis) {
@@ -537,9 +536,12 @@ button:focus:after {
     display: inline-block;
     vertical-align: top;
     box-sizing: border-box;
-    cursor: pointer;
     position: relative;
     flex: 1 1 300px;
+}
+
+:global(.pointer) {
+    cursor: pointer;
 }
 
 :global(.lum-list) li>a,
@@ -550,11 +552,43 @@ button:focus:after {
     border-radius: 4px;
 }
 
+:global(.txt-sm) {
+    font-size: 12px;
+}
+
 :global(.lum-list) li>a:hover,
 :global(.lum-list) li>div:hover {
     background-color: #f6f6f6;
 }
 
-:global .acts a{
-  
+:global .acts button {
+    padding-top: 0px;
+    padding-left: 0;
+    padding-right: 0;
+    margin-right: 8px;
+    font-size: 14px;
+    opacity: 0;
+    transition: opacity .3s;
+}
+
+@media screen and (max-width: 768px) {
+     :global( .acts) button {
+        opacity: 1;
+    }
+}
+
+:global .acts:hover button,
+:global .acts button:hover,
+:global .acts button:focus {
+    opacity: 1;
+}
+
+:global .new-info {
+    padding: 3px 8px;
+    border-radius: 5px;
+    color: white;
+    background-color: #ff2929;
+    font-size: 12px;
+    font-weight: normal;
+    vertical-align: middle;
 }

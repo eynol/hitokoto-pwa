@@ -26,12 +26,16 @@ class NavManagement extends Component {
       currentPage: 1,
       totalPages: 0,
       publicHitokotos: [],
-      userProfile: {}
+      userProfile: {},
+      isUnmouted: false
     }
     this.getAllPublicHitokotos = this.getAllPublicHitokotos.bind(this);
   }
   componentWillMount() {
     this.getAllPublicHitokotos();
+  }
+  componentWillUnmount() {
+    this.setState({isUnmouted: true})
   }
   getAllPublicHitokotos(page = 1) {
     let element = ReactDOM.findDOMNode(this);

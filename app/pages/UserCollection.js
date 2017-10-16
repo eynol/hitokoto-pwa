@@ -5,6 +5,7 @@ import {matchPath} from 'react-router'
 
 import QueueAnim from 'rc-queue-anim';
 import httpManager from '../API/httpManager';
+import indexedDBManager from '../API/IndexedDBManager';
 
 import hitokotoDriver from '../API/hitokotoDriver'
 import showNotification from '../API/showNotification';
@@ -70,9 +71,18 @@ class UserCollection extends Component {
 
     if (colleName && colleName.length) {
       return httpManager.API_viewCollection(colleName, page, perpage).then(result => {
-
+        let hitokotoBundle = result.hitokotos.slice(0);
         this.props.fetchHitokotosSuccess(result.hitokotos);
-        this.setState({inited: true, error: null, total: result.totalPage, current: result.currentPage})
+        this.setState({inited: true, error: null, total: result.totalPage, current: result.currentPage});
+
+        //OFFLINE:cache HITOKOTOS
+        if (hitokotoBundle.length) {
+          let one = hitokotoBundle[0];
+          let uid = one.creator_id;
+          let fid = one.fid;
+          let url = hitokotoDriver.patterManager.getUrlOfUserCol(uid, fid, false);
+          indexedDBManager.putHitokotoBulk(url, hitokotoBundle);
+        }
 
       }).catch(e => {
         showNotification('获取用户hitokoto失败！', 'error');
@@ -116,6 +126,7 @@ class UserCollection extends Component {
 
     return httpManager.API_deleteHitokoto(collectionName, {id: hitokotoToRemove._id}).then(result => {
 
+      indexedDBManager.removeHitokoto(hitokotoToRemove._id);
       showNotification(result.message, 'success');
       this.hideDelModal();
       this.fetchHitokotos(this.state.current);

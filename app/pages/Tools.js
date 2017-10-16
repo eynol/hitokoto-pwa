@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {Link, withRouter} from 'react-router-dom';
+import showNotification from '../API/showNotification'
 
 import FullPageCard from '../component/FullPageCard';
 import idbm from '../API/IndexedDBManager';
@@ -9,13 +10,26 @@ class Tools extends Component {
   }
   clearLS() {
     window.localStorage.clear();
-    location.href = '#';
-    location.reload();
+    showNotification('localstorage已清空,将在3秒后回到首页', 'success');
+    setTimeout(() => {
+      location.href = '#';
+      location.reload();
+    }, 3000)
   }
   clearIDB() {
-    idbm.DEBUG_CLEAR_ALL();
-    location.href = '#';
-    location.reload();
+    idbm.DROP_DB().then(() => {
+      showNotification(`全删了！快跑！
+Uncaught (in promise) Error: IndexedDB database has been deleted.
+\tat indexedManager.js:46
+\tat (anonymous)`, 'error');
+      setTimeout(() => {
+        location.href = '#';
+        location.reload();
+      }, 3000)
+    }, e => {
+      showNotification(e, 'error')
+    });
+
   }
   render() {
     let {path, location} = this.props;
@@ -30,9 +44,9 @@ class Tools extends Component {
         </dl>
         <dl>
           <dt>
-            <a href="javascript:" onClick={() => this.clearIDB()}>清除本地离线数据</a>
+            <a href="javascript:" onClick={() => this.clearIDB()}>删库跑路</a>
           </dt>
-          <dd>将会已经缓存的所有数据</dd>
+          <dd>将会删除本地的indexedDB数据库</dd>
         </dl>
       </FullPageCard>
     )

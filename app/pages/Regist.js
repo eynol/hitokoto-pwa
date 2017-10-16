@@ -184,7 +184,7 @@ class Regist extends Component {
 
       //注册成功！
       showNotification(resp.message, 'success');
-      httpManager.updateToken(resp.token);
+      //httpManager.updateToken(resp.token); update token in reducer
       this.props.registDone(resp);
       that.setState({
         username: undefined,

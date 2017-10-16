@@ -6,18 +6,29 @@ import Textarea from 'react-textarea-autosize';
 
 import FullPageCard from '../component/FullPageCard'
 
+import {getURL} from '../API/SourceManager'
+import indexedDBManager from '../API/IndexedDBManager'
 import showNotification from '../API/showNotification';
-import httpManager from '../API/httpManager'
+import {default as httpManager, timeoutPromise} from '../API/httpManager'
 
 import style from './HitokotoEditor.css';
-let {hitokotoTextarea, hitokotoSouceInput, hitokotoSouceTypeBlock, operations} = style;
+let {
+  hitokotoTextarea,
+  hitokotoSouceInput,
+  hitokotoSouceTypeBlock,
+  operations,
+  suggeBox,
+  inputSuggestion
+} = style;
 
 class HitokotoEditor extends Component {
   constructor(props) {
     super(props);
     this.state = {
       hitokoto: {
-        category: '其他'
+        category: '其他',
+        authorChoices: [],
+        sourceChoices: []
       }
     }
 
@@ -25,10 +36,44 @@ class HitokotoEditor extends Component {
     this.handlePreviewClick = this.handlePreviewClick.bind(this);
     this.publish = this.publish.bind(this);
     this.update = this.update.bind(this);
+
+    this.authorSuggestion = this.getSuggestion.bind(this, 'author');
+    this.clickAuthorSugg = this.clickSuggestion.bind(this, 'author');
+    this.authorBlur = this.blurSuggestion.bind(this, 'author');
+
+    this.sourceSuggestion = this.getSuggestion.bind(this, 'source');
+    this.clickSourceSugg = this.clickSuggestion.bind(this, 'source');
+    this.sourceBlur = this.blurSuggestion.bind(this, 'source');
+
   }
 
   goBack() {
     this.props.history.goBack();
+  }
+  getSuggestion(key, evt) {
+    let value = evt.target.value;
+    if (value && value.trim()) {
+      timeoutPromise(300, indexedDBManager.getHitokotoSuggestion(key, value)).then(res => {
+        this.setState(state => {
+          state[key + 'Choices'] = res.slice(0, 5);
+          return state;
+        })
+        console.log(res);
+      })
+    }
+  }
+  clickSuggestion(key, evt) {
+    let value = evt.target.textContent;
+    this.refs[key].value = value;
+  }
+  blurSuggestion(key) {
+    setTimeout(() => {
+      this.setState(state => {
+        state[key + 'Choices'] = [];
+        return state;
+      });
+
+    }, 200);
   }
   handlePreviewClick() {
     let hitokoto = this.getHitokoto();
@@ -72,7 +117,8 @@ class HitokotoEditor extends Component {
       let collectionName = this.props.rinfo[1];
 
       return httpManager.API_newHitokoto(collectionName, hitokoto).then(result => {
-
+        let hito = result.hitokoto;
+        indexedDBManager.putHitokoto(getURL(hito.creator_id, hito.fid, false), hito);
         showNotification(result.message, 'success');
         this.props.history.goBack();
         this.props.refreshHitokotoList();
@@ -91,6 +137,9 @@ class HitokotoEditor extends Component {
       hitokoto._id = this.props.within._id;
 
       return httpManager.API_updateHitokoto(collectionName, hitokoto).then(result => {
+
+        let hito = result.hitokoto;
+        indexedDBManager.putHitokoto(getURL(hito.creator_id, hito.fid, false), hito);
 
         showNotification(result.message, 'success');
 
@@ -129,7 +178,7 @@ class HitokotoEditor extends Component {
       )
     }
 
-    let child = '';
+    let {authorChoices, sourceChoices} = this.state;
 
     return (
       <FullPageCard
@@ -147,17 +196,42 @@ class HitokotoEditor extends Component {
             placeholder="请在此输入hitokoto"
             defaultValue={hitokoto.hitokoto}/>
         </div>
-        <div>
+        <div className={suggeBox}>
+          {authorChoices && authorChoices.length
+            ? (
+              <div className={inputSuggestion}>
+                {authorChoices.map(choice => (
+                  <span key={choice} onClick={this.clickAuthorSugg}>{choice}</span>
+                ))}
+              </div>
+            )
+            : null}
           <input
             type="text"
             ref='author'
             placeholder="...在这里写原作者(可选)"
+            onChange={this.authorSuggestion}
+            onFocus={this.authorSuggestion}
+            onBlur={this.authorBlur}
             className={hitokotoSouceInput}
-            defaultValue={hitokoto.author}/>
+            defaultValue={hitokoto.author}/></div>
+        <div className={suggeBox}>
+          {sourceChoices && sourceChoices.length
+            ? (
+              <div className={inputSuggestion}>
+                {sourceChoices.map(choice => (
+                  <span key={choice} onClick={this.clickSourceSugg}>{choice}</span>
+                ))}
+              </div>
+            )
+            : null}
           <input
             type="text"
             ref='source'
             placeholder="...在这里写来源出处(必填)"
+            onChange={this.sourceSuggestion}
+            onFocus={this.sourceSuggestion}
+            onBlur={this.sourceBlur}
             className={hitokotoSouceInput}
             defaultValue={hitokoto.source}/>
         </div>
@@ -197,7 +271,6 @@ class HitokotoEditor extends Component {
                     ref="state"
                     hidden
                     id="id-public"
-                    onChange={() => console.log(this.getHitokoto())}
                     defaultChecked={hitokoto.state == 'private' || hitokoto.state == 'reviewing'}/>
                   <label htmlFor="id-public"></label>(暂时无效，发布的全部是公开的句子)
                 </span>

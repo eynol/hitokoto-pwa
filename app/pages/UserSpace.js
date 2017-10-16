@@ -45,14 +45,14 @@ class UserSpace extends Component {
             </li>
             <li>
               <Link to="/managements/sync">
-                <h4>离线同步</h4>
+                <h4>离线缓存</h4>
                 <p>将来源的全部句子缓存到本地，离线时也可以使用</p>
               </Link>
             </li>
             <li>
-              <Link to="/managements/patterns">
+              <Link to="/managements/cleaner">
                 <h4>缓存清理</h4>
-                <p>根据自己喜好选择来源形成模式</p>
+                <p>清理本地缓存，例如已经删除了的来源的遗留下的缓存</p>
               </Link>
             </li>
           </ul>

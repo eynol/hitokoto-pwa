@@ -89,6 +89,12 @@ export const sendNotification = (value, type = 'info', interactive = false, time
 }
 export const removeNotification = (id) => ({type: REMOVE_NOTIFICATION, value: id})
 
+export const UPDATE_TASK = 'update task'
+export const REMOVE_TASK = 'remove task'
+
+export const updateTask = (id, value, done) => ({type: UPDATE_TASK, value, id, done})
+export const removeTask = (id) => ({type: REMOVE_TASK, value: id})
+
 export const SOURCES_NEW_ONE = 'sources new one';
 export const SOURCES_REMOVE_ONE = 'sources remove one';
 export const SOURCES_NEW_ONE_DONE = 'sources new one done';

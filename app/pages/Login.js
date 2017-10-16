@@ -93,8 +93,7 @@ class Login extends Component {
     httpManager.API_login({username: $username, password: $password}).then((resp) => {
 
       showNotification(resp.message, 'success');
-      // login done!!!!
-      httpManager.updateToken(resp.token);
+      // login done!!!! httpManager.updateToken(resp.token); update token in reducer
       this.props.loginDone(resp)
 
       this.props.hideLogin()
