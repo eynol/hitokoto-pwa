@@ -34,15 +34,16 @@
 @media screen and (max-width:768px) {
     .copyright-open,
     .copyright-close {
+        position: absolute;
+        z-index: 200;
         display: initial;
         text-align: center;
         width: 20px;
-        position: absolute;
         left: calc(50% - 10px);
         bottom: 10px;
     }
     .copyright-close {
-        margin-left: -10px;
+        /* margin-left: -10px; */
         bottom: 5px;
     }
     .copyright-open:before {

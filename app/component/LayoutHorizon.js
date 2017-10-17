@@ -68,6 +68,7 @@ function LayoutHorizon(props) {
       }}>
         <QueueAnim
           key={id + 'content'}
+          ease={['easeOutQuart', 'easeInOutQuart']}
           animConfig={animateConfig}
           className={Content + (overLoad
           ? ' ' + overLoadHitokoto
@@ -84,7 +85,11 @@ function LayoutHorizon(props) {
           }}
             key={id + 'hito'}>{hitokoto}</h1>
           {author || source
-            ? <p key={id + 'from'}>——&nbsp;&nbsp;{author
+            ? <p
+                key={id + 'from'}
+                style={{
+                fontFamily: FONT_MAP[font]
+              }}>——&nbsp;&nbsp;{author
                   ? author
                   : ''}{author
                   ? ' '

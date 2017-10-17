@@ -43,23 +43,28 @@
 }
 
 .nav {
-    position: absolute;
+    position: fixed;
     top: 15px;
     right: 100px;
     border: 5px solid black;
     padding: 20px;
     z-index: 302;
+    backface-visibility: hidden ;
+    transform: translateZ(0) scale(1.0, 1.0);
 }
 
 .nav.showCover{
     opacity: 0;
     transition: all .3s;
-    transform: translateX(-10px)
+    backface-visibility: hidden ;
+    transform: translateX(-10px) translateZ(0) scale(1.0, 1.0);
 }
 .navCover {
-    position: absolute;
+    position: fixed;
     top: 15px;
     right: 100px;
+    backface-visibility: hidden ;
+    transform: translateZ(0) scale(1.0, 1.0);
     z-index: 301;
     transition: all .3s;
     color: black;
@@ -158,13 +163,13 @@
     
     .hamburger {
         display: inline-block;
-        position: absolute;
+        position: fixed;
         top: 20px;
         left: 22px;
     }
     .navPhone {
         display: block;
-        position: absolute;
+        position: fixed;
         left: 0;
         top: 0;
         width: 45%;

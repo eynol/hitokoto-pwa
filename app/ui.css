@@ -181,6 +181,13 @@ button:focus:after {
     transform: scale(1, 1);
 }
 
+@media screen and (max-width:768px) {
+    button:after {
+        transform-origin: top left;
+        transform: scale(1, 1);
+    }
+}
+
 @media screen and (min-width:768px) {
      ::-webkit-scrollbar {
         width: 8px;

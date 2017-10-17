@@ -1,6 +1,6 @@
 
 .logo{
-  position: absolute;
+  position: fixed;
   writing-mode: horizontal-tb;
   top: 15px;
   left: 50px;

@@ -43,7 +43,8 @@
     background-color: #fff;
     /* box-shadow: 0 3px 10px rgba(0,0,0,.15); */
     border-radius: 4px;
-    will-change: transiform;
+    will-change: transiform,position;
+    backface-visibility: hidden;
 }
 
 .layout_horizon .Content>h1 {
@@ -59,13 +60,13 @@
 @media screen and (max-width: 768px) {
     .layout_horizon {
         width: 100%;
-        padding: 90px 50px 50px;
+        padding: 90px 25px 25px;
     }
     .layout_horizon .Content {
         display: block;
+        width: 100%;
+        box-sizing: border-box;
         padding: 25px;
-        margin-left: -25px;
-        margin-right: -25px;
     }
     .layout_horizon .Content>h1 {
         font-size: 1.5em;
@@ -164,12 +165,12 @@ ul.actions {
 }
 
 .layout_vertical .verticalAnimate {
+    position: relative;
     width: 100%;
     height: 100%;
-    position: relative;
     writing-mode: vertical-rl;
     overflow: auto;
-    padding: 0 20px 16px 20px;
+    padding: 0 20px;
 }
 
 .verticalAnimate:before {
@@ -182,6 +183,7 @@ ul.actions {
 .layout_vertical .Content {
     position: relative;
     /* min-width: 300px; */
+    height: 100%;
     margin: 0 auto;
     background-color: #fff;
     /* background-color: rgba(255, 255, 255, .78); */
@@ -189,6 +191,7 @@ ul.actions {
     border-radius: 4px;
     z-index: 205;
     will-change: opacity, translate;
+    backface-visibility: hidden;
     /* box-shadow: 0 3px 10px rgba(0, 0, 0, .15); */
 }
 
@@ -211,7 +214,7 @@ ul.actions {
 
 @media screen and (max-width: 768px) {
     .layout_vertical {
-        padding: 70px 0 25px 0;
+        padding: 70px 0 40px 0;
     }
     .verticalAnimate::before {
         width: 70px;
@@ -226,6 +229,7 @@ ul.actions {
     .layout_vertical .oprations {
         text-align: right;
         margin-right: 29px;
+        width: 300px;
     }
 }
 
