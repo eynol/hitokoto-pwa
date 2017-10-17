@@ -251,7 +251,7 @@ class LayoutSetting extends Component {
           <Modal key="modal" exit={this.hideLoadFontModal}>
             <h3 className="color-red">注意：下载字体将会消耗24MB的流量！</h3>
             <p>只有这一次下载会消耗24MB的流量，字体下载后，将会缓存到本地，以后将会直接从本地读取。建议电脑用户自行安装思源宋体，然后禁用该选项，这是最好的解决方式。</p>
-            <p>可能出现的现象：进入页面后，页面中间的文字会消失1秒，然后恢复正常。</p>
+            <p>可能出现的现象：进入页面后，页面中间的文字会消失1秒，然后恢复正常；由于字体文件过大，进入展示页面时会卡顿一次。</p>
             <p className="color-red">注意：如果要中断下载，可以刷新页面 或 关闭「加载思源宋体」开关！</p>
             <div className="clearfix">
               <span className="pull-right">

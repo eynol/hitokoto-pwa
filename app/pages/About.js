@@ -15,12 +15,11 @@ class About extends Component {
           <section>
             <blockquote>
               <p>
-                简单来说，一言（ヒトコト）指的是就是一句话，可以是动漫中的台词，可以是小说中的语句，也可以是网络上的各种小段子。<br/>或是感动，或是开心，又或是单纯的回忆，来到这里，留下你所喜欢的那一句句话，与大家分享，这就是一言存在的目的。<br/>*:本段文本源自<a href="http://hitokoto.us" target="_blank">hitokoto.us.</a>
+                简单来说，一言（ヒトコト）指的是就是一句话，可以是动漫中的台词，可以是小说中的语句，也可以是网络上的各种小段子。<br/>或是感动，或是开心，又或是单纯的回忆，来到这里，留下你所喜欢的那一句句话，与大家分享，这就是一言存在的目的。<br/>*:本段文本源自<a href="http://hitokoto.us" target="_blank" rel="noopener">hitokoto.us.</a>
               </p>
             </blockquote>
             <br/>
-            <p>我觉得，生活中总有那么一句话能够触碰到你的内心，无论是动漫或者是小说中的句子。比如说，《诗经》,《松浦弥太郎的100个基本》。</p>
-            <p>我们的生活里不必要有太多的鸡汤，但是有些美好的东西值得分享。</p>
+            <p>总而言之，这个网站就是展示能够触动你内心的一句话的网站，你可以在此发布，收藏，分享你收集的句子。这些句子可以是动漫里的，可以是书上摘抄的句子，也可以是网上很有道理的话，或者是电影里的经典台词。</p>
           </section>
           <section >
             <h2>这个网站是干嘛的？</h2>
@@ -48,13 +47,13 @@ class About extends Component {
             </header>
             <ul>
               <li>
-                <a href="http://hitokoto.cn" target="_blank">hitokoto.cn</a>
+                <a href="http://hitokoto.cn" target="_blank" rel="noopener">hitokoto.cn</a>
               </li>
             </ul>
           </section>
           <section className={debug}>
             <header>
-              <h3>调试工具</h3>
+              <h2>开发者工具</h2>
             </header>
             <Link to='/tools'>工具箱</Link>
           </section>

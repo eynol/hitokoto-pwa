@@ -1,9 +1,12 @@
 import React, {Component} from 'react';
 import {Link, withRouter} from 'react-router-dom';
+import * as OfflinePluginRuntime from 'offline-plugin/runtime';
+
 import showNotification from '../API/showNotification'
+import idbm from '../API/IndexedDBManager';
 
 import FullPageCard from '../component/FullPageCard';
-import idbm from '../API/IndexedDBManager';
+
 class Tools extends Component {
   goBack() {
     this.props.history.go(-1);
@@ -12,8 +15,8 @@ class Tools extends Component {
     window.localStorage.clear();
     showNotification('localstorage已清空,将在3秒后回到首页', 'success');
     setTimeout(() => {
-      location.href = '#';
-      location.reload();
+      location.href = '/';
+
     }, 3000)
   }
   clearIDB() {
@@ -23,8 +26,8 @@ Uncaught (in promise) Error: IndexedDB database has been deleted.
 \tat indexedManager.js:46
 \tat (anonymous)`, 'error');
       setTimeout(() => {
-        location.href = '#';
-        location.reload();
+        location.href = '/';
+
       }, 3000)
     }, e => {
       showNotification(e, 'error')
@@ -35,19 +38,25 @@ Uncaught (in promise) Error: IndexedDB database has been deleted.
     let {path, location} = this.props;
     return (
       <FullPageCard cardname="工具箱">
-        <h3>开发期间，如果您发现样式大变或者操作有错误，建议点击以下按钮，清除部分数据。</h3>
-        <dl>
-          <dt>
-            <a href="javascript:" onClick={() => this.clearLS()}>清除Localstorage缓存</a>
-          </dt>
-          <dd>将会清除 模式，来源，还有页面设置</dd>
-        </dl>
-        <dl>
-          <dt>
-            <a href="javascript:" onClick={() => this.clearIDB()}>删库跑路</a>
-          </dt>
-          <dd>将会删除本地的indexedDB数据库</dd>
-        </dl>
+
+        <div className="lum-list tryFlexContainer">
+          <h1 className="color-red">下列的按钮很危险！如果你不知道自己在做什么，请返回。</h1>
+
+          <ul>
+            <li>
+              <a href="javascript:" onClick={() => this.clearLS()}>
+                <h4>清除Localstorage缓存</h4>
+                <p>将会清除 模式，来源，页面设置，用户登录信息。</p>
+              </a>
+            </li>
+            <li>
+              <a href="javascript:" onClick={() => this.clearIDB()}>
+                <h4>删库跑路</h4>
+                <p>将会删除本地的indexedDB数据库，包括缓存的hitokto，思源宋体字体文件、我的收藏。</p>
+              </a>
+            </li>
+          </ul>
+        </div>
       </FullPageCard>
     )
   }

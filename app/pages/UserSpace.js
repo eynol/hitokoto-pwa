@@ -20,6 +20,12 @@ class UserSpace extends Component {
         <div className="lum-list">
           <ul>
             <li>
+              <Link to="/managements/favorites">
+                <h4>我的收藏</h4>
+                <p>查看、导出、删除收藏的句子。数据存储在本地，如果清除缓存，可能会导致数据丢失。</p>
+              </Link>
+            </li>
+            <li>
               <Link to="/myspace/collections">
                 <h4>我的句集</h4>
                 <p>查看所有的句集</p>
@@ -53,6 +59,12 @@ class UserSpace extends Component {
               <Link to="/managements/cleaner">
                 <h4>缓存清理</h4>
                 <p>清理本地缓存，例如已经删除了的来源的遗留下的缓存</p>
+              </Link>
+            </li>
+            <li>
+              <Link to="/managements/backup">
+                <h4>备份还原</h4>
+                <p>备份本地的所有模式和来源到服务器上，或者从服务器上还原之前备份的数据。</p>
               </Link>
             </li>
           </ul>

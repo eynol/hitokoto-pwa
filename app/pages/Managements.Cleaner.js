@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 
+import Task from '../API/Task';
 import showNotification from '../API/showNotification';
 import timeTransform from '../API/social-time-transform';
 import httpManager from '../API/httpManager';
@@ -10,6 +11,7 @@ import hitokotoDriver from '../API/hitokotoDriver'
 const patterManager = hitokotoDriver.patterManager;
 
 import FullPageCard from '../component/FullPageCard'
+import Modal from '../component/Modal'
 
 class Cleaner extends Component {
   constructor(props) {
@@ -30,7 +32,8 @@ class Cleaner extends Component {
     this.state = {
       states: null,
       inPatterns,
-      inSources
+      inSources,
+      chooseModal: false
     }
   }
   componentWillMount() {
@@ -53,6 +56,48 @@ class Cleaner extends Component {
         })
       });
     });
+  }
+  showChooseModal(url) {
+    this.setState({chooseModal: url});
+  }
+  export(type) {
+    let task = new Task();
+    task.update('准备数据中...');
+    indexedDBManager.exportHitokotos(this.state.chooseModal).then(hitokotos => {
+      task.update('数据准备完成，格式转换中...');
+      if (type == 'txt') {
+        //
+        return new Blob(hitokotos.map(h => {
+          return `\n${h.id}
+${h.hitokoto}
+${h.source}
+由 ${h.author} 创建于
+${h.created_at}\n\n`
+        }), {type: 'text/plain'})
+      } else if (type == 'json') {
+        //
+        return new Blob([JSON.stringify(hitokotos)], {type: 'application/json'});
+      }
+    }).then(file => {
+      let a = document.createElement('a');
+      a.href = URL.createObjectURL(file);
+      a.download = new Date().toLocaleString() + '.' + type;
+
+      a.onclick = () => {
+        URL.revokeObjectURL(file)
+      };
+
+      a = document.body.appendChild(a);
+      a.click();
+
+      task.success('格式转换完成，尝试下载');
+    }).catch(e => {
+      task.failed('执行失败：' + e.message || e)
+    });
+    this.hideChooseModal()
+  }
+  hideChooseModal() {
+    this.setState({chooseModal: false})
   }
   render() {
     let list, {states, inPatterns, inSources} = this.state;
@@ -88,6 +133,7 @@ class Cleaner extends Component {
                 已缓存{count}
               </p>
               <p className="acts">
+                <button onClick={() => this.showChooseModal(url)}>导出</button>
                 <button className="color-red" onClick={this.clearCache.bind(this, url)}>全部清除</button>
               </p>
             </div>
@@ -124,6 +170,17 @@ class Cleaner extends Component {
             {list}
           </ul>
         </div>
+        {this.state.chooseModal
+          ? (
+            <Modal exit={() => this.hideChooseModal()}>
+              <h1>请选择导出的类型：</h1>
+              <p>
+                <button onClick={() => this.export('txt')}>纯文本</button>
+                <button onClick={() => this.export('json')}>JSON</button>
+              </p>
+            </Modal>
+          )
+          : null}
       </FullPageCard>
     )
   }
