@@ -2,6 +2,9 @@ var webpack = require('webpack');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var Visualizer = require('webpack-visualizer-plugin');
+var WebpackPwaManifest = require('webpack-pwa-manifest')
+var OfflinePlugin = require('offline-plugin');
+var path = require('path');
 
 module.exports = {
   entry: {
@@ -85,12 +88,54 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: __dirname + "/app/index.tmpl.html"
     }),
+    new WebpackPwaManifest({
+      name: '一言PWA',
+      short_name: '一言PWA',
+      description: '一个一言渐进式网页应用!',
+      background_color: '#f6f6f6',
+      theme_color: "#3a3a3a",
+      publicPath: '/',
+      ios: true,
+      icons: [
+        {
+          src: path.resolve('app/icon.png'),
+          sizes: [
+            120, 152, 167, 180, 512
+          ],
+          destination: path.join('icons', 'ios'),
+          ios: true
+        },
+        // {   src: path.resolve('src/assets/icons/ios-icon.png'),   size: 1024,
+        // destination: path.join('icons', 'ios'),   ios: 'startup' },
+        {
+          src: path.resolve('app/icon.png'),
+          sizes: [
+            36,
+            48,
+            72,
+            96,
+            144,
+            192,
+            512
+          ],
+          destination: path.join('icons', 'android')
+        }
+      ]
+    }),
     new ExtractTextPlugin("[name]-[chunkhash].css"),
     new webpack.optimize.CommonsChunkPlugin({
-      name: ['vendor', 'manifest']
+      name: ['vender', 'manifest']
     }),
     new webpack.HashedModuleIdsPlugin(),
-
+    new OfflinePlugin({
+      excludes: ['**/*.map'],
+      updateStrategy: 'changed',
+      autoUpdate: 1000 * 60 * 10,
+      ServiceWorker: {
+        events: true,
+        navigateFallbackURL: '/'
+      }
+    }),
     new Visualizer({filename: './statistics-production.html'})
   ]
 }

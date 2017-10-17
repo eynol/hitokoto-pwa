@@ -1,6 +1,9 @@
 var webpack = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
+var WebpackPwaManifest = require('webpack-pwa-manifest')
+var OfflinePlugin = require('offline-plugin');
+
 var path = require('path');
 module.exports = {
   devtool: 'cheap-module-source-map',
@@ -70,6 +73,44 @@ module.exports = {
     }
   },
   plugins: [
+    new HtmlWebpackPlugin({
+      template: __dirname + "/app/index.tmpl.html",
+      favicon: __dirname + '/app/icon.png'
+    }),
+    new WebpackPwaManifest({
+      name: '一言PWA',
+      short_name: '一言PWA',
+      description: '一个一言渐进式网页应用!',
+      background_color: '#f6f6f6',
+      theme_color: "#3a3a3a",
+      publicPath: '/',
+      ios: true,
+      icons: [
+        {
+          src: path.resolve('app/icon.png'),
+          sizes: [
+            120, 152, 167, 180, 512
+          ],
+          destination: path.join('icons', 'ios'),
+          ios: true
+        },
+        // {   src: path.resolve('src/assets/icons/ios-icon.png'),   size: 1024,
+        // destination: path.join('icons', 'ios'),   ios: 'startup' },
+        {
+          src: path.resolve('app/icon.png'),
+          sizes: [
+            36,
+            48,
+            72,
+            96,
+            144,
+            192,
+            512
+          ],
+          destination: path.join('icons', 'android')
+        }
+      ]
+    }),
     new webpack.LoaderOptionsPlugin({
       options: {
         postcss: function () {
@@ -77,12 +118,19 @@ module.exports = {
         }
       }
     }),
-    new HtmlWebpackPlugin({
-      template: __dirname + "/app/index.tmpl.html"
-    }),
+
     // new ExtractTextPlugin("[name]-[chunkhash].css"),
 
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.NamedModulesPlugin()
+    new webpack.NamedModulesPlugin(),
+    new OfflinePlugin({
+      publicPath: '/',
+      updateStrategy: 'changed',
+      autoUpdate: 1000 * 60 * 2,
+      ServiceWorker: {
+        events: true,
+        navigateFallbackURL: '/'
+      }
+    })
   ]
 }
