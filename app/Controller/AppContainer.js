@@ -23,6 +23,9 @@ import UserSpace from '../pages/UserSpace'
 import NotFound from '../pages/NotFound'
 import Sync from '../pages/Managements.Sync';
 import Cleaner from '../pages/Managements.Cleaner';
+import GonaReload from '../pages/GonaReload';
+import Favorites from '../pages/Managements.Favorites';
+import Backup from '../pages/Managements.Backup';
 
 import UserCollections from '../containers/UserCollections'
 import UserCollection from '../containers/UserCollection'
@@ -39,15 +42,18 @@ const ROUTES = [
   {
     to: /^(\/|\/login)$/,
     component: Index,
-    name: '首页'
+    name: '首页',
+    reload: true
   }, {
     to: /^\/managements\/?$/,
     component: Managements,
-    name: '管理导航页面'
+    name: '管理导航页面',
+    reload: true
   }, {
     to: /^\/managements\/sources$/,
     component: Sources,
-    name: '来源管理'
+    name: '来源管理',
+    reload: true
   }, {
     to: /^\/managements\/sources\/(new|\d+)(\/update)?$/,
     component: SourceEditor,
@@ -55,7 +61,8 @@ const ROUTES = [
   }, {
     to: /^\/managements\/patterns$/,
     component: Patterns,
-    name: '模式管理'
+    name: '模式管理',
+    reload: true
   }, {
     to: /^\/managements\/patterns\/(new|\d+)(\/update)?$/,
     component: PatternEditor,
@@ -63,31 +70,48 @@ const ROUTES = [
   }, {
     to: /^\/managements\/sync$/,
     component: Sync,
-    name: '离线缓存页面'
+    name: '离线缓存页面',
+    reload: true
   }, {
     to: /^\/managements\/cleaner$/,
     component: Cleaner,
-    name: '缓存清理页面'
+    name: '缓存清理页面',
+    reload: true
+  }, {
+    to: /^\/managements\/favorites$/,
+    component: Favorites,
+    name: '我的收藏页面',
+    reload: true
+  }, {
+    to: /^\/managements\/backup$/,
+    component: Backup,
+    name: '备份还原页面',
+    reload: true
   }, {
     to: /^\/explore\/?/,
     component: Explore,
-    name: '广场页面'
+    name: '广场页面',
+    reload: true
   }, {
     to: /^\/about\/?$/,
     component: About,
-    name: '关于页面'
+    name: '关于页面',
+    reload: true
   }, {
     to: /^\/myspace\/?$/,
     component: UserSpace,
-    name: '个人中心页面'
+    name: '个人中心页面',
+    reload: true
   }, {
     to: /^\/myspace\/collections\/?$/,
     component: UserCollections,
-    name: '我的全部句集页面'
+    name: '我的全部句集页面',
+    reload: true
   }, {
     to: /^\/myspace\/collections\/([^\/]+)\/?$/,
     component: UserCollection,
-    name: '句集详情页面'
+    name: '句集详情页面',
+    reload: true
   }, {
     to: /^\/myspace\/collections\/([^\/]+)(\/update|\/new)?\/preview$/,
     component: HitokotoPreview,
@@ -99,15 +123,18 @@ const ROUTES = [
   }, {
     to: /^\/myspace\/profiles$/,
     component: Profile,
-    name: '账号设置'
+    name: '账号设置',
+    reload: true
   }, {
     to: /^\/tools/,
     component: Tools,
-    name: '工具页面'
+    name: '工具页面',
+    reload: true
   }, {
     to: /\w*/,
     component: NotFound,
-    name: '404页面'
+    name: '404页面',
+    reload: true
   }
 ];
 
@@ -127,6 +154,14 @@ class AppContainer extends Component {
     }).filter(item => item)[0];
     const routeInfo = matched.to.exec(location.pathname);
     const Child = matched.component;
+
+    //    需要刷新页面以使用新资源，如果路由reload为true,并且window.swUpdate 为true的话，就跳转过去，否则不刷新页面
+    if (matched.reload && window.swUpdate) {
+
+      window.location.href = props.location.pathname;
+      return <GonaReload/>;
+    }
+
     return (
       <div
         style={{
@@ -165,4 +200,4 @@ class AppContainer extends Component {
   }
 }
 
-export default AppContainer;
+export default withRouter(AppContainer);

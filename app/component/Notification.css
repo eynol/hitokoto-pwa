@@ -59,4 +59,5 @@
   display: table-cell;
   white-space: pre-wrap;
   text-align: justify;
+  word-break: break-all;
 }

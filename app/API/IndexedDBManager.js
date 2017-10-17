@@ -3,6 +3,8 @@ import store from '../store'
 
 var db = new Dexie("hitokoto_pwa");
 db.version(1).stores({hitokoto: ',url,_id,fid,author,source,offline', collection: '_id,owner,name,offline', syncRecord: ',url', asserts: ',name'});
+db.version(2).stores({favor: ',url,_id,fid,author,source,offline'});
+db.version(3).stores({favor: ',url,hitokoto,_id,fid,author,source,offline'});
 
 const KEY_SEPRATOR = '<%hitokoto%>';
 class IndexedDBManager {
@@ -44,6 +46,9 @@ class IndexedDBManager {
   }
   getHitokotoCount(url) {
     return db.table('hitokoto').where('url').equals(url).count()
+  }
+  exportHitokotos(url) {
+    return db.table('hitokoto').where('url').equals(url).toArray()
   }
   clearOneSource(url) {
     return db.table('hitokoto').where('url').equals(url).delete()
@@ -123,6 +128,18 @@ class IndexedDBManager {
       let onlyKeys = arr.map(hito => hito[k]);
       return [...new Set(onlyKeys)]
     })
+  }
+  addToFavorite(hitokoto) {
+    return db.table('favor').put(hitokoto, hitokoto.hitokoto)
+  }
+  removeFromFavorite(hitokoto) {
+    return db.table('favor').delete(hitokoto.hitokoto)
+  }
+  isInFavorite(hitokoto) {
+    return db.table('favor').get(hitokoto.hitokoto)
+  }
+  getAllFavorite() {
+    return db.table('favor').toArray()
   }
   DEBUG_CLEAR_ALL() {
     db.table('hitokoto').clear()

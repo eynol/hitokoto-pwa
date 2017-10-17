@@ -10,9 +10,15 @@ export const addZero = (n) => n < 10
  */
 function Chinese(d) {
   if (Object.prototype.toString.call(d) !== '[object Date]') {
+    let origin = d;
     d = new Date(d);
     let temp = d.getDate();
     if (temp !== temp) {
+      if (d === undefined) {
+        return '某个时刻'
+      } else if (typeof origin === 'string') {
+        return origin; //原样返回时间，可能第三方已经处理了时间了
+      }
       return '(时间参数不合法)'
     }
   };

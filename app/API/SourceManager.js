@@ -254,4 +254,10 @@ export default class SourceManager {
     $setSources(this.sources);
     return JSON.parse(JSON.stringify(ret[0]))
   }
+  restoreSources(sources) {
+    if (sources && sources.length) {
+      this.sources = JSON.parse(JSON.stringify(sources));
+      $setSources(this.sources);
+    }
+  }
 }

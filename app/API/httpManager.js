@@ -13,7 +13,7 @@ function $setLSToken(token) {
 const toString = Object.prototype.toString;
 
 const GET_HITOKOTO_PRIVATE_URL = new RegExp('^' + location.protocol + '//' + location.host + '/api/sources/[^/]+/[^/]+');
-const SAME_ORIGIN = new RegExp('^' + location.protocol + '//' + location.host);
+export const SAME_ORIGIN = new RegExp('^' + location.protocol + '//' + location.host);
 
 const isPlainObject = (obj) => {
   if (!obj || typeof obj !== "object" || obj.nodeType || (obj != null && obj == obj.window)) {
@@ -491,6 +491,12 @@ class HTTPManager {
   }
   API_deleteHitokoto(name, formData) {
     return this.fetchAuthJSON('delete', '/api/collections/' + name, formData)
+  }
+  API_backup(formData) {
+    return this.fetchAuthJSON('post', '/api/backups', formData)
+  }
+  API_restore() {
+    return this.fetchAuthJSON('get', '/api/backups')
   }
 
 }

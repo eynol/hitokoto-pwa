@@ -9,6 +9,12 @@ function Managements(props) {
       <div className="lum-list tryFlexContainer">
         <ul>
           <li>
+            <Link to="/managements/favorites">
+              <h4>我的收藏</h4>
+              <p>查看、导出、删除收藏的句子。</p>
+            </Link>
+          </li>
+          <li>
             <Link to="/managements/sources">
               <h4>来源管理</h4>
               <p>管理添加获取句子的URL</p>

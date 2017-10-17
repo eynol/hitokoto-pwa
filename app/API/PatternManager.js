@@ -196,4 +196,10 @@ export default class PatternManager extends SourceManager {
   getPatternById(id) {
     return this.patterns.find(pattern => (pattern.id == id))
   }
+  restorePatterns(patterns) {
+    if (patterns && patterns.length) {
+      this.patterns = JSON.parse(JSON.stringify(patterns));
+      $setPatterns(this.patterns);
+    }
+  }
 }

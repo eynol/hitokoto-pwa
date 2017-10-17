@@ -42,23 +42,46 @@ function PublicHitokoto(props) {
         state
       },
       viewonly,
-      showState
+      showState,
+      usernameProxy,
+      collectionProxy
     } = props,
 
-    timeStr = tranformDate(new Date(created_at));
+    timeStr = tranformDate(created_at);
 
   return (
     <div className={item}>
       <div className="clearfix">
         {viewonly
           ? null
-          : ([(
-              <Link to={"/explore/" + creator} className={userName}>
-                <span>{creator}</span>
-              </Link>
-            ), (
-              <Link className="color-basic" to={"/explore/" + creator + '/' + collection}>{collection}</Link>
-            ), (<br/>)])
+          : ([
+            (usernameProxy
+              ? (
+                <a href="javascript:" key="user" onClick={usernameProxy} className={userName}>
+                  <span>{creator}</span>
+                </a>
+              )
+              : (
+                <Link key="user" to={"/explore/" + creator} className={userName}>
+                  <span>{creator}</span>
+                </Link>
+              )),
+            (collectionProxy
+              ? (
+                <a
+                  href="javascript:"
+                  key="collection"
+                  className="color-basic"
+                  onClick={collectionProxy}>{collection}</a>
+              )
+              : (
+                <Link
+                  key="collection"
+                  className="color-basic"
+                  to={"/explore/" + creator + '/' + collection}>{collection}</Link>
+              )),
+            (<br key="br"/>)
+          ])
 }
         <span className={timetag}>{showState
             ? STATE[state] + ' - '

@@ -45,7 +45,7 @@ class ExploreUser extends Component {
   }
 
   render() {
-    let {path, location, userName} = this.props;
+    let {location, userName} = this.props;
     let profile = this.state.user,
       patterManager = hitokotoDriver.patterManager,
       ListToShow = null;

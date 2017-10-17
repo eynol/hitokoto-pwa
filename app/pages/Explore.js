@@ -7,6 +7,7 @@ import QueueAnim from 'rc-queue-anim';
 
 import httpManager from '../API/httpManager';
 import showNotification from '../API/showNotification';
+import indexedDBManager from '../API/IndexedDBManager';
 
 import ExploreUser from './ExploreUser'
 import ExploreUserCollection from './ExploreUserCollection'
@@ -17,7 +18,7 @@ import Loading from '../component/Loading';
 
 import {ANIMATE_CONFIG_NEXT} from '../configs'
 
-class NavManagement extends Component {
+class Explore extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -26,10 +27,14 @@ class NavManagement extends Component {
       currentPage: 1,
       totalPages: 0,
       publicHitokotos: [],
+      favorites: [],
       userProfile: {},
       isUnmouted: false
     }
     this.getAllPublicHitokotos = this.getAllPublicHitokotos.bind(this);
+
+    this.addToFavorite = this.addToFavorite.bind(this);
+    this.removeFromRavorite = this.removeFromRavorite.bind(this);
   }
   componentWillMount() {
     this.getAllPublicHitokotos();
@@ -48,7 +53,31 @@ class NavManagement extends Component {
     }
     this.setState({inited: false})
     httpManager.API_getAllPublicHitokotos(page, 10).then(result => {
-      this.setState({inited: true, error: null, totalPages: result.total, currentPage: result.current, publicHitokotos: result.hitokotos})
+      this.setState({
+        inited: true,
+        error: null,
+        totalPages: result.total,
+        currentPage: result.current,
+        publicHitokotos: result.hitokotos,
+        favorites: new Array(result.hitokotos)
+      });
+
+      //检测是否收藏 获取是否已加入收藏
+      result.hitokotos.map((h, i) => {
+        indexedDBManager.isInFavorite(h).then(yes => {
+          if (yes) {
+            this.setState(state => {
+              state.favorites[i] = true;
+              return state;
+            })
+          } else {
+            this.setState(state => {
+              state.favorites[i] = false;
+              return state;
+            })
+          }
+        })
+      })
     }).catch(e => {
       this.setState({
         error: e.message || e || '获取失败',
@@ -67,6 +96,28 @@ class NavManagement extends Component {
       }
     };
     return uid;
+  }
+  addToFavorite(evt) {
+    let index = evt.target.getAttribute('data-index');
+
+    indexedDBManager.addToFavorite(this.state.publicHitokotos[index]).then(result => {
+      this.setState(state => {
+        showNotification('加入收藏成功！', 'success')
+
+        state.favorites[index] = true;
+        return state;
+      })
+    })
+  }
+  removeFromRavorite(evt) {
+    let index = evt.target.getAttribute('data-index');
+    indexedDBManager.removeFromFavorite(this.state.publicHitokotos[index]).then(result => {
+      this.setState(state => {
+        showNotification('取消收藏成功！', 'info')
+        state.favorites[index] = false;
+        return state;
+      })
+    })
   }
   render() {
     let {path, location} = this.props;
@@ -97,14 +148,27 @@ class NavManagement extends Component {
                       error={this.state.error}
                       retry={() => this.getAllPublicHitokotos(this.state.currentPage)}
                       key="loading"/>}
-                  <div className="view">{this.state.publicHitokotos.map(hito => (
-                      <PublicHitokoto data={hito}>
-                        <a href="javascript:">
-                          <i className="iconfont icon-like"></i>
-                        </a>
-                        <a href="javascript:">
-                          <i className="iconfont icon-favor"></i>
-                        </a>
+                  <div className="view">{this.state.publicHitokotos.map((hito, index) => (
+                      <PublicHitokoto data={hito} key={hito.id}>
+                        {this.state.favorites[index]
+                          ? (
+                            <a href="javascript:">
+                              <i
+                                className="iconfont icon-favorfill"
+                                title="已收藏"
+                                data-index={index}
+                                onClick={this.removeFromRavorite}></i>
+                            </a>
+                          )
+                          : (
+                            <a href="javascript:">
+                              <i
+                                className="iconfont icon-favor"
+                                title="点击加入收藏"
+                                data-index={index}
+                                onClick={this.addToFavorite}></i>
+                            </a>
+                          )}
                       </PublicHitokoto>
                     ))}</div>
                 </QueueAnim>
@@ -126,7 +190,7 @@ class NavManagement extends Component {
               }
             }
           }) => {
-            return (<ExploreUser userName={user} uid={this.uidByName(user)}/>)
+            return (<ExploreUser userName={user} uid={this.uidByName(user) || window.trickyUid}/>)
           }}/>
           <Route
             exact
@@ -139,12 +203,14 @@ class NavManagement extends Component {
               }
             }
           }) => {
-            return (<ExploreUserCollection collectionName={collection} uid={this.uidByName(user)}/>)
+            return (<ExploreUserCollection
+              collectionName={collection}
+              uid={this.uidByName(user) || window.trickyUid}/>)
           }}/>
         </Switch>
       </FullPageCard>
     )
   }
 }
-export default withRouter(NavManagement)
+export default withRouter(Explore)
 // export default About

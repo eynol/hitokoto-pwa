@@ -112,6 +112,11 @@ class HitokotoDriver {
                 this.increaseSourceCount(id, source.id);
               }
 
+              //添加url以便收藏使用
+              if (!hitokoto.url) {
+                hitokoto.url = source.url;
+              }
+
               let index = this.signal.findIndex(item => item === pid);
               if (~ index) {
                 this.signal.splice(index, 1)
@@ -143,6 +148,11 @@ class HitokotoDriver {
               //  increase count
               if (type == 'next') {
                 this.increaseSourceCount(id, source.id);
+              }
+
+              //添加url以便收藏使用
+              if (!hitokoto.url) {
+                hitokoto.url = source.url;
               }
 
               let index = this.signal.findIndex(item => item === pid);
@@ -311,6 +321,12 @@ class HitokotoDriver {
     if (this.pattern.id == id) {
       let pattern = this.patterManager.getPatternById(id);
       this.drive(pattern).start();
+    }
+  }
+  restorePatterns(patterns) {
+    if (patterns && patterns.length && patterns.length > 0) {
+      this.patterManager.restorePatterns(patterns);
+      this.drive(this.patterManager.getDefaultPattern());
     }
   }
 }

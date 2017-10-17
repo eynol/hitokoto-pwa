@@ -1,26 +1,26 @@
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 import {Link, withRouter, Route} from 'react-router-dom';
-import FullPageCard from '../component/FullPageCard'
+import QueueAnim from 'rc-queue-anim';
 
 import httpManager from '../API/httpManager';
-import QueueAnim from 'rc-queue-anim';
-import CollectionBox from '../component/CollectionBox';
-
 import hitokotoDriver from '../API/hitokotoDriver';
+import indexedDBManager from '../API/IndexedDBManager';
 import showNotification from '../API/showNotification';
 
+import {CardContainer} from '../component/CollectionBox.css'
 import PublicHitokoto from '../component/PublicHitokoto'
+import CollectionBox from '../component/CollectionBox';
+import FullPageCard from '../component/FullPageCard'
 import Pagination from '../component/Pagination';
 import Loading from '../component/Loading'
-
-import {CardContainer} from '../component/CollectionBox.css'
 
 class ExploreUserCollection extends Component {
   constructor(props) {
     super(props);
     this.state = {
       hitokotos: [],
+      favorites: [],
       inited: false,
       error: null,
       total: 1,
@@ -29,6 +29,8 @@ class ExploreUserCollection extends Component {
     this.handleView = this.handleView.bind(this);
     this.exploreUserCollection = this.exploreUserCollection.bind(this);
 
+    this.addToFavorite = this.addToFavorite.bind(this);
+    this.removeFromRavorite = this.removeFromRavorite.bind(this);
   }
   componentWillMount() {
     this.exploreUserCollection(1);
@@ -48,13 +50,60 @@ class ExploreUserCollection extends Component {
     }
     this.setState({inited: false})
     httpManager.API_getPublicUserHitokotos(uid, collectionName, page, perpage).then(result => {
-      this.setState({inited: true, error: null, hitokotos: result.hitokotos, current: result.currentPage, total: result.totalPage})
+      this.setState({
+        inited: true,
+        error: null,
+        hitokotos: result.hitokotos,
+        favorites: new Array(result.hitokotos.length).fill(null),
+        current: result.currentPage,
+        total: result.totalPage
+      });
+
+      //获取是否已加入收藏
+      result.hitokotos.map((h, i) => {
+        indexedDBManager.isInFavorite(h).then(yes => {
+          if (yes) {
+            this.setState(state => {
+              state.favorites[i] = true;
+              return state;
+
+            })
+          } else {
+            this.setState(state => {
+              state.favorites[i] = false;
+              return state;
+            })
+          }
+        })
+      })
     }).catch(e => {
       showNotification('获取句集内容失败！', 'error');
       this.setState({
         error: e.message || e || '获取句集内容失败！',
         inited: false
       });
+    })
+  }
+  addToFavorite(evt) {
+    let index = evt.target.getAttribute('data-index');
+
+    indexedDBManager.addToFavorite(this.state.hitokotos[index]).then(result => {
+      this.setState(state => {
+        showNotification('加入收藏成功！', 'success')
+
+        state.favorites[index] = true;
+        return state;
+      })
+    })
+  }
+  removeFromRavorite(evt) {
+    let index = evt.target.getAttribute('data-index');
+    indexedDBManager.removeFromFavorite(this.state.hitokotos[index]).then(result => {
+      this.setState(state => {
+        showNotification('取消收藏成功！', 'info')
+        state.favorites[index] = false;
+        return state;
+      })
     })
   }
   handleView(colname) {
@@ -81,12 +130,25 @@ class ExploreUserCollection extends Component {
 
         ListToShow = hitokotos.map((hitokoto, index) => (
           <PublicHitokoto key={hitokoto._id} data={hitokoto} viewonly>
-            <a href="javascript:">
-              <i className="iconfont icon-like"></i>
-            </a>
-            <a href="javascript:">
-              <i className="iconfont icon-favor"></i>
-            </a>
+            {this.state.favorites[index]
+              ? (
+                <a href="javascript:">
+                  <i
+                    className="iconfont icon-favorfill"
+                    title="已收藏"
+                    data-index={index}
+                    onClick={this.removeFromRavorite}></i>
+                </a>
+              )
+              : (
+                <a href="javascript:">
+                  <i
+                    className="iconfont icon-favor"
+                    title="点击加入收藏"
+                    data-index={index}
+                    onClick={this.addToFavorite}></i>
+                </a>
+              )}
           </PublicHitokoto>
         ))
       }
