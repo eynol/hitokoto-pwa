@@ -166,8 +166,10 @@ class HitokotoPlayer extends Component {
             <p>ID：{hitokoto.id || '未知'}</p>
             <p>发布者：<Link to={"/explore/" + hitokoto.creator} role='exit'>{hitokoto.creator}</Link>
             </p>
-            <p>所在句集：{hitokoto.f
-                ? <Link to={"/explore/" + hitokoto.creator + '/' + hitokoto.f} role='exit'>{hitokoto.f}</Link>
+            <p>所在句集：{hitokoto.collection
+                ? <Link
+                    to={"/explore/" + hitokoto.creator + '/' + hitokoto.collection}
+                    role='exit'>{hitokoto.collection}</Link>
                 : '未知'}</p>
             <p>分类：{hitokoto.category || '未知'}</p>
             <p>发布时间：{time}</p>
@@ -179,7 +181,7 @@ class HitokotoPlayer extends Component {
           <Modal exit={this.hideInfo} key="player-info">
             <p>ID：{hitokoto.id || '未知'}</p>
             <p>发布者：{hitokoto.creator || '未知'}</p>
-            <p>所在句集：{hitokoto.f || '未知'}</p>
+            <p>所在句集：{hitokoto.collection || '未知'}</p>
             <p>分类：{hitokoto.category || '未知'}</p>
             <p>发布时间：{time}</p>
           </Modal>
