@@ -6,7 +6,7 @@ import FullPageCard from '../component/FullPageCard'
 function Managements(props) {
   return (
     <FullPageCard cardname="管理">
-      <div className="lum-list tryFlexContainer">
+      <div className="lum-list ">
         <ul>
           <li>
             <Link to="/managements/favorites">

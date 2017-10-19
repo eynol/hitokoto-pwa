@@ -1,3 +1,4 @@
+import broadcastManager from './broadcastManager';
 import indexedDBManager from './IndexedDBManager';
 import showNotification from '../API/showNotification';
 
@@ -30,7 +31,7 @@ const isPlainObject = (obj) => {
 
   var key;
   for (key in obj) {}
-  return key === undefined || hasOwn.call(obj, key);
+  return key === undefined || Object.prototype.hasOwnProperty.call.call(obj, key);
 }
 /**
  * 传入超时时间和一个promise.
@@ -116,6 +117,8 @@ class HTTPManager {
       }
 
     }
+
+    this.responseHeaderResolver = this.responseHeaderResolver.bind(this);
   }
   /**
    *
@@ -132,10 +135,24 @@ class HTTPManager {
 
     if (SAME_ORIGIN.test(res.url)) {
       //  读取头部信息
-      let raw_message = res.headers.get('urgent-message');
+      let raw_message = res.headers.get('broadcast');
       if (raw_message) {
         //如果有消息；
-
+        let broadcasts = raw_message.split('|').map(t => t.replace(/"/gm, ''));
+        let getMessage = broadcasts.some(d => !broadcastManager.hasDisplayed(d))
+        if (getMessage) {
+          this.API_Admin_getBroadcasts().then(res => {
+            let messages = res.messages;
+            if (messages && messages.length) {
+              messages.forEach(msg => {
+                if (!broadcastManager.hasDisplayed(msg.endAt)) {
+                  broadcastManager.add(msg.endAt);
+                  showNotification(msg.message, 'info', true);
+                }
+              })
+            }
+          })
+        }
       }
     }
 
@@ -497,6 +514,27 @@ class HTTPManager {
   }
   API_restore() {
     return this.fetchAuthJSON('get', '/api/backups')
+  }
+
+  //Admin API
+  API_Admin_getNeedReviewHitokotos(page, perpage) {
+    return this.fetchAuthJSON('get', '/api/admin/hitokotos/review', {page, perpage})
+  }
+  API_Admin_changeHitokotoState(hid, state) {
+    return this.fetchAuthJSON('post', '/api/admin/hitokotos/review', {hid, state})
+  }
+  //broadcast
+  API_Admin_putBroadcast(data) {
+    return this.fetchAuthJSON('put', '/api/admin/broadcasts', data)
+  }
+  API_Admin_updateBroadcast(data) {
+    return this.fetchAuthJSON('post', '/api/admin/broadcasts', data)
+  }
+  API_Admin_deleteBroadcast(data) {
+    return this.fetchAuthJSON('delete', '/api/admin/broadcasts', data)
+  }
+  API_Admin_getBroadcasts() {
+    return this.fetchAuthJSON('get', '/api/admin/broadcasts')
   }
 
 }

@@ -1,6 +1,7 @@
 import 'whatwg-fetch';
 import PatternManager, {SOURCE_UPDATE_KEYS} from './PatternManager'
 import httpManager from './httpManager'
+import showNotification from './showNotification'
 
 import {PERSE_ADAPTER_SAFE, AdapterValidate, PERSE_ADAPTER} from './AdapterValidate'
 import offlineWatcher from './Offline'
@@ -35,6 +36,8 @@ class HitokotoDriver {
     this.processing = false; // 是否请求中的flag标志
     this.timerDisabled = true; //用于页面失去焦点后停用计时器;
     this.signal = []; //  用于存储标志已经有请求hitokoto的操作了，信号量
+
+    this.errSignal = 0;
 
     this.drive(this.patterManager.getDefaultPattern()); //  默认模式
     this.hertbeat = this.reborn(); //  用于保存hitokotoDriver内部计时器的;
@@ -132,7 +135,22 @@ class HitokotoDriver {
                 this.signal.splice(index, 1)
                 // return Promise.reject(reason);
               }
-              console.log('oops', e);
+
+              //只在processing的状态下才增加错误信号量。
+              if (this.processing) {
+                this.errSignal += 1; //增加错误信号量。
+
+                if (this.errSignal > 10) {
+                  this.updateProcessing(false);
+                  this.timerDisabled = true;
+                  showNotification('从网络获取hitokoto出错次数已经超过10次！已暂停播放器!', 'error', true)
+                }
+              } else {
+                this.errSignal > 0
+                  ? this.errSignal -= 1
+                  : void 0;
+              }
+
               //  失败了 使用离线缓存
               return indexedDBManager.getHitokoto(source.url);
             })
@@ -193,7 +211,10 @@ class HitokotoDriver {
       ROLLBACK.unshift(PREFETCH.shift())
       this.nextHitokotoHandler(ROLLBACK.slice(0, 1)[0], this.getCount())
     }
-    console.log('signal', this.signal)
+    if (this.errSignal > 20 && this.timerDisabled) {
+      this.timerDisabled = false;
+      this.errSignal = 0;
+    }
     this.lastTime = Date.now()
   }
   last() {
@@ -201,8 +222,6 @@ class HitokotoDriver {
       PREFETCH.unshift(ROLLBACK.shift())
     }
     this.lastHitokotoHandler(ROLLBACK.slice(0, 1)[0], this.getCount())
-    console.log('last')
-    console.log('signal', this.signal)
     this.updateProcessing(false);
     this.lastTime = Date.now()
   }
@@ -243,15 +262,14 @@ class HitokotoDriver {
   testSourceAdapter(url, adapterString) {
     let adapter;
     try {
-      console.log(adapterString)
       adapter = PERSE_ADAPTER(adapterString);
-      console.log(adapter)
+
     } catch (e) {
-      console.error(e);
+
       return Promise.reject(e);
     }
     return this.httpManager.getHitokoto(url).then(adapter).then((hitokoto) => {
-      console.log('[test.adapter.result]', hitokoto);
+      console.debug('[test.adapter.result]', hitokoto);
       if (!hitokoto) {
         return Promise.reject(hitokoto);
       } else {
@@ -291,12 +309,10 @@ class HitokotoDriver {
     p.then(hitokoto => {
       try {
         indexedDBManager.putHitokoto(url, hitokoto)
-      } catch (e) {
-        console.log(e);
-      }
+      } catch (e) {}
       return hitokoto
     }).catch(e => {
-      console.log('oopppsss', e);
+
       return Promise.reject(e);
     });
     return p;

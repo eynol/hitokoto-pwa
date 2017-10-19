@@ -138,9 +138,11 @@ class HitokotoEditor extends Component {
 
       return httpManager.API_updateHitokoto(collectionName, hitokoto).then(result => {
 
-        let hito = result.hitokoto;
+        // let hito = result.hitokoto;
+        /*
+        result.hitokoto is undefined
         indexedDBManager.putHitokoto(getURL(hito.creator_id, hito.fid, false), hito);
-
+        */
         showNotification(result.message, 'success');
 
         this.props.history.goBack();
@@ -253,36 +255,36 @@ class HitokotoEditor extends Component {
               <option value="其他">其他</option>
             </select>
           </p>
-          <hr/> {hitokoto.state == 'blocked'
-            ? (
-              <p className="color-red">该句子已被隔离</p>
-            )
-            : (
-              <p>
-                <span className="form">
-                  私密<a
-                    href="javascript:"
-                    title="点击查看提示"
-                    onClick={() => showNotification('公开的句子将会出现在「探索」中，私密的句子只有自己可以看到。\nps:目前发布的所有句子全部都是公开状态，如果有人发乱七八糟的内容，站长将会开启审核机制。', 'info', true)}>
-                    <i className="iconfont icon-question"></i>
-                  </a>：
-                  <input
-                    type="checkbox"
-                    ref="state"
-                    hidden
-                    id="id-public"
-                    defaultChecked={hitokoto.state == 'private' || hitokoto.state == 'reviewing'}/>
-                  <label htmlFor="id-public"></label>(暂时无效，发布的全部是公开的句子)
-                </span>
-                {hitokoto.state == 'reviewing'
-                  ? (
-                    <span className="color-red">正在审核中</span>
-                  )
-                  : null}
-              </p>
-            )
-}
-
+          <hr/>
+          <p>
+            <span className="form">
+              私密<a
+                href="javascript:"
+                title="点击查看提示"
+                onClick={() => showNotification('公开的句子将会出现在「探索」中，私密的句子只有自己可以看到，审核中的句子只有审核通过后才会在「探索中」。如果修改已经公开了的句子，那么这个句子将会再次被审核。' +
+          '\n审核机制是为了防止恶意内容，不防君子防小人。',
+      'info', true)}>
+                <i className="iconfont icon-question"></i>
+              </a>：
+              <input
+                type="checkbox"
+                ref="state"
+                hidden
+                id="id-public"
+                defaultChecked={hitokoto.state == 'private' || hitokoto.state == 'rejected'}/>
+              <label htmlFor="id-public"></label>(公开的句子将会被审核，审核通过后才会出现在「探索」中。)
+            </span>
+            {hitokoto.state == 'reviewing'
+              ? (
+                <span className="color-red">正在审核中</span>
+              )
+              : null}
+            {hitokoto.state == 'rejected'
+              ? (
+                <span className="color-red">已驳回，建议修改。</span>
+              )
+              : null}
+          </p>
         </div>
 
         <div className={operations}>

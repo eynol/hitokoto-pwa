@@ -310,7 +310,7 @@ class Sync extends Component {
 
     return (
       <FullPageCard cardname="离线缓存">
-        <div className="lum-list tryFlexContainer">
+        <div className="lum-list ">
           <ul>
             {list}
           </ul>

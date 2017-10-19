@@ -32,12 +32,6 @@ class UserSpace extends Component {
               </Link>
             </li>
             <li>
-              <Link to="/myspace/profiles">
-                <h4>账号设置</h4>
-                <p>修改邮箱，修改密码</p>
-              </Link>
-            </li>
-            <li>
               <Link to="/managements/sources">
                 <h4>来源管理</h4>
                 <p>管理添加获取句子的URL</p>
@@ -65,6 +59,12 @@ class UserSpace extends Component {
               <Link to="/managements/backup">
                 <h4>备份还原</h4>
                 <p>备份本地的所有模式和来源到服务器上，或者从服务器上还原之前备份的数据。</p>
+              </Link>
+            </li>
+            <li>
+              <Link to="/myspace/profiles">
+                <h4>账号设置</h4>
+                <p>修改邮箱，修改密码</p>
               </Link>
             </li>
           </ul>

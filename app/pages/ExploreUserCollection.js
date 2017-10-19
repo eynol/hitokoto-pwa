@@ -26,7 +26,7 @@ class ExploreUserCollection extends Component {
       total: 1,
       current: 1
     }
-    this.handleView = this.handleView.bind(this);
+
     this.exploreUserCollection = this.exploreUserCollection.bind(this);
 
     this.addToFavorite = this.addToFavorite.bind(this);
@@ -106,9 +106,7 @@ class ExploreUserCollection extends Component {
       })
     })
   }
-  handleView(colname) {
-    this.props.history.push(this.props.location.pathname + '/' + colname);
-  }
+
   addToSource(colname, event) {
     hitokotoDriver.patterManager.newSourceWithUsernameAndCol(this.props.userName, colname);
     this.forceUpdate();

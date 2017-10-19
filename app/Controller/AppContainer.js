@@ -11,9 +11,13 @@ import PatternEditor from '../pages/PatternEditor'
 import Sources from '../pages/Sources'
 import SourceEditor from '../pages/SourceEditor'
 import About from '../pages/About'
+import Doc from '../pages/Doc'
 import Tools from '../pages/Tools'
 import Managements from '../pages/Managements'
 import Explore from '../pages/Explore'
+import Admin from '../pages/Admin'
+import Review from '../pages/Admin.Review'
+import Broadcast from '../pages/Admin.Broadcast'
 
 import Login from '../containers/Login'
 import Regist from '../containers/Regist'
@@ -48,6 +52,21 @@ const ROUTES = [
     to: /^\/managements\/?$/,
     component: Managements,
     name: '管理导航页面',
+    reload: true
+  }, {
+    to: /^\/admin\/?$/,
+    component: Admin,
+    name: '后台管理页面',
+    reload: true
+  }, {
+    to: /^\/admin\/review\/?$/,
+    component: Review,
+    name: '审核句子页面',
+    reload: true
+  }, {
+    to: /^\/admin\/broadcast\/?$/,
+    component: Broadcast,
+    name: '广播页面',
     reload: true
   }, {
     to: /^\/managements\/sources$/,
@@ -96,6 +115,11 @@ const ROUTES = [
     to: /^\/about\/?$/,
     component: About,
     name: '关于页面',
+    reload: true
+  }, {
+    to: /^\/doc\/?$/,
+    component: Doc,
+    name: '接口文档页面',
     reload: true
   }, {
     to: /^\/myspace\/?$/,

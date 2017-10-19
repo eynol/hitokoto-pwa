@@ -71,7 +71,7 @@ class Sources extends Component {
           <i className="iconfont icon-tishi"></i>
           在这里新增其他域名下的hitokoto一言接口，然后在「模式管理」中使用哦~
         </p>
-        <div className="lum-list tryFlexContainer">
+        <div className="lum-list ">
           <ul>
             {lists}
             <li key="new">

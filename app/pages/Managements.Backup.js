@@ -56,7 +56,7 @@ class Backup extends Component {
   render() {
     return (
       <FullPageCard cardname="备份还原">
-        <div className="lum-list tryFlexContainer">
+        <div className="lum-list ">
           <p>如果是自动同步的话，每一步操作都要备份会很麻烦，所以请手动操作，在多设备间同步您的来源和模式。</p>
           <ul>
             <li>

@@ -39,7 +39,7 @@ Uncaught (in promise) Error: IndexedDB database has been deleted.
     return (
       <FullPageCard cardname="工具箱">
 
-        <div className="lum-list tryFlexContainer">
+        <div className="lum-list ">
           <h1 className="color-red">下列的按钮很危险！如果你不知道自己在做什么，请返回。</h1>
 
           <ul>

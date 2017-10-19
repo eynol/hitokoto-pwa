@@ -2,3 +2,9 @@
   padding: 20px;
   text-align: center;
 }
+@media screen and (max-width:768px){
+
+  .wrapper button:after{
+    display: none;
+  }
+}

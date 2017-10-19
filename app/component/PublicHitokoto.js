@@ -22,7 +22,8 @@ import {
 const STATE = {
   'public': '公开',
   'private': '私密',
-  'reviewing': '审核中'
+  'reviewing': '审核中',
+  'rejected': '驳回(私密)'
 }
 
 const _ = (n) => n < 10
@@ -90,7 +91,7 @@ function PublicHitokoto(props) {
       <div className={userHitokotoFlex}>
         <div className={userHitokotoFlexChild + ' clearfix'}>
           <span className={userHitokoto}>{hitokoto}</span><br/>
-          <span className={userHitokotoSource}>——{author
+          <span className={userHitokotoSource}>—— {author
               ? author + ' '
               : ''}{source}</span>
         </div>

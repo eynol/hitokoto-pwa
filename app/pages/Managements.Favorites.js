@@ -114,9 +114,9 @@ ${h.created_at}\n\n`
   }
   collectionClickProxy(index) {
     let target = this.state.hitokotos[index];
-    if (target.creator_id && target.creator && target.f) {
+    if (target.creator_id && target.creator && target.collection) {
       window.trickyUid = target.creator_id;
-      this.props.history.push('/explore/' + target.creator + '/' + target.f);
+      this.props.history.push('/explore/' + target.creator + '/' + target.collection);
     } else {
       showNotification('无法跳转到句集详情，可能句子不是本网站的。');
     }
@@ -170,7 +170,8 @@ ${h.created_at}\n\n`
             <i className="iconfont icon-pulldown hide-pc"></i>
           </a>
         )]}>
-        <div className="lum-list tryFlexContainer">
+        <p>收藏的句子保存在本地，清空浏览器缓存可能导致数据丢失。</p>
+        <div className="lum-list ">
           {list}
         </div>
         {this.state.chooseModal

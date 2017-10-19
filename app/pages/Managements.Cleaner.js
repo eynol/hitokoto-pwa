@@ -165,7 +165,7 @@ ${h.created_at}\n\n`
     }
     return (
       <FullPageCard cardname="缓存清理">
-        <div className="lum-list tryFlexContainer">
+        <div className="lum-list ">
           <ul>
             {list}
           </ul>
