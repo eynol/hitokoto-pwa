@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
-import {Link, withRouter, Route} from 'react-router-dom';
+
 import QueueAnim from 'rc-queue-anim';
 import Textarea from 'react-textarea-autosize';
 
@@ -228,4 +228,4 @@ class Review extends Component {
     )
   }
 }
-export default withRouter(Review)
+export default Review

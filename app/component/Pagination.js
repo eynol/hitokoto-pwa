@@ -16,8 +16,8 @@ const getRangeStart = (current, total, limit = 10) => {
     return 1;
   } else {
     let halfRange = Math.floor(limit / 2), //  间隔
-      isOdd = limit & 1, //  奇偶
-      bottom = current - halfRange,
+      isOdd = limit & 1, //  奇数，显示数目是技术还是偶数。
+      bottom = current - halfRange, //令偶数的curren在中数或者中数+1的位置。
       top = current + halfRange + (isOdd
         ? 0
         : -1);
@@ -25,7 +25,7 @@ const getRangeStart = (current, total, limit = 10) => {
     if (bottom < 1) {
       return 1;
     } else if (top > total) {
-      return total - limit;
+      return total - limit + 1;
     } else {
       return bottom;
     }
@@ -35,9 +35,13 @@ const getRangeStart = (current, total, limit = 10) => {
 class Pagination extends Component {
   constructor(props) {
     super(props);
+
+    let {current, total, limit} = props;
+
     this.state = {
-      rangeStart: 1
-    }
+      rangeStart: getRangeStart(current, total, limit)
+    };
+
     this.go = this.go.bind(this);
     this.toBegin = this.toBegin.bind(this);
     this.toEnd = this.toEnd.bind(this);
@@ -46,21 +50,15 @@ class Pagination extends Component {
     this.lastRange = this.lastRange.bind(this);
     this.nextRange = this.nextRange.bind(this);
   }
-  componentWillMount() {
-    let {current, total, limit} = this.props;
-
-    this.setState({
-      rangeStart: getRangeStart(current, total, limit)
-    });
-
-  }
 
   componentWillReceiveProps(nextProps) {
-    let {current, total, limit} = nextProps;
+    let {current, total, limit} = nextProps,
+      nextRangeStart = getRangeStart(current, total, limit),
+      rangeStart = this.state.rangeStart;
 
-    this.setState({
-      rangeStart: getRangeStart(current, total, limit)
-    });
+    if (nextRangeStart != this.state.rangeStart) {
+      this.setState({rangeStart: nextRangeStart});
+    }
 
   }
   go(event) {

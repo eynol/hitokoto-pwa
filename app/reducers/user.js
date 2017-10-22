@@ -10,7 +10,8 @@ const user = (user = $getUser(), action) => {
             $set: {
               nickname: ret.nickname,
               token: ret.token,
-              uid: ret.uid
+              uid: ret.uid,
+              permission: ret.permission
             }
           });
         $setUser(nextUser);
@@ -20,9 +21,9 @@ const user = (user = $getUser(), action) => {
 
     case USER_LOGOUT:
       {
-        $setUser({nickname: '', token: '', uid: ''})
+        $setUser({nickname: '', token: '', uid: '', permission: 0})
         httpManager.updateToken('')
-        return {nickname: '', token: '', uid: ''}
+        return {nickname: '', token: '', uid: '', permission: 0}
       }
 
     case USER_UPDATE_USERNICKNAME:

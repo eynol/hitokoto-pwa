@@ -53,12 +53,16 @@ class HitokotoContainer extends Component {
     this.setState({processing: processing})
   }
   nextHitokotoHandler(hitokoto, {lastCount, nextCount}) {
-    console.log(hitokoto, lastCount, nextCount)
+    if (process.env.NODE_ENV !== 'production') {
+      console.log(hitokoto, lastCount, nextCount)
+    }
     this.setState({hitokoto: hitokoto, direction: 'next', lastCount, nextCount});
     setInstantHitokoto(hitokoto);
   }
   lastHitokotoHandler(hitokoto, {lastCount, nextCount}) {
-    console.log(hitokoto, lastCount, nextCount)
+    if (process.env.NODE_ENV !== 'production') {
+      console.log(hitokoto, lastCount, nextCount)
+    }
     this.setState({hitokoto: hitokoto, direction: 'back', lastCount, nextCount});
   }
   handleNext() {

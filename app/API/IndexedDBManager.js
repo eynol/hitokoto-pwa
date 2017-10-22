@@ -2,9 +2,7 @@ import Dexie from 'dexie';
 import store from '../store'
 
 var db = new Dexie("hitokoto_pwa");
-db.version(1).stores({hitokoto: ',url,_id,fid,author,source,offline', collection: '_id,owner,name,offline', syncRecord: ',url', asserts: ',name'});
-db.version(2).stores({favor: ',url,_id,fid,author,source,offline'});
-db.version(3).stores({favor: ',url,hitokoto,_id,fid,author,source,offline'});
+db.version(1).stores({hitokoto: ',url,_id,fid,author,source,offline', collection: '_id,owner,name,offline', syncRecord: ',url', asserts: ',name', favor: ',url,hitokoto,_id,fid,author,source,offline'});
 
 const KEY_SEPRATOR = '<%hitokoto%>';
 class IndexedDBManager {
@@ -48,7 +46,7 @@ class IndexedDBManager {
     return db.table('hitokoto').where('url').equals(url).count()
   }
   exportHitokotos(url) {
-    return db.table('hitokoto').where('url').equals(url).toArray()
+    return db.table('hitokoto').where('url').equals(url).sortBy('create_at').toArray()
   }
   clearOneSource(url) {
     return db.table('hitokoto').where('url').equals(url).delete()
@@ -95,7 +93,7 @@ class IndexedDBManager {
 
       let randomindex
       if (option && option.type == 'next') {
-        randomindex = source.count % count;
+        randomindex = option.source.count % count;
       } else {
         randomindex = Math.floor(Math.random() * count);
       }

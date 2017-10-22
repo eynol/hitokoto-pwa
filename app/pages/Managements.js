@@ -44,4 +44,3 @@ function Managements(props) {
   )
 }
 export default Managements
-// export default About

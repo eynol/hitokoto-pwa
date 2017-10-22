@@ -64,7 +64,9 @@ function LayoutHorizon(props) {
         style={{
         position: 'relative',
         height: '100%',
-        width: '100%'
+        width: '100%',
+        maxWidth: '1000px',
+        margin: '0 auto'
       }}>
         <QueueAnim
           key={id + 'content'}

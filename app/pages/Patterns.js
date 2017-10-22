@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import QueueAnim from 'rc-queue-anim';
-import {Link, withRouter} from 'react-router-dom';
 
 import hitokotoDriver from '../API/hitokotoDriver';
 
@@ -130,4 +129,4 @@ class Patterns extends Component {
   }
 }
 
-export default withRouter(Patterns);
+export default Patterns;

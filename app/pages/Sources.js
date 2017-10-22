@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import {Link, withRouter} from 'react-router-dom';
 import QueueAnim from 'rc-queue-anim';
 
 import {GLOBAL_ANIMATE_TYPE} from '../configs'
@@ -100,4 +99,4 @@ class Sources extends Component {
   }
 }
 
-export default withRouter(Sources);
+export default Sources;

@@ -94,7 +94,7 @@ class HTTPManager {
     this.initQ = []; //  暂存Promise未polyfill完成前的请求；
     this.token = $getLSToken() || '';
     //promise polyfill
-    let _that = this;
+    /* let _that = this;
 
     try {
       var p = Promise.resolve(2);
@@ -117,7 +117,7 @@ class HTTPManager {
       }
 
     }
-
+*/
     this.responseHeaderResolver = this.responseHeaderResolver.bind(this);
   }
   /**

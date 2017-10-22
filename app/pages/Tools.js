@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Link, withRouter} from 'react-router-dom';
+
 import * as OfflinePluginRuntime from 'offline-plugin/runtime';
 
 import showNotification from '../API/showNotification'
@@ -12,6 +12,9 @@ class Tools extends Component {
     this.props.history.go(-1);
   }
   clearLS() {
+    if (!confirm('你确定？')) {
+      return;
+    }
     window.localStorage.clear();
     showNotification('localstorage已清空,将在3秒后回到首页', 'success');
     setTimeout(() => {
@@ -20,6 +23,9 @@ class Tools extends Component {
     }, 3000)
   }
   clearIDB() {
+    if (!confirm('你确定？')) {
+      return;
+    }
     idbm.DROP_DB().then(() => {
       showNotification(`全删了！快跑！
 Uncaught (in promise) Error: IndexedDB database has been deleted.
@@ -61,5 +67,4 @@ Uncaught (in promise) Error: IndexedDB database has been deleted.
     )
   }
 }
-export default withRouter(Tools)
-// export default About
+export default Tools

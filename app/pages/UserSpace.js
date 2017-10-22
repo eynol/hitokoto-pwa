@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import QueueAnim from 'rc-queue-anim';
+import {connect} from 'react-redux';
 
 import {Link} from 'react-router-dom';
 
@@ -15,6 +16,8 @@ class UserSpace extends Component {
   }
 
   render() {
+    let permission = this.props.permission;
+
     return (
       <FullPageCard cardname="个人中心">
         <div className="lum-list">
@@ -67,6 +70,14 @@ class UserSpace extends Component {
                 <p>修改邮箱，修改密码</p>
               </Link>
             </li>
+            {permission
+              ? <li>
+                  <Link to="/admin">
+                    <h4>后台管理</h4>
+                    <p>审核句子，发布广播</p>
+                  </Link>
+                </li>
+              : null}
           </ul>
         </div>
       </FullPageCard>
@@ -74,4 +85,8 @@ class UserSpace extends Component {
   }
 }
 
-export default UserSpace;
+const mapStateToProps = (state) => {
+  return ({permission: state.user.permission})
+}
+
+export default connect(mapStateToProps)(UserSpace)

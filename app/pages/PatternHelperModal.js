@@ -1,7 +1,9 @@
 import React, {Component} from 'react';
+import {Link} from 'react-router-dom';
 
 import showNotification from '../API/showNotification';
 import hitokotoDriver from '../API/hitokotoDriver';
+
 const patterManager = hitokotoDriver.patterManager;
 
 import Modal from '../component/Modal';
@@ -111,6 +113,9 @@ class PatternHelperModal extends Component {
           </div>
           <hr/>
           <div className="clearfix">
+            <button>
+              <Link role="exit" to="/managements/patterns/new">添加模式</Link>
+            </button>
             <span className="pull-right">
               <button className="color-basic" role="exit">以后再说</button>
               <button role="exit">确定</button>

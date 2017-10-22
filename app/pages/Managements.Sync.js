@@ -24,11 +24,9 @@ class Sync extends Component {
       isUnmounted: false
     }
   }
-  componentWillReceiveProps(nextProps) {
-    console.log('cwrp')
-  }
+
   componentWillUnmount() {
-    console.log('unmouted')
+
     this.setState({isUnmounted: true})
   }
   componentWillMount() {

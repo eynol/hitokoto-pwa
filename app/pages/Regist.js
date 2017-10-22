@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {Link, withRouter} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import QueueAnim from 'rc-queue-anim';
 
 import here$you$are from '../API/PublicEncrypt';

@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import {withRouter} from 'react-router-dom';
 import QueueAnim from 'rc-queue-anim';
 import Textarea from 'react-textarea-autosize';
 
@@ -159,7 +158,9 @@ class SourceEditor extends Component {
       sid = Number(sid);
       // 找到要修改的来源
       source = patterManager.sources.find(source => source.id === sid);
-      console.log(source)
+      if (process.env.NODE_ENV !== 'production') {
+        console.log(source)
+      }
     }
 
     if (source && typeof source.adapter == 'string') {
@@ -210,4 +211,4 @@ class SourceEditor extends Component {
     );
   }
 }
-export default withRouter(SourceEditor);
+export default SourceEditor;

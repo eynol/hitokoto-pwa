@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import {Link} from 'react-router-dom';
 
 import hitokotoDriver from '../API/hitokotoDriver'
 import httpManager from '../API/httpManager'
@@ -28,13 +27,12 @@ class Backup extends Component {
     httpManager.API_restore().then(res => {
       let backup = res.backup,
         bakObj;
-      console.log(backup);
+
       if (backup) {
         bakObj = this.decode(backup);
 
         patterManager.restoreSources(bakObj.sources);
         hitokotoDriver.restorePatterns(bakObj.patterns);
-        console.log(bakObj);
         showNotification('恢复成功！', 'success')
       } else {
         showNotification('无备份！', 'info')
@@ -78,4 +76,3 @@ class Backup extends Component {
   }
 }
 export default Backup
-// export default About

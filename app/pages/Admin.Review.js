@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
-import {Link, withRouter, Route} from 'react-router-dom';
+
 import QueueAnim from 'rc-queue-anim';
 
 import httpManager from '../API/httpManager';
@@ -31,9 +31,13 @@ class Review extends Component {
     this.regret = this.regret.bind(this);
     this.reject = this.reject.bind(this);
     this.detail = this.detail.bind(this);
+    this.refresh = this.refresh.bind(this);
   }
   componentWillMount() {
     this.getNeedReviewHitokotos(1);
+  }
+  refresh() {
+    this.getNeedReviewHitokotos(this.state.current, this.state.total);
   }
   getNeedReviewHitokotos(page, perpage = 10) {
 
@@ -186,6 +190,11 @@ class Review extends Component {
               key="loading"/>}
           <div className="view">{ListToShow}</div>
         </QueueAnim>
+
+        <div className="align-center">
+          <button onClick={this.refresh}>刷新本页</button>
+        </div>
+
         <Pagination
           current={this.state.current || 1}
           total={this.state.total || 1}
@@ -195,4 +204,4 @@ class Review extends Component {
     )
   }
 }
-export default withRouter(Review)
+export default Review

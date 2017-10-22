@@ -12,6 +12,13 @@ import {render} from 'react-dom';
 import {AppContainer} from 'react-hot-loader';
 import App from './withRedux/App';
 import * as OfflinePluginRuntime from 'offline-plugin/runtime';
+/*
+//与Link标签有问题。
+
+if (process.env.NODE_ENV !== 'production') {
+  const {whyDidYouUpdate} = require('why-did-you-update')
+  whyDidYouUpdate(React)
+}*/
 
 import showNotification from './API/showNotification';
 

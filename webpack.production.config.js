@@ -30,7 +30,8 @@ module.exports = {
   output: {
     path: __dirname + "/build",
     filename: "[name]-[chunkhash].js",
-    chunkFilename: '[chunkhash].js'
+    chunkFilename: '[chunkhash].js',
+    publicPath: 'https://hitokoto.heitaov.cn/'
   },
 
   module: {
@@ -86,7 +87,8 @@ module.exports = {
 
     new webpack.DefinePlugin({'process.env.NODE_ENV': JSON.stringify('production')}),
     new HtmlWebpackPlugin({
-      template: __dirname + "/app/index.tmpl.html"
+      template: __dirname + "/app/index.tmpl.html",
+      favicon: __dirname + '/app/icon.png'
     }),
     new WebpackPwaManifest({
       name: '一言PWA',
@@ -94,7 +96,7 @@ module.exports = {
       description: '一个一言渐进式网页应用!',
       background_color: '#f6f6f6',
       theme_color: "#3a3a3a",
-      publicPath: '/',
+      publicPath: 'https://hitokoto.heitaov.cn/',
       ios: true,
       icons: [
         {
@@ -128,7 +130,6 @@ module.exports = {
     }),
     new webpack.HashedModuleIdsPlugin(),
     new OfflinePlugin({
-      excludes: ['**/*.map'],
       updateStrategy: 'changed',
       autoUpdate: 1000 * 60 * 10,
       ServiceWorker: {

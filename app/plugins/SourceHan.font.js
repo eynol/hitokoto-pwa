@@ -41,7 +41,6 @@ function donwLoadFont() {
     }
 
     var xhr = new XMLHttpRequest();
-    // xhr.open('get', 'http://cdn.heitaov.cn/thumb.jpg', true)
     xhr.open('get', 'https://cdn.heitaov.cn/SourceHanSerifSC-Bold.otf', true)
     xhr.onload = function () {
 

@@ -3,7 +3,7 @@ import PatternManager, {SOURCE_UPDATE_KEYS} from './PatternManager'
 import httpManager from './httpManager'
 import showNotification from './showNotification'
 
-import {PERSE_ADAPTER_SAFE, AdapterValidate, PERSE_ADAPTER} from './AdapterValidate'
+import {PERSE_ADAPTER_SAFE, AdapterValidate, PERSE_ADAPTER, ADAPTER_ORGIN} from './AdapterValidate'
 import offlineWatcher from './Offline'
 import indexedDBManager from './IndexedDBManager'
 const HITOKOTO_KEYS = [
@@ -152,7 +152,7 @@ class HitokotoDriver {
               }
 
               //  失败了 使用离线缓存
-              return indexedDBManager.getHitokoto(source.url);
+              return this.getHitokotoFromIDB(source.url, {type, source});
             })
           })
         } else {

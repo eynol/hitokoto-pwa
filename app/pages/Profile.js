@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Link, withRouter} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 
 import httpManager from '../API/httpManager';
 import $encode from '../API/PublicEncrypt';
@@ -225,5 +225,4 @@ class Profile extends Component {
     )
   }
 }
-export default withRouter(Profile)
-// export default About
+export default Profile

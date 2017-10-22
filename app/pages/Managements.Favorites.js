@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import {Link, withRouter} from 'react-router-dom';
 
 import Task from '../API/Task';
 import showNotification from '../API/showNotification';
@@ -74,13 +73,13 @@ class Favorites extends Component {
       file = new Blob(hitokotos.map(h => {
         return `\n${h.id}
 ${h.hitokoto}
-${h.source}
-由 ${h.author} 创建于
+${h.author} - ${h.source}
+由 ${h.creator} 创建于
 ${h.created_at}\n\n`
       }), {type: 'text/plain'})
     } else if (type == 'json') {
       //
-      file = new Blob([JSON.stringify(hitokotos)], {type: 'application/json'});
+      file = new Blob([JSON.stringify(hitokotos, null, 2)], {type: 'application/json'});
     }
 
     //插入页面中
@@ -202,4 +201,4 @@ ${h.created_at}\n\n`
     )
   }
 }
-export default withRouter(Favorites)
+export default Favorites

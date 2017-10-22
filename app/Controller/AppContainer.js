@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import QueueAnim from 'rc-queue-anim';
 import style from '../component/HitokotoLayout.css';
-import {HashRouter as Router, withRouter, Route, Redirect} from 'react-router-dom';
+import {withRouter, Route, Redirect} from 'react-router-dom';
 
 import Task from '../API/Task';
 import showNotification from '../API/showNotification';
@@ -18,6 +18,7 @@ import Explore from '../pages/Explore'
 import Admin from '../pages/Admin'
 import Review from '../pages/Admin.Review'
 import Broadcast from '../pages/Admin.Broadcast'
+import License from '../pages/License'
 
 import Login from '../containers/Login'
 import Regist from '../containers/Regist'
@@ -155,6 +156,11 @@ const ROUTES = [
     name: '工具页面',
     reload: true
   }, {
+    to: /^\/license/,
+    component: License,
+    name: '开源协议页面',
+    reload: true
+  }, {
     to: /\w*/,
     component: NotFound,
     name: '404页面',
@@ -168,9 +174,10 @@ offlineWatcher.whenOffline(() => showNotification('检测到网络已离线', 'e
 class AppContainer extends Component {
   constructor(props) {
     super(props)
+    this.getChildren.bind(this);
   }
   getChildren(props) {
-    const {location} = props;
+    const {location, history} = props;
     const matched = ROUTES.map(item => {
       if (item.to.test(location.pathname)) {
         return item;
@@ -210,7 +217,11 @@ class AppContainer extends Component {
           必须要等到动画结束后等待一段时间，之前的组件才会消失。
           如果在动画结束后，马上路由返回，先前的组件就会反向出现。
          只好每次都重新渲染*/}
-          <Child key={matched.name} rinfo={routeInfo}/>
+          <Child
+            key={matched.name}
+            rinfo={routeInfo}
+            location={location}
+            history={history}/>
         </QueueAnim>
         <Regist/>
         <Login/>
@@ -220,7 +231,7 @@ class AppContainer extends Component {
     );
   }
   render() {
-    return (<Route render={this.getChildren}/>);
+    return (<Route key="appcontainer" render={this.getChildren}/>);
   }
 }
 

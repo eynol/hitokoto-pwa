@@ -7,11 +7,14 @@ export const SOURCES = [
   {
     id: 1001,
     name: 'hitokoto.cn',
-    url: 'http://api.hitokoto.cn/',
+    url: 'https://sslapi.hitokoto.cn/',
     adapter: `function(resp){
-      let source = resp.from;
+      var source = resp.from;
+      var category = resp.type;
       delete resp.from;
+      delete resp.category;
       resp.source = source;
+      resp.category = category;
       return resp;
     }`,
     online: true,
@@ -24,12 +27,12 @@ export const SOURCES = [
     adapter: `function(resp){
         var id = String(resp.id).slice(0,9);
         return { 
-          type:resp.catname,
+          category: resp.catname,
           creator:resp.author,
-          created_at:resp.date,
-          id:id,
-          hitokoto:resp.text,
-          source:resp.source
+          created_at: resp.date,
+          id: id,
+          hitokoto: resp.text,
+          source: resp.source
         }
       }`,
     online: true,
@@ -41,13 +44,13 @@ export const SOURCES = [
     url: 'https://hitoapi.cc/sp/',
     adapter: `function(resp){
       return {
-       type:resp.catname,
-       creator:
-       resp.author,
-       created_at:resp.date,
-       id:resp.id,
-       hitokoto:resp.text,
-       source:resp.source}
+       category: resp.catname,
+       creator: resp.author,
+       created_at: resp.date,
+       id: resp.id,
+       hitokoto: resp.text,
+       source: resp.source
+      }
     }`,
     online: true,
     local: true,
@@ -59,12 +62,12 @@ export const SOURCES = [
     adapter: `function (resp){ 
      var id = String(resp.id).slice(0,6);
     return {
-      hitokoto:resp.hitokoto,
-      type: resp.cat,
+      hitokoto: resp.hitokoto,
+      category: resp.cat,
       id: id,
       source: resp.source,
-      creator:"",
-      created_at:resp.addtime
+      creator: "",
+      created_at: resp.addtime
       }
     }`,
     online: true,
@@ -72,6 +75,31 @@ export const SOURCES = [
     count: 0
   }
 ];
+
+export let SITE_DEFAULT = [
+  {
+    id: 1009,
+    name: '松浦弥太郎的一百个基本',
+    url: 'https://hitokoto.heitaov.cn/cors/桃码陶/100个基本',
+    adapter: 0,
+    online: true,
+    local: true,
+    count: 0
+  }
+]
+export const SITE_ALL = [
+  {
+    id: 1010,
+    name: '全站随机',
+    url: 'https://hitokoto.heitaov.cn/cors',
+    adapter: 0,
+    online: true,
+    local: true,
+    count: 0
+  }
+]
+
+let COMBINED_SOURCES = SOURCES.concat(SITE_DEFAULT, SITE_ALL);
 const SOURCES_NAME = PREFIX + 'sources';
 //    工具函数开始 ///////////////////////////////////////////////////
 function $getVersion() {
@@ -119,8 +147,9 @@ export default class SourceManager {
     //2.获取本地存储的所有的hikotoko来源,_Sources，如果本地没有，将SOURCE保存到本地并作为结果返回
     this.sources = $getSources();
     if (!this.sources) {
-      $setSources(SOURCES);
-      this.sources = SOURCES;
+
+      $setSources(COMBINED_SOURCES);
+      this.sources = COMBINED_SOURCES;
     }
 
     /**
@@ -143,7 +172,7 @@ export default class SourceManager {
       this.sources.forEach(function (item) {
         urlMap[item.url] = true;
       });
-      SOURCES.forEach((src) => {
+      COMBINED_SOURCES.forEach((src) => {
         if (!urlMap[src.url]) {
           //  url不存在,添加至_sources
           this.sources.push(src);
@@ -193,7 +222,7 @@ export default class SourceManager {
   newSourceWithUsernameAndCol(username, collection, isCros, uid, cid) {
     let url,
       source,
-      name = '' + username + collection;
+      name = '' + username + '-' + collection;
     if (isCros) {
       url = this.getUrlOfUserCol(username, collection, true);
     } else {

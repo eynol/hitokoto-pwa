@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux'
-import {withRouter} from 'react-router-dom';
 
 import HitokotoPreview from '../pages/HitokotoPreview'
 
@@ -14,4 +13,4 @@ const mapActionToProps = (dispacth) => {
     cleanPreview: (ntype) => dispacth(cleanPreview(ntype))
   })
 }
-export default withRouter(connect(mapStoreToProps, mapActionToProps)(HitokotoPreview))
+export default connect(mapStoreToProps, mapActionToProps)(HitokotoPreview)

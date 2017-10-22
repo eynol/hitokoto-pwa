@@ -58,7 +58,6 @@ class HitokotoEditor extends Component {
           state[key + 'Choices'] = res.slice(0, 5);
           return state;
         })
-        console.log(res);
       })
     }
   }
@@ -79,7 +78,7 @@ class HitokotoEditor extends Component {
     let hitokoto = this.getHitokoto();
     if (hitokoto) {
 
-      this.props.preview(hitokoto, 'preview');
+      this.props.handlePreview(hitokoto, 'preview');
       this.props.history.push(this.props.location.pathname + '/preview')
     }
   }
@@ -161,10 +160,14 @@ class HitokotoEditor extends Component {
     let hitokoto = this.props.within;
 
     if (thisIsNew) {
-      hitokoto = {
-        category: '其他',
-        state: 'public'
-      };
+      if (this.props.preview) {
+        hitokoto = this.props.preview;
+      } else {
+        hitokoto = {
+          category: '其他',
+          state: 'public'
+        };
+      }
     } else if (!thisIsNew && !hitokoto) {
       return (
         <FullPageCard
@@ -301,7 +304,7 @@ class HitokotoEditor extends Component {
 
 HitokotoEditor.propTypes = {
   rinfo: PropTypes.array.isRequired,
-  preview: PropTypes.func.isRequired,
+  handlePreview: PropTypes.func.isRequired,
   refreshHitokotoList: PropTypes.func.isRequired
 }
 

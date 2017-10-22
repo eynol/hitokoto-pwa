@@ -52,6 +52,7 @@
 .userHitokoto {
     white-space: pre-line;
     letter-spacing: .07em;
+    line-height: 1.7;
 }
 
 @media screen and (max-width:768px) {

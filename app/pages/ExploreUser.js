@@ -86,4 +86,3 @@ class ExploreUser extends Component {
   }
 }
 export default withRouter(ExploreUser)
-// export default About

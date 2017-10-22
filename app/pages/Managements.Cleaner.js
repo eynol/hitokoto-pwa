@@ -70,13 +70,13 @@ class Cleaner extends Component {
         return new Blob(hitokotos.map(h => {
           return `\n${h.id}
 ${h.hitokoto}
-${h.source}
-由 ${h.author} 创建于
+${h.author} - ${h.source}
+由 ${h.creator} 创建于
 ${h.created_at}\n\n`
         }), {type: 'text/plain'})
       } else if (type == 'json') {
         //
-        return new Blob([JSON.stringify(hitokotos)], {type: 'application/json'});
+        return new Blob([JSON.stringify(hitokotos, null, 2)], {type: 'application/json'});
       }
     }).then(file => {
       let a = document.createElement('a');

@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import {withRouter} from 'react-router-dom';
 import FullPageCard from '../component/FullPageCard'
 
 import showNotification from '../API/showNotification';
@@ -330,4 +329,4 @@ class PatternEditor extends Component {
   }
 }
 
-export default withRouter(PatternEditor);
+export default PatternEditor;

@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 
-import {Link, withRouter, Route, Switch} from 'react-router-dom';
+import {Link, Route, Switch} from 'react-router-dom';
 import FullPageCard from '../component/FullPageCard'
 import QueueAnim from 'rc-queue-anim';
 
@@ -35,6 +35,10 @@ class Explore extends Component {
 
     this.addToFavorite = this.addToFavorite.bind(this);
     this.removeFromRavorite = this.removeFromRavorite.bind(this);
+
+    this.getExploreComp = this.getExploreComp.bind(this);
+    this.getExploreUserComp = this.getExploreUserComp.bind(this);
+    this.getExploreUserCollectComp = this.getExploreUserCollectComp.bind(this);
   }
   componentWillMount() {
     this.getAllPublicHitokotos();
@@ -119,98 +123,96 @@ class Explore extends Component {
       })
     })
   }
+  getExploreComp() {
+    return (
+      <div className='hitokoto-list'>
+        <QueueAnim
+          ease='easeOutQuart'
+          animConfig={[
+          {
+            opacity: [1, 0]
+          }, {
+            left: '0',
+            right: '0',
+            position: 'absolute',
+            opacity: [1, 0]
+          }
+        ]}>
+          {this.state.inited
+            ? null
+            : <Loading
+              error={this.state.error}
+              retry={() => this.getAllPublicHitokotos(this.state.currentPage)}
+              key="loading"/>}
+          <div className="view">{this.state.publicHitokotos.map((hito, index) => (
+              <PublicHitokoto data={hito} key={hito.id}>
+                {this.state.favorites[index]
+                  ? (
+                    <a href="javascript:">
+                      <i
+                        className="iconfont icon-favorfill"
+                        title="已收藏"
+                        data-index={index}
+                        onClick={this.removeFromRavorite}></i>
+                    </a>
+                  )
+                  : (
+                    <a href="javascript:">
+                      <i
+                        className="iconfont icon-favor"
+                        title="点击加入收藏"
+                        data-index={index}
+                        onClick={this.addToFavorite}></i>
+                    </a>
+                  )}
+              </PublicHitokoto>
+            ))}</div>
+        </QueueAnim>
+        <Pagination
+          current={this.state.currentPage || 1}
+          total={this.state.totalPages || 1}
+          limit={10}
+          func={this.getAllPublicHitokotos}></Pagination>
+      </div>
+    )
+  }
+  getExploreUserComp({
+    match: {
+      params: {
+        user
+      }
+    }
+  }) {
+
+    return (<ExploreUser userName={user} uid={this.uidByName(user) || window.trickyUid}/>)
+
+  }
+  getExploreUserCollectComp({
+    match: {
+      params: {
+        user,
+        collection
+      }
+    }
+  }) {
+    return (<ExploreUserCollection
+      collectionName={collection}
+      uid={this.uidByName(user) || window.trickyUid}/>)
+  }
   render() {
-    let {path, location} = this.props;
+
     return (
       <FullPageCard cardname="探索">
         <Switch>
-          <Route
-            exact
-            path="/explore"
-            render={() => {
-            return (
-              <div className='hitokoto-list'>
-                <QueueAnim
-                  ease='easeOutQuart'
-                  animConfig={[
-                  {
-                    opacity: [1, 0]
-                  }, {
-                    left: '0',
-                    right: '0',
-                    position: 'absolute',
-                    opacity: [1, 0]
-                  }
-                ]}>
-                  {this.state.inited
-                    ? null
-                    : <Loading
-                      error={this.state.error}
-                      retry={() => this.getAllPublicHitokotos(this.state.currentPage)}
-                      key="loading"/>}
-                  <div className="view">{this.state.publicHitokotos.map((hito, index) => (
-                      <PublicHitokoto data={hito} key={hito.id}>
-                        {this.state.favorites[index]
-                          ? (
-                            <a href="javascript:">
-                              <i
-                                className="iconfont icon-favorfill"
-                                title="已收藏"
-                                data-index={index}
-                                onClick={this.removeFromRavorite}></i>
-                            </a>
-                          )
-                          : (
-                            <a href="javascript:">
-                              <i
-                                className="iconfont icon-favor"
-                                title="点击加入收藏"
-                                data-index={index}
-                                onClick={this.addToFavorite}></i>
-                            </a>
-                          )}
-                      </PublicHitokoto>
-                    ))}</div>
-                </QueueAnim>
-                <Pagination
-                  current={this.state.currentPage || 1}
-                  total={this.state.totalPages || 1}
-                  limit={10}
-                  func={this.getAllPublicHitokotos}></Pagination>
-              </div>
-            )
-          }}/>
-          <Route
-            exact
-            path="/explore/:user"
-            render={({
-            match: {
-              params: {
-                user
-              }
-            }
-          }) => {
-            return (<ExploreUser userName={user} uid={this.uidByName(user) || window.trickyUid}/>)
-          }}/>
+          <Route exact path="/explore" render={this.getExploreComp}/>
+          <Route exact path="/explore/:user" render={this.getExploreUserComp}/>
           <Route
             exact
             path="/explore/:user/:collection"
-            render={({
-            match: {
-              params: {
-                user,
-                collection
-              }
-            }
-          }) => {
-            return (<ExploreUserCollection
-              collectionName={collection}
-              uid={this.uidByName(user) || window.trickyUid}/>)
-          }}/>
+            render={this.getExploreUserCollectComp}/>
         </Switch>
       </FullPageCard>
     )
   }
 }
-export default withRouter(Explore)
-// export default About
+export default Explore
