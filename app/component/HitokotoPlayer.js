@@ -31,6 +31,8 @@ class HitokotoPlayer extends Component {
 
     this.showInfo = this.showInfo.bind(this);
     this.hideInfo = this.hideInfo.bind(this);
+
+    this.whenSpaceKeyPressed = this.whenSpaceKeyPressed.bind(this);
   }
   componentWillMount() {
     let hitokoto = this.props.hitokoto;
@@ -43,6 +45,11 @@ class HitokotoPlayer extends Component {
         }
       })
     }
+
+    window.addEventListener('keydown', this.whenSpaceKeyPressed, true);
+  }
+  componentWillUnmount() {
+    window.removeEventListener('keydown', this.whenSpaceKeyPressed, true);
   }
   componentWillReceiveProps(nextProps) {
     let hitokoto = nextProps.hitokoto;
@@ -58,6 +65,17 @@ class HitokotoPlayer extends Component {
           this.setState({favor: hito.hitokoto})
         }
       })
+    }
+  }
+  whenSpaceKeyPressed(evt) {
+    if (evt.code == "Space" || evt.keyCode == 32) {
+      let {processing, callbacks: {
+          handleNext
+        }} = this.props;
+
+      if (!processing) {
+        handleNext()
+      }
     }
   }
   addToFavorite() {
@@ -194,6 +212,7 @@ class HitokotoPlayer extends Component {
       (layoutHorizon
         ? <LayoutHorizon
             key="player-horizon"
+            onKeyPress={this.whenSpaceKeyPressed}
             overflowhide={this.props.panel === PANEL_OPEN + 'nav'}
             animateConfig={direction == 'next'
             ? ANIMATE_CONFIG_NEXT
@@ -203,6 +222,7 @@ class HitokotoPlayer extends Component {
             actions={Actions}></LayoutHorizon>
         : <LayoutVertical
           key="player-vertical"
+          onKeyPress={this.whenSpaceKeyPressed}
           animateConfig={direction == 'next'
           ? ANIMATE_CONFIG_NEXT
           : ANIMATE_CONFIG_LAST}
