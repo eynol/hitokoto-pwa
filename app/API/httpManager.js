@@ -2,6 +2,9 @@ import broadcastManager from './broadcastManager';
 import indexedDBManager from './IndexedDBManager';
 import showNotification from '../API/showNotification';
 
+import { userLogout } from '../actions';
+import store from '../store';
+
 const TOKEN_NAME = 'hitokotoToken'
 
 function $getLSToken() {
@@ -221,6 +224,9 @@ class HTTPManager {
           let message = json.message;
           if (message == '授权过期，请重新登录') {
             //重新登录;
+            store.dispatch(userLogout());
+            alert('授权已过期，需要重新登录');
+            window.location = '/';
           }
           return Promise.reject(message);
         } else {
@@ -248,7 +254,9 @@ class HTTPManager {
 
     //  判断next
     if (type == 'next') {
-      let query = this.parseQeuery({seed: source.count});
+      let query = this.parseQeuery({
+        seed: source.count
+      });
 
       if (/\?/.test(url)) {
         //不可能为0
@@ -276,8 +284,8 @@ class HTTPManager {
           add(prefix, item);
         } else {
           this._buildPrams(prefix + "[" + (typeof item === "object"
-            ? index
-            : "") + "]", item, traditional, add);
+              ? index
+              : "") + "]", item, traditional, add);
         }
       })
     } else if (!traditional && typeof obj === 'object') {
@@ -356,10 +364,10 @@ class HTTPManager {
     }
     let form = new FormData();
     let add = (key, value) => {
-      if (~ ['number', 'string', 'boolean'].indexOf(typeof value)) {
+      if (~['number', 'string', 'boolean'].indexOf(typeof value)) {
         form.append(key, String(value));
 
-      } else if (~ (['[object Blob]', '[object File]'].indexOf(toString.call(obj)))) {
+      } else if (~(['[object Blob]', '[object File]'].indexOf(toString.call(obj)))) {
         form.append(key, value, value.name || '' + Date.now())
 
       } else {
@@ -386,38 +394,38 @@ class HTTPManager {
       _body;
 
     method = method.toLowerCase();
-    if (~ ['get', 'head'].indexOf(method)) {
+    if (~['get', 'head'].indexOf(method)) {
       _query = this.parseQeuery(data);
-    } else if (~ ['post', 'put', 'delete'].indexOf(method)) {
+    } else if (~['post', 'put', 'delete'].indexOf(method)) {
       _body = this.parseFormData(data);
 
     }
     return fetch(url + (_query
-      ? '?' + _query
-      : ''), {
-      method: method,
-      body: _body
-    }).then(this.responseHeaderResolver).then(this.parseToJSON).catch(NOTIFY_ERROR)
+        ? '?' + _query
+        : ''), {
+        method: method,
+        body: _body
+      }).then(this.responseHeaderResolver).then(this.parseToJSON).catch(NOTIFY_ERROR)
   }
   fetchAuthJSON(method, url, data) {
     let _query,
       _body;
 
     method = method.toLowerCase();
-    if (~ ['get', 'head'].indexOf(method)) {
+    if (~['get', 'head'].indexOf(method)) {
       _query = this.parseQeuery(data);
-    } else if (~ ['post', 'put', 'delete'].indexOf(method)) {
+    } else if (~['post', 'put', 'delete'].indexOf(method)) {
       _body = this.parseFormData(data);
     }
     return fetch(url + (_query
-      ? '?' + _query
-      : ''), {
-      method: method,
-      body: _body,
-      headers: {
-        'X-API-TOKEN': this.token
-      }
-    }).then(this.responseHeaderResolver).then(this.parseToJSON).catch(NOTIFY_ERROR)
+        ? '?' + _query
+        : ''), {
+        method: method,
+        body: _body,
+        headers: {
+          'X-API-TOKEN': this.token
+        }
+      }).then(this.responseHeaderResolver).then(this.parseToJSON).catch(NOTIFY_ERROR)
   }
   API_sync(url, data) {
     if (!data) {
@@ -454,18 +462,27 @@ class HTTPManager {
     return this.fetchJSON('post', '/api/regist', formData)
   }
   API_getAllPublicHitokotos(page = 1, perpage = 20) {
-    return this.fetchJSON('get', '/api/explore', {page, perpage})
+    return this.fetchJSON('get', '/api/explore', {
+      page,
+      perpage
+    })
   }
   API_getPublicUserDetail(uid) {
     return this.fetchJSON('get', '/api/explore/users/' + uid)
   }
   API_getPublicUserHitokotos(uid, collection, page, perpage) {
-    return this.fetchJSON('get', '/api/explore/users/' + uid + '/' + collection, {page, perpage})
+    return this.fetchJSON('get', '/api/explore/users/' + uid + '/' + collection, {
+      page,
+      perpage
+    })
   }
 
   //  Need Auth Token
   API_updatePassword(oldpass, newpass) {
-    return this.fetchAuthJSON('post', '/api/password', {oldpass, newpass})
+    return this.fetchAuthJSON('post', '/api/password', {
+      oldpass,
+      newpass
+    })
   }
   API_getUserEmail() {
     return this.fetchAuthJSON('get', '/api/useremail')
@@ -474,13 +491,20 @@ class HTTPManager {
     return this.fetchAuthJSON('get', '/api/oldemailcode')
   }
   API_verifyOldEmailCode(code) {
-    return this.fetchAuthJSON('post', '/api/oldemailcode', {code})
+    return this.fetchAuthJSON('post', '/api/oldemailcode', {
+      code
+    })
   }
   API_sendNewEmailCode(email) {
-    return this.fetchAuthJSON('get', '/api/newemailcode', {email})
+    return this.fetchAuthJSON('get', '/api/newemailcode', {
+      email
+    })
   }
   API_verifyNewEmailCode(email, code) {
-    return this.fetchAuthJSON('post', '/api/newemailcode', {email, code})
+    return this.fetchAuthJSON('post', '/api/newemailcode', {
+      email,
+      code
+    })
   }
 
   API_myCollections() {
@@ -497,7 +521,10 @@ class HTTPManager {
   }
 
   API_viewCollection(name, page, perpage) {
-    return this.fetchAuthJSON('get', '/api/collections/' + name, {page, perpage})
+    return this.fetchAuthJSON('get', '/api/collections/' + name, {
+      page,
+      perpage
+    })
   }
 
   API_newHitokoto(name, formData) {
@@ -518,10 +545,16 @@ class HTTPManager {
 
   //Admin API
   API_Admin_getNeedReviewHitokotos(page, perpage) {
-    return this.fetchAuthJSON('get', '/api/admin/hitokotos/review', {page, perpage})
+    return this.fetchAuthJSON('get', '/api/admin/hitokotos/review', {
+      page,
+      perpage
+    })
   }
   API_Admin_changeHitokotoState(hid, state) {
-    return this.fetchAuthJSON('post', '/api/admin/hitokotos/review', {hid, state})
+    return this.fetchAuthJSON('post', '/api/admin/hitokotos/review', {
+      hid,
+      state
+    })
   }
   //broadcast
   API_Admin_putBroadcast(data) {

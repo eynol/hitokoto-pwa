@@ -1,5 +1,3 @@
-import httpManager from '../API/httpManager'
-
 ///   Panel (login ,regist,layoutSetting);
 export const PANEL_OPEN = 'panel open';
 export const PANEL_HIDE = 'panel hide';
@@ -17,7 +15,6 @@ export const USER_UPDATE_USERNICKNAME = 'update user nickname';
 export const userLogin = (ret) => ({type: USER_LOGIN, value: ret})
 
 export const userLogout = () => dispatch => {
-  httpManager.updateToken(''); //清除tokon
   return Promise.resolve({type: USER_LOGOUT}).then(action => dispatch(action))
 }
 export const updateNickname = (nickname) => ({type: USER_UPDATE_USERNICKNAME, value: nickname})
