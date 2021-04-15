@@ -1,4 +1,4 @@
-import SourceManager, {SOURCES, SITE_DEFAULT} from './SourceManager';
+import SourceManager, { SOURCES, SITE_DEFAULT } from './SourceManager';
 
 const PREFIX = 'hikotoko';
 
@@ -8,12 +8,13 @@ const VERSION_NAME = PREFIX + 'patterns_version';
 export const PATTERN_UPDATE_KEYS = ['name', 'interval', 'type'];
 export const PATTERNS = [
   {
-    id: 100100,
-    name: '网站默认',
-    interval: 0,
-    sources: SITE_DEFAULT,
-    type: 'next',
+    id: 100124,
+    name: '第三方API定时刷新',
+    interval: 6,
+    sources: SOURCES,
+    type: 'random',
     default: true
+
   }, {
     id: 100123,
     name: '第三方API',
@@ -22,11 +23,11 @@ export const PATTERNS = [
     type: 'random',
     default: false
   }, {
-    id: 100124,
-    name: '第三方API定时刷新',
-    interval: 6,
-    sources: SOURCES,
-    type: 'random',
+    id: 100100,
+    name: '网站默认',
+    interval: 0,
+    sources: SITE_DEFAULT,
+    type: 'next',
     default: false
   }
 ];

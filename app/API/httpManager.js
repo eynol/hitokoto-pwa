@@ -96,31 +96,6 @@ class HTTPManager {
 
     this.initQ = []; //  暂存Promise未polyfill完成前的请求；
     this.token = $getLSToken() || '';
-    //promise polyfill
-    /* let _that = this;
-
-    try {
-      var p = Promise.resolve(2);
-
-      _that.inited = true;
-      _that.afterInited();
-    } catch (e) {
-      console.log('[API.hitokoto]:', e);
-      if (/promise/i.test(e.message)) {
-        console.log('不支持Promise');
-        //load promise polyfill
-        var s = document.createElement('script');
-        s.onload = function () {
-          _that.inited = true;
-          _that.afterInited();
-          console.log('injected handler has been called')
-        }
-        s.src = 'http://cdn.heitaov.cn/promise.min.js';
-        document.body.appendChild(s);
-      }
-
-    }
-*/
     this.responseHeaderResolver = this.responseHeaderResolver.bind(this);
   }
   /**

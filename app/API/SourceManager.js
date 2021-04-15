@@ -7,7 +7,7 @@ export const SOURCES = [
   {
     id: 1001,
     name: 'hitokoto.cn',
-    url: 'https://sslapi.hitokoto.cn/',
+    url: 'https://v1.hitokoto.cn/',
     adapter: `function(resp){
       var source = resp.from;
       var category = resp.type;
@@ -23,7 +23,7 @@ export const SOURCES = [
   }, {
     id: 1002,
     name: 'hitoapi.cc',
-    url: 'https://hitoapi.cc/s/',
+    url: 'https://hitoapi.cc/s',
     adapter: `function(resp){
         var id = String(resp.id).slice(0,9);
         return { 
@@ -41,7 +41,7 @@ export const SOURCES = [
   }, {
     id: 1005,
     name: 'hitoapi.cc',
-    url: 'https://hitoapi.cc/sp/',
+    url: 'https://hitoapi.cc/sp',
     adapter: `function(resp){
       return {
        category: resp.catname,
@@ -80,7 +80,7 @@ export let SITE_DEFAULT = [
   {
     id: 1009,
     name: '松浦弥太郎的一百个基本',
-    url: 'https://hitokoto.heitaov.cn/cors/桃码陶/100个基本',
+    url: location.origin + '/cors/桃码陶/100个基本',
     adapter: 0,
     online: true,
     local: true,
@@ -91,7 +91,7 @@ export const SITE_ALL = [
   {
     id: 1010,
     name: '全站随机',
-    url: 'https://hitokoto.heitaov.cn/cors',
+    url: location.origin + '/cors',
     adapter: 0,
     online: true,
     local: true,
@@ -258,7 +258,7 @@ export default class SourceManager {
         return false;
       }
     }));
-    if (~ index) {
+    if (~index) {
       return true;
     }
 

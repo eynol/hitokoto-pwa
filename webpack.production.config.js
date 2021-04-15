@@ -31,7 +31,7 @@ module.exports = {
     path: __dirname + "/build",
     filename: "[name]-[chunkhash].js",
     chunkFilename: '[chunkhash].js',
-    publicPath: 'https://hitokoto.heitaov.cn/'
+    publicPath: '/'
   },
 
   module: {
@@ -96,7 +96,7 @@ module.exports = {
       description: '一个一言渐进式网页应用!',
       background_color: '#f6f6f6',
       theme_color: "#3a3a3a",
-      publicPath: 'https://hitokoto.heitaov.cn/',
+      publicPath: '/',
       ios: true,
       icons: [
         {

@@ -41,7 +41,7 @@ function donwLoadFont() {
     }
 
     var xhr = new XMLHttpRequest();
-    xhr.open('get', 'https://cdn.heitaov.cn/SourceHanSerifSC-Bold.otf', true)
+    xhr.open('get', 'https://pluscdn.heitaov.cn/SourceHanSerifSC-Bold.otf', true)
     xhr.onload = function () {
 
       downloadTasker.success('思源宋体下载完成！');
