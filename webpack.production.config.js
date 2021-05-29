@@ -5,7 +5,7 @@ var Visualizer = require('webpack-visualizer-plugin');
 var WebpackPwaManifest = require('webpack-pwa-manifest')
 var OfflinePlugin = require('offline-plugin');
 var path = require('path');
-
+var publicPath = process.env.PUBLIC_URL
 module.exports = {
   entry: {
     vender: [
@@ -31,7 +31,7 @@ module.exports = {
     path: __dirname + "/build",
     filename: "[name]-[chunkhash].js",
     chunkFilename: '[chunkhash].js',
-    publicPath: '/'
+    publicPath: publicPath || '/'
   },
 
   module: {
@@ -85,7 +85,7 @@ module.exports = {
       }
     }),
 
-    new webpack.DefinePlugin({'process.env.NODE_ENV': JSON.stringify('production')}),
+    new webpack.DefinePlugin({ 'process.env.NODE_ENV': JSON.stringify('production') }),
     new HtmlWebpackPlugin({
       template: __dirname + "/app/index.tmpl.html",
       favicon: __dirname + '/app/icon.png'
@@ -96,7 +96,7 @@ module.exports = {
       description: '一个一言渐进式网页应用!',
       background_color: '#f6f6f6',
       theme_color: "#3a3a3a",
-      publicPath: '/',
+      publicPath: publicPath || '/',
       ios: true,
       icons: [
         {
@@ -134,9 +134,9 @@ module.exports = {
       autoUpdate: 1000 * 60 * 10,
       ServiceWorker: {
         events: true,
-        navigateFallbackURL: '/'
+        navigateFallbackURL: publicPath || '/'
       }
     }),
-    new Visualizer({filename: './statistics-production.html'})
+    new Visualizer({ filename: './statistics-production.html' })
   ]
 }
