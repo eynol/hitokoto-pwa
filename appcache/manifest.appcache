@@ -1,0 +1,30 @@
+CACHE MANIFEST
+#ver:5/29/2021, 6:02:44 PM
+#plugin:4.9.1
+
+CACHE:
+/hitokoto-pwa/fonts/iconfont.eot
+/hitokoto-pwa/fonts/iconfont.ttf
+/hitokoto-pwa/fonts/iconfont.svg
+/hitokoto-pwa/vender-8621b0beb2a9f5a48c1d.js
+/hitokoto-pwa/bundle-01ada2dc9c1ec82174ba.js
+/hitokoto-pwa/manifest-e150dab243eae80e14c6.js
+/hitokoto-pwa/bundle-01ada2dc9c1ec82174ba.css
+/hitokoto-pwa/icon.png
+/hitokoto-pwa/
+/hitokoto-pwa/manifest.ed23e5b8c09fcb5a594a06e9abf88edd.json
+/hitokoto-pwa/icons/android/icon_512x512.5e3e558909d8b63b64c4d35b7858dc3a.png
+/hitokoto-pwa/icons/android/icon_192x192.189e0ce5bfecff57463bbba512ef559e.png
+/hitokoto-pwa/icons/android/icon_144x144.8818dd8e4735fbc025f9812b48e86dfb.png
+/hitokoto-pwa/icons/android/icon_96x96.4cca67943cf8f6b658110761a8a607a4.png
+/hitokoto-pwa/icons/android/icon_72x72.a0b235ff3e76123959a710c72f466eac.png
+/hitokoto-pwa/icons/android/icon_48x48.da094868a98b3ce5ba1b30c6e748ec32.png
+/hitokoto-pwa/icons/android/icon_36x36.369fb5f40a2ad01b8498680ba553e7d9.png
+/hitokoto-pwa/icons/ios/icon_512x512.5e3e558909d8b63b64c4d35b7858dc3a.png
+/hitokoto-pwa/icons/ios/icon_180x180.5fb77be9fdf3421c2ddecb7e0c17c5f5.png
+/hitokoto-pwa/icons/ios/icon_167x167.4f9119d68722251861e024eb3c6645f3.png
+/hitokoto-pwa/icons/ios/icon_152x152.7b8d962730f19e21f0af8ebe23c40ef7.png
+/hitokoto-pwa/icons/ios/icon_120x120.0cc1a3cd4c3ececf84541447242633bc.png
+
+NETWORK:
+*

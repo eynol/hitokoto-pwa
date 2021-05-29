@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0,user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>一·言</title>
+  <meta name="og:title" property="og:title" content="一言">
+  <meta name="keyword" content="一言,hitokoto,pwa,ヒトコト" />
+  <meta name="description" content="简单来说，一言（ヒトコト）指的是就是一句话，可以是动漫中的台词，可以是小说中的语句，也可以是网络上的各种小段子。或是感动，或是开心，又或是单纯的回忆，来到这里，留下你所喜欢的那一句句话，与大家分享，这就是一言存在的目的。">
+  <meta property="og:description" content="简单来说，一言（ヒトコト）指的是就是一句话，可以是动漫中的台词，可以是小说中的语句，也可以是网络上的各种小段子。或是感动，或是开心，又或是单纯的回忆，来到这里，留下你所喜欢的那一句句话，与大家分享，这就是一言存在的目的。">
+
+  <style>
+    html {
+      box-sizing: border-box;
+      -ms-text-size-adjust: 100%;
+      -webkit-text-size-adjust: 100%;
+      height: 100%;
+      width: 100%;
+      display: block;
+    }
+
+    *,
+    *:before,
+    *:after {
+      box-sizing: inherit;
+    }
+
+    body {
+      display: block;
+      margin: 0;
+      scroll-behavior: smooth;
+      font-family: "PingFang SC", helvetica, "游ゴシック体", "Noto Sans CJK", "Source Han Sans", 'Hiragino Sans GB', 'Microsoft Yahei Light', 'Microsoft YaHei', 'WenQuanYi Micro Hei', "Microsoft Yahei", lucida, sans-serif;
+      height: 100%;
+      width: 100%;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    p,
+    ul {
+      margin: 0;
+      padding: 0;
+    }
+
+    a {
+      color: #444;
+    }
+
+    hr {
+      /* border:1px solid #444; */
+      border: none;
+      outline: none;
+    }
+
+    hr::after {
+      content: '';
+      margin: 5px 0;
+      display: block;
+      height: 1px;
+      width: inherit;
+      background-color: #e0e0e0;
+    }
+
+   
+    #root {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+  <style type='text/css'>
+    @-webkit-keyframes predelay {
+      0% {
+        opacity: 0;
+      }
+
+      100% {
+        opacity: 1;
+      }
+    }
+
+    @keyframes predelay {
+      0% {
+        opacity: 0;
+      }
+
+      100% {
+        opacity: 1;
+      }
+    }
+
+    #preshow {
+      position: absolute;
+      z-index: -1;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      margin: auto;
+      width: 300px;
+      height: 100px;
+      text-align: center;
+      opacity: 0;
+      animation: predelay .3s ease-out 1s forwards;
+    }
+
+    #preshow-loading {
+      margin-top: 40px;
+    }
+
+    .content {
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    @-webkit-keyframes rotate_pacman_half_up {
+      0% {
+        -webkit-transform: rotate(270deg);
+        transform: rotate(270deg);
+      }
+
+      50% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+      }
+
+      100% {
+        -webkit-transform: rotate(270deg);
+        transform: rotate(270deg);
+      }
+    }
+
+    @keyframes rotate_pacman_half_up {
+      0% {
+        -webkit-transform: rotate(270deg);
+        transform: rotate(270deg);
+      }
+
+      50% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+      }
+
+      100% {
+        -webkit-transform: rotate(270deg);
+        transform: rotate(270deg);
+      }
+    }
+
+    @-webkit-keyframes rotate_pacman_half_down {
+      0% {
+        -webkit-transform: rotate(90deg);
+        transform: rotate(90deg);
+      }
+
+      50% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+      }
+
+      100% {
+        -webkit-transform: rotate(90deg);
+        transform: rotate(90deg);
+      }
+    }
+
+    @keyframes rotate_pacman_half_down {
+      0% {
+        -webkit-transform: rotate(90deg);
+        transform: rotate(90deg);
+      }
+
+      50% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+      }
+
+      100% {
+        -webkit-transform: rotate(90deg);
+        transform: rotate(90deg);
+      }
+    }
+
+    @-webkit-keyframes pacman-balls {
+      75% {
+        opacity: 0.7;
+      }
+
+      100% {
+        -webkit-transform: translate(-100px, -6.25px);
+        transform: translate(-100px, -6.25px);
+      }
+    }
+
+    @keyframes pacman-balls {
+      75% {
+        opacity: 0.7;
+      }
+
+      100% {
+        -webkit-transform: translate(-100px, -6.25px);
+        transform: translate(-100px, -6.25px);
+      }
+    }
+
+    .pacman {
+      position: relative;
+      display: inline-block;
+      width: 120px;
+      margin-bottom: 1em;
+    }
+
+    .pacman>div:nth-child(2) {
+      -webkit-animation: pacman-balls 1s 0s infinite linear;
+      animation: pacman-balls 1s 0s infinite linear;
+    }
+
+    .pacman>div:nth-child(3) {
+      -webkit-animation: pacman-balls 1s 0.33s infinite linear;
+      animation: pacman-balls 1s 0.33s infinite linear;
+    }
+
+    .pacman>div:nth-child(4) {
+      -webkit-animation: pacman-balls 1s 0.66s infinite linear;
+      animation: pacman-balls 1s 0.66s infinite linear;
+    }
+
+    .pacman>div:nth-child(5) {
+      -webkit-animation: pacman-balls 1s 0.99s infinite linear;
+      animation: pacman-balls 1s 0.99s infinite linear;
+    }
+
+    .pacman>div:first-of-type {
+      width: 0px;
+      height: 0px;
+      border-right: 25px solid transparent;
+      border-top: 25px solid #fff500;
+      border-left: 25px solid #fff500;
+      border-bottom: 25px solid #fff500;
+      border-radius: 25px;
+      -webkit-animation: rotate_pacman_half_up 0.5s 0s infinite;
+      animation: rotate_pacman_half_up 0.5s 0s infinite;
+    }
+
+    .pacman>div:nth-child(2) {
+      width: 0px;
+      height: 0px;
+      border-right: 25px solid transparent;
+      border-top: 25px solid #fff500;
+      border-left: 25px solid #fff500;
+      border-bottom: 25px solid #fff500;
+      border-radius: 25px;
+      -webkit-animation: rotate_pacman_half_down 0.5s 0s infinite;
+      animation: rotate_pacman_half_down 0.5s 0s infinite;
+      margin-top: -50px;
+    }
+
+    .pacman>div:nth-child(3),
+    .pacman>div:nth-child(4),
+    .pacman>div:nth-child(5),
+    .pacman>div:nth-child(6) {
+      background-color: #fff500;
+      width: 15px;
+      height: 15px;
+      border-radius: 100%;
+      margin: 2px;
+      width: 10px;
+      height: 10px;
+      position: absolute;
+      -webkit-transform: translate(0, -6.25px);
+      -ms-transform: translate(0, -6.25px);
+      transform: translate(0, -6.25px);
+      top: 25px;
+      left: 100px;
+    }
+  </style>
+  <script>
+    if (typeof Object.assign != 'function') {
+      Object.assign = function (target) {
+        'use strict';
+        if (target == null) {
+          throw new TypeError('Cannot convert undefined or null to object');
+        }
+
+        target = Object(target);
+        for (var index = 1; index < arguments.length; index++) {
+          var source = arguments[index];
+          if (source != null) {
+            for (var key in source) {
+              if (Object.prototype.hasOwnProperty.call(source, key)) {
+                target[key] = source[key];
+              }
+            }
+          }
+        }
+        return target;
+      };
+    }
+  </script>
+<meta name="apple-mobile-web-app-title" content="一言PWA" /><meta name="apple-mobile-web-app-capable" content="yes" /><meta name="apple-mobile-web-app-status-bar-style" content="default" /><meta name="theme-color" content="#3a3a3a" /><link rel="apple-touch-icon" sizes="512x512" href="/hitokoto-pwa/icons/ios/icon_512x512.5e3e558909d8b63b64c4d35b7858dc3a.png" /><link rel="apple-touch-icon" sizes="180x180" href="/hitokoto-pwa/icons/ios/icon_180x180.5fb77be9fdf3421c2ddecb7e0c17c5f5.png" /><link rel="apple-touch-icon" sizes="167x167" href="/hitokoto-pwa/icons/ios/icon_167x167.4f9119d68722251861e024eb3c6645f3.png" /><link rel="apple-touch-icon" sizes="152x152" href="/hitokoto-pwa/icons/ios/icon_152x152.7b8d962730f19e21f0af8ebe23c40ef7.png" /><link rel="apple-touch-icon" sizes="120x120" href="/hitokoto-pwa/icons/ios/icon_120x120.0cc1a3cd4c3ececf84541447242633bc.png" /><link rel="manifest" href="/hitokoto-pwa/manifest.ed23e5b8c09fcb5a594a06e9abf88edd.json" /><link rel="shortcut icon" href="/hitokoto-pwa/icon.png"><link href="/hitokoto-pwa/bundle-01ada2dc9c1ec82174ba.css" rel="stylesheet"></head>
+
+<body>
+  <div id="preshow">
+    <div class="content">
+      <div class="pacman">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+      <h1>HITOKOTO</h1>
+      <p id='preshow-loading'>Loading</p>
+    </div>
+  </div>
+  <div id='root'></div>
+  <div id='modal-root'></div>
+<script type="text/javascript" src="/hitokoto-pwa/manifest-e150dab243eae80e14c6.js"></script><script type="text/javascript" src="/hitokoto-pwa/vender-8621b0beb2a9f5a48c1d.js"></script><script type="text/javascript" src="/hitokoto-pwa/bundle-01ada2dc9c1ec82174ba.js"></script></body>
+
+</html>
