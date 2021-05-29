@@ -3,7 +3,7 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var WebpackPwaManifest = require('webpack-pwa-manifest')
 var OfflinePlugin = require('offline-plugin');
-
+var publicPath = process.env.PUBLIC_URL
 var path = require('path');
 module.exports = {
   devtool: 'cheap-module-source-map',
@@ -21,7 +21,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, "/build"),
     filename: "[name].js",
-    publicPath: '/'
+    publicPath: publicPath || '/'
   },
 
   module: {
@@ -124,12 +124,12 @@ module.exports = {
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NamedModulesPlugin(),
     new OfflinePlugin({
-      publicPath: '/',
+      publicPath: publicPath || '/',
       updateStrategy: 'changed',
       autoUpdate: 1000 * 60 * 2,
       ServiceWorker: {
         events: true,
-        navigateFallbackURL: '/'
+        navigateFallbackURL: publicPath ||'/'
       }
     })
   ]
